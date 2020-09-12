@@ -1,0 +1,3 @@
+node_modules
+.dotenv
+database_schema.sql
