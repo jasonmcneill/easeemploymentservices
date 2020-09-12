@@ -24,13 +24,13 @@ function onSubmit(e) {
         case "authentication failed":
           showError(
             "Please check your username and/or password for accuracy, then try again.",
-            "Login Failed"
+            "Unable to Sign In"
           );
           break;
         default:
           showError(
             "Please check your username and/or password for accuracy, then try again.",
-            "Login Failed"
+            "Unable to Sign In"
           );
           break;
       }
