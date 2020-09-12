@@ -6,4 +6,7 @@ const authenticateToken = utils.authenticateToken;
 const homePage = require("./controllers/homePage");
 router.get("/", homePage.GET);
 
+const login = require("./controllers/login");
+router.get("/login", login.GET);
+
 module.exports = router;
