@@ -8,5 +8,6 @@ router.get("/", homePage.GET);
 
 const login = require("./controllers/login");
 router.get("/login", login.GET);
+router.post("/login", login.POST);
 
 module.exports = router;

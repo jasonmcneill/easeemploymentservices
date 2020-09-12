@@ -25,13 +25,28 @@ function clearAlertMessageContent() {
   messageContent.innerText = "";
 }
 
-function showError(message) {
+function showError(message, headline) {
   const messageElement = document.querySelector("#alertMessage");
   const messageContent = messageElement.querySelector("[data-alert-content]");
 
   clearAlertMessageContent(messageElement);
   messageContent.classList.add("alert-danger");
-  messageContent.innerText = message || "";
+  messageContent.innerHTML = headline
+    ? `<h4 class="alert-heading text-center">${headline}</h4><p>${message}</p>`
+    : `${message}`;
+  messageElement.classList.remove("d-none");
+  messageElement.scrollIntoView();
+}
+
+function showSuccess(message, headline) {
+  const messageElement = document.querySelector("#alertMessage");
+  const messageContent = messageElement.querySelector("[data-alert-content]");
+
+  clearAlertMessageContent(messageElement);
+  messageContent.classList.add("alert-success");
+  messageContent.innerHTML = headline
+    ? `<h4 class="alert-heading text-center">${headline}</h4><p>${message}</p>`
+    : `${message}`;
   messageElement.classList.remove("d-none");
   messageElement.scrollIntoView();
 }
