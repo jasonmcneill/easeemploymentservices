@@ -3,7 +3,9 @@ exports.GET = (req, res) => {
 };
 
 exports.POST = (req, res) => {
+  const bcrypt = require("bcrypt");
   const db = require("../../database");
+  const saltRounds = 10;
   const username = req.username;
   const password = req.password;
 
