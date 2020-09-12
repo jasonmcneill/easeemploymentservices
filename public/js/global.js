@@ -32,7 +32,7 @@ function showError(message, headline) {
   clearAlertMessageContent(messageElement);
   messageContent.classList.add("alert-danger");
   messageContent.innerHTML = headline
-    ? `<h4 class="alert-heading text-center">${headline}</h4><p>${message}</p>`
+    ? `<h5 class="alert-heading text-center">${headline}</h5><p>${message}</p>`
     : `${message}`;
   messageElement.classList.remove("d-none");
   messageElement.scrollIntoView();
@@ -45,7 +45,7 @@ function showSuccess(message, headline) {
   clearAlertMessageContent(messageElement);
   messageContent.classList.add("alert-success");
   messageContent.innerHTML = headline
-    ? `<h4 class="alert-heading text-center">${headline}</h4><p>${message}</p>`
+    ? `<h5 class="alert-heading text-center">${headline}</h5><p>${message}</p>`
     : `${message}`;
   messageElement.classList.remove("d-none");
   messageElement.scrollIntoView();
