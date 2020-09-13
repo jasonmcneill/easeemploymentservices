@@ -1,10 +1,12 @@
 function showSpinner(elementToToggle, spinnerElement) {
   elementToToggle.classList.add("d-none");
+  spinnerElement.classList.remove("d-none");
   console.log("spinner activated", elementToToggle);
 }
 
 function hideSpinner(elementToToggle, spinnerElement) {
   elementToToggle.classList.remove("d-none");
+  spinnerElement.classList.add("d-none");
   console.log("spinner deactivated", elementToToggle);
 }
 
