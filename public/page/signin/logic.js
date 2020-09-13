@@ -21,11 +21,30 @@ function onSubmit(e) {
     .then((data) => {
       hideSpinner(elementToToggle, spinnerElement);
       switch (data.msg) {
-        case "authentication failed":
+        case "unable to query for user":
+          showError(
+            "The system is unable to verify your login at this time.  Please try again later.",
+            "System is down"
+          );
+          break;
+        case "unable to verify login":
+          showError(
+            "The system is unable to verify your login at this time.  Please try again later.",
+            "System is down"
+          );
+          break;
+        case "invalid login":
           showError(
             "Please check your username and/or password for accuracy, then try again.",
             "Unable to Sign In"
           );
+          break;
+        case "user authenticated":
+          const refreshToken = data.refreshToken;
+          const accessToken = data.accessToken;
+          localStorage.setItem("refreshToken", refreshToken);
+          sessionStorage.setItem("accessToken", accessToken);
+          window.location.href = "/";
           break;
         default:
           showError(
