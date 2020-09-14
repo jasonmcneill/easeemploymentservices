@@ -25,6 +25,9 @@ exports.POST = (req, res) => {
     if (!result.length)
       return res.status(404).send({ msg: "user not found", msgType: "error" });
     const employeeid = result[0].employeeid;
+    const firstname = result[0].firstname;
+    const lastname = result[0].lastname;
+    const recipientEmail = result[0].email;
     const resetToken = require("crypto").randomBytes(32).toString("hex");
     const passwordResetExpiry = new Date();
     passwordResetExpiry.setDate(
@@ -45,26 +48,28 @@ exports.POST = (req, res) => {
         const resetUrl = isLocal
           ? `http://localhost:3000/password-reset#token=${resetToken}`
           : `https://access.easeemploymentservices.com/password-reset#token=${resetToken}`;
-        const recipientEmail = result[0].email;
         const senderEmail = isLocal
-          ? "jason.mcneill@grindstonewebdev.com"
-          : "no-reply@access.easeemploymentservices.com";
+          ? "Access <no-reply@em6223.easeemploymentservices.com>"
+          : "Access <no-reply@em6223.easeemploymentservices.com>";
         const subject = "Reset your password";
-        const body = `A request was just received to reset your password.  To do so, please click on the following link within 20 minutes of your request: <p><strong><a href="${resetUrl}">Reset my password</a></strong></p>`;
+        const body = `
+          <p>This message is for ${firstname} ${lastname}. A request was just received to reset your password.  To do so, please click on the following link within 20 minutes of your request:</p>
+          <p><strong><a href="${resetUrl}">Reset my password</a></strong></p>
+          <p>E.A.S.E. Employment Services</p>
+        `;
         utils
           .sendEmail(recipientEmail, senderEmail, subject, body)
-          .then((sendgridResponse) => {
-            return res.status(200).send({
-              msg: "password reset e-mail sent",
-              msgType: "success",
-              response: sendgridResponse,
-            });
+          .then((result) => {
+            console.log(result);
+            return res
+              .status(200)
+              .send({ msg: "password reset e-mail sent", msgType: "success" });
           })
           .catch((error) => {
+            console.log(error);
             return res.status(500).send({
               msg: "password reset e-mail could not be sent",
               msgType: "error",
-              error: error,
             });
           });
       }
