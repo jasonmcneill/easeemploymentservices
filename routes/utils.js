@@ -51,9 +51,16 @@ exports.sendEmail = (recipient, sender, subject, body) => {
     html: body,
   };
   return new Promise((resolve, reject) => {
-    resolve(sgMail.send(msg));
-  }).catch((error) => {
-    reject(error);
+    sgMail
+      .send(msg)
+      .then((result) => {
+        console.log(`SUCCESS!: ${result}`);
+        resolve(result);
+      })
+      .catch((error) => {
+        console.log(`ERROR: ${error}`);
+        reject(error);
+      });
   });
 };
 
