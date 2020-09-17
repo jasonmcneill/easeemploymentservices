@@ -18,4 +18,8 @@ const resetPassword = require("./controllers/reset-password");
 router.get("/reset-password", resetPassword.GET);
 router.post("/reset-password", resetPassword.POST);
 
+const register = require("./controllers/register");
+router.get("/register", register.GET);
+router.post("/register", register.POST);
+
 module.exports = router;

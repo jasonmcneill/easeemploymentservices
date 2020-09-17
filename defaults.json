@@ -1,0 +1,26 @@
+{
+  "users": {
+    "sysamins": [
+      {
+        "name": {
+          "first": "Jason",
+          "last": "McNeill",
+          "full": "Jason McNeill"
+        },
+        "email": "jason.mcneill@grindstonewebdev.com",
+        "smsphone": "213-325-1382"
+      }
+    ],
+    "directors": [
+      {
+        "name": {
+          "first": "Stacci",
+          "last": "Davie",
+          "full": "Stacci Davie"
+        },
+        "email": "stacci.ease@gmail.com",
+        "smsphone": "253-590-8079"
+      }
+    ]
+  }
+}
