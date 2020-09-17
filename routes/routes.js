@@ -14,4 +14,8 @@ const forgotPassword = require("./controllers/forgot-password");
 router.get("/forgot-password", forgotPassword.GET);
 router.post("/forgot-password", forgotPassword.POST);
 
+const resetPassword = require("./controllers/reset-password");
+router.get("/reset-password", resetPassword.GET);
+router.post("/reset-password", resetPassword.POST);
+
 module.exports = router;

@@ -5,7 +5,8 @@ exports.GET = (req, res) => {
 exports.POST = (req, res) => {
   const db = require("../../database");
   const email = req.body.email || "";
-  const isLocal = req.body.isLocal || false;
+  const protocol = req.body.protocol;
+  const host = req.body.host;
   const validator = require("email-validator");
   const isValidEmail = validator.validate(email);
 
@@ -16,7 +17,7 @@ exports.POST = (req, res) => {
     });
 
   const sql =
-    "SELECT employeeid, firstname, lastname, email FROM employees WHERE email = ? LIMIT 1;";
+    "SELECT employeeid, firstname, lastname, email, passwordresettoken, passwordresetexpiry FROM employees WHERE email = ? LIMIT 1;";
   db.query(sql, [email], (err, result) => {
     if (err)
       return res
@@ -24,46 +25,57 @@ exports.POST = (req, res) => {
         .send({ msg: "unable to query for email", msgType: "error" });
     if (!result.length)
       return res.status(404).send({ msg: "user not found", msgType: "error" });
+    const moment = require("moment");
     const employeeid = result[0].employeeid;
     const firstname = result[0].firstname;
     const lastname = result[0].lastname;
     const recipientEmail = result[0].email;
-    const resetToken = require("crypto").randomBytes(32).toString("hex");
-    const passwordResetExpiry = new Date();
-    passwordResetExpiry.setDate(
-      passwordResetExpiry.getDate() + (1 / 24 / 60) * 20
+    let resetToken = require("crypto").randomBytes(32).toString("hex");
+    const timeSent = moment();
+    const passwordResetExpiry = moment().add(20, "minutes");
+    const passwordResetExpiryMySQL = passwordResetExpiry.format(
+      "YYYY-MM-DD HH:mm:ss"
     );
+    const expiryInDatabase = result[0].passwordresetexpiry;
+    const expiryStillInTheFuture = timeSent.isBefore(expiryInDatabase);
+    if (expiryStillInTheFuture && result[0].passwordresettoken.length)
+      resetToken = result[0].passwordresettoken;
+
     const sql =
       "UPDATE employees SET passwordresettoken = ?, passwordresetexpiry = ? WHERE employeeid = ?;";
     db.query(
       sql,
-      [employeeid, resetToken, passwordResetExpiry],
+      [resetToken, passwordResetExpiryMySQL, employeeid],
       (err, result2) => {
         if (err)
           return res.status(500).send({
             msg: "unable to update employee record",
             msgType: "error",
           });
+        const uuid = require("uuid");
+        const messageID = uuid.v4();
         const utils = require("../utils");
-        const resetUrl = isLocal
-          ? `http://localhost:3000/password-reset#token=${resetToken}`
-          : `https://access.easeemploymentservices.com/password-reset#token=${resetToken}`;
-        const senderEmail = isLocal
-          ? "Access <no-reply@em6223.easeemploymentservices.com>"
-          : "Access <no-reply@em6223.easeemploymentservices.com>";
+        const resetUrl = `${protocol}//${host}/reset-password#token=${resetToken}`;
+        const senderEmail = `E.A.S.E. <no-reply@em6223.easeemploymentservices.com>`;
         const subject = "Reset your password";
         const body = `
-          <p>This message is for ${firstname} ${lastname}. A request was just received to reset your password.  To do so, please click on the following link within 20 minutes of your request:</p>
-          <p><strong><a href="${resetUrl}">Reset my password</a></strong></p>
+          <p>This message is for ${firstname} ${lastname}. We just received your request to reset your password.  To do so, please click on the following link within 20 minutes of your request:</p>
+          <p style="margin: 30px 0"><strong><big><a href="${resetUrl}" style="text-decoration: underline">Reset my password</a></big></strong></p>
           <p>E.A.S.E. Employment Services</p>
+          <div style="margin: 40px 0 20px 0">
+            <small><small style="color: #ccc">
+              <hr size="1" color="#ccc" />
+              Message ID: ${messageID.toUpperCase()}
+            </small></small>
+          </div>
         `;
         utils
           .sendEmail(recipientEmail, senderEmail, subject, body)
           .then((result) => {
-            console.log(result);
-            return res
-              .status(200)
-              .send({ msg: "password reset e-mail sent", msgType: "success" });
+            return res.status(result[0].statusCode || 200).send({
+              msg: "password reset e-mail sent",
+              msgType: "success",
+            });
           })
           .catch((error) => {
             console.log(error);

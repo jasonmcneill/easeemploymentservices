@@ -54,11 +54,9 @@ exports.sendEmail = (recipient, sender, subject, body) => {
     sgMail
       .send(msg)
       .then((result) => {
-        console.log(`SUCCESS!: ${result}`);
         resolve(result);
       })
       .catch((error) => {
-        console.log(`ERROR: ${error}`);
         reject(error);
       });
   });
@@ -135,4 +133,15 @@ exports.validatePhone = (number, countryCode) => {
 exports.smsToken = () => {
   const token = Math.floor(100000 + Math.random() * 900000);
   return token;
+};
+
+exports.validateNewPassword = (password) => {
+  let isValid = false;
+  const zxcvbn = require("zxcvbn");
+  const complexityScoreMeasured = zxcvbn(password).score || 0;
+  const minimumComplexityScore = 3;
+
+  if (complexityScoreMeasured >= minimumComplexityScore) isValid = true;
+
+  return isValid;
 };
