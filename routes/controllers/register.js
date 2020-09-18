@@ -11,7 +11,6 @@ exports.POST = (req, res) => {
   const password = req.body.password || "";
   const protocol = req.body.protocol || "http://";
   const host = req.body.host || "localhost:3000";
-  console.log(req.body);
 
   // Validate missing data
   if (!firstname.length)
@@ -26,6 +25,15 @@ exports.POST = (req, res) => {
     return res.status(400).send({ msg: "missing username", msgType: "error" });
   if (!password.length)
     return res.status(400).send({ msg: "missing password", msgType: "error" });
+
+  // TODO:  Modify DB to store registration token & expiry
+  // TODO:  Check DB for duplicate SMS phone numbers
+  // TODO:  Normalize SMS phone number
+  // TODO:  Check DB for duplicate usernames
+  // TODO:  Check defaults.js file
+  // TODO:  Ensure sufficient password complexity
+  // TODO:  Populate DB with registration token & expiry
+  // TODO:  Send e-mail with registration token
 
   return res
     .status(200)

@@ -32,6 +32,7 @@ exports.POST = (req, res) => {
     const recipientEmail = result[0].email;
     let resetToken = require("crypto").randomBytes(32).toString("hex");
     const timeSent = moment();
+    const createdAt = timeSent.format("YYYY-MM-DD HH:mm:ss");
     const passwordResetExpiry = moment().add(20, "minutes");
     const passwordResetExpiryMySQL = passwordResetExpiry.format(
       "YYYY-MM-DD HH:mm:ss"
@@ -42,10 +43,10 @@ exports.POST = (req, res) => {
       resetToken = result[0].passwordresettoken;
 
     const sql =
-      "UPDATE employees SET passwordresettoken = ?, passwordresetexpiry = ? WHERE employeeid = ?;";
+      "INSERT INTO tokens(token, expiry, purpose, createdAt) VALUES ?, ?, 'reset password', ?;";
     db.query(
       sql,
-      [resetToken, passwordResetExpiryMySQL, employeeid],
+      [resetToken, passwordResetExpiryMySQL, createdAt],
       (err, result2) => {
         if (err)
           return res.status(500).send({

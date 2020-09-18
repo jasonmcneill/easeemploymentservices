@@ -85,6 +85,12 @@ function onSubmit(e) {
             "System is Down"
           );
           break;
+        case "unable to designate token as claimed":
+          showError(
+            "There was a technical glitch which prevented your new password from being used.  Please wait a moment, then try saving it again.",
+            "System is Down"
+          );
+          break;
         case "password updated":
           contentExceptAlert.classList.add("d-none");
           showSuccess(

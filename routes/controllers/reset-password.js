@@ -6,8 +6,12 @@ exports.POST = (req, res) => {
   const db = require("../../database");
   const token = req.body.token || "";
   const newPassword = req.body.newPassword || "";
-  const sql =
-    "SELECT employeeid, passwordresetexpiry FROM employees WHERE passwordresettoken = ? LIMIT 1;";
+  const sql = `SELECT e.employeeid, t.token, t.expiry
+    FROM employees e
+    INNER JOIN tokens t ON t.employeeid = e.employeeid
+    WHERE t.token = ?
+    AND t.purpose = 'reset password'
+    LIMIT 1;`;
 
   db.query(sql, [token], (error, result) => {
     if (error)
@@ -19,7 +23,7 @@ exports.POST = (req, res) => {
 
     const employeeid = result[0].employeeid;
     const moment = require("moment");
-    const dateExpiry = moment(result[0].passwordresetexpiry);
+    const dateExpiry = moment(result[0].expiry);
     const dateNow = moment();
     const isExpired = dateExpiry.isBefore(dateNow);
 
@@ -58,9 +62,19 @@ exports.POST = (req, res) => {
               msg: "unable to store hashed password",
               msgType: "error",
             });
-          return res
-            .status(200)
-            .send({ msg: "password updated", msgType: "success" });
+
+          const sql = `UPDATE tokens SET claimed = 1 WHERE token = ?`;
+          db.query(sql, [token], (err, result) => {
+            if (err)
+              return res.status(500).send({
+                msg: "unable to designate token as claimed",
+                msgType: "error",
+              });
+
+            return res
+              .status(200)
+              .send({ msg: "password updated", msgType: "success" });
+          });
         });
       });
     });
