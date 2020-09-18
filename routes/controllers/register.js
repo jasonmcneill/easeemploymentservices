@@ -9,8 +9,22 @@ exports.POST = (req, res) => {
   const smsphone = req.body.smsphone || "";
   const username = req.body.username || "";
   const password = req.body.password || "";
-  const protocol = req.body.protocol || "http://";
-  const host = req.body.host || "localhost:3000";
+  let protocol;
+  let host;
+  switch (process.env.ENV) {
+    case "development":
+      protocol = "http:";
+      host = "localhost:3000";
+      break;
+    case "staging":
+      protocol = "https:";
+      host = "staging-access.easeemploymentservices.com";
+      break;
+    case "production":
+      protocol = "https:";
+      host = "access.easeemploymentservices.com";
+      break;
+  }
 
   // Validate missing data
   if (!firstname.length)

@@ -6,8 +6,6 @@ function onSubmit(e) {
   const smsphone = e.target["smsphone"].value.trim();
   const username = e.target["username"].value.trim();
   const password = e.target["password"].value.trim();
-  const protocol = window.location.protocol;
-  const host = window.location.host;
   const endpoint = `${protocol}//${host}/register`;
   const spinner = document.querySelector("#registerSpinner");
   const content = document.querySelector("#registerContent");
@@ -23,8 +21,6 @@ function onSubmit(e) {
       smsphone: smsphone,
       username: username,
       password: password,
-      protocol: protocol,
-      host: host,
     }),
     headers: new Headers({
       "Content-Type": "application/json",

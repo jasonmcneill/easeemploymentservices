@@ -4,7 +4,6 @@ function onSubmit(e) {
   const el = document.querySelector("#passwordResetContent");
   const elExceptAlert = document.querySelector("#forgotPasswordContent");
   const spinner = document.querySelector("#passwordResetSpinner");
-  const { protocol, host } = window.location;
 
   if (email.length === 0) {
     return showError("Please input your e-mail address.");
@@ -16,8 +15,6 @@ function onSubmit(e) {
     method: "POST",
     body: JSON.stringify({
       email: email,
-      protocol: protocol,
-      host: host,
     }),
     headers: new Headers({
       "Content-Type": "application/json",

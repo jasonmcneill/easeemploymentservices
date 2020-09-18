@@ -5,8 +5,22 @@ exports.GET = (req, res) => {
 exports.POST = (req, res) => {
   const db = require("../../database");
   const email = req.body.email || "";
-  const protocol = req.body.protocol;
-  const host = req.body.host;
+  let protocol;
+  let host;
+  switch (process.env.ENV) {
+    case "development":
+      protocol = "http:";
+      host = "localhost:3000";
+      break;
+    case "staging":
+      protocol = "https:";
+      host = "staging-access.easeemploymentservices.com";
+      break;
+    case "production":
+      protocol = "https:";
+      host = "access.easeemploymentservices.com";
+      break;
+  }
   const validator = require("email-validator");
   const isValidEmail = validator.validate(email);
 
