@@ -10,7 +10,7 @@ exports.POST = (req, res) => {
     FROM employees e
     INNER JOIN tokens t ON t.employeeid = e.employeeid
     WHERE t.token = ?
-    AND t.purpose = 'reset password'
+    AND t.purpose = 'password reset'
     LIMIT 1;`;
 
   db.query(sql, [token], (error, result) => {
@@ -57,19 +57,25 @@ exports.POST = (req, res) => {
         const sql =
           "UPDATE employees SET password = ?, passwordmustchange = 0 WHERE employeeid = ?;";
         db.query(sql, [hash, employeeid], (err, result) => {
-          if (err)
+          if (err) {
+            console.log(err);
+
             return res.status(500).send({
               msg: "unable to store hashed password",
               msgType: "error",
             });
+          }
 
           const sql = `UPDATE tokens SET claimed = 1 WHERE token = ?`;
           db.query(sql, [token], (err, result) => {
-            if (err)
+            if (err) {
+              console.log(err);
+
               return res.status(500).send({
                 msg: "unable to designate token as claimed",
                 msgType: "error",
               });
+            }
 
             return res
               .status(200)

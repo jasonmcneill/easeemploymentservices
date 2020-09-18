@@ -16,13 +16,24 @@ exports.POST = (req, res) => {
       msgType: "error",
     });
 
-  const sql =
-    "SELECT employeeid, firstname, lastname, email, passwordresettoken, passwordresetexpiry FROM employees WHERE email = ? LIMIT 1;";
+  const sql = `SELECT 
+      e.employeeid,
+      e.firstname, 
+      e.lastname, 
+      e.email,
+      t.token,
+      t.expiry
+    FROM employees e
+    LEFT OUTER JOIN tokens t ON t.employeeid = e.employeeid
+    WHERE e.email = ?
+    LIMIT 1;`;
   db.query(sql, [email], (err, result) => {
-    if (err)
+    if (err) {
+      console.log(err);
       return res
         .status(500)
         .send({ msg: "unable to query for email", msgType: "error" });
+    }
     if (!result.length)
       return res.status(404).send({ msg: "user not found", msgType: "error" });
     const moment = require("moment");
@@ -37,22 +48,27 @@ exports.POST = (req, res) => {
     const passwordResetExpiryMySQL = passwordResetExpiry.format(
       "YYYY-MM-DD HH:mm:ss"
     );
-    const expiryInDatabase = result[0].passwordresetexpiry;
-    const expiryStillInTheFuture = timeSent.isBefore(expiryInDatabase);
-    if (expiryStillInTheFuture && result[0].passwordresettoken.length)
-      resetToken = result[0].passwordresettoken;
+    const tokenInDatabase = result[0].token || "";
+    const expiryInDatabase = result[0].expiry || "";
+    const expiryStillInTheFuture = expiryInDatabase.length
+      ? timeSent.isBefore(expiryInDatabase)
+      : false;
+    if (expiryStillInTheFuture && tokenInDatabase.length)
+      resetToken = tokenInDatabase;
 
     const sql =
-      "INSERT INTO tokens(token, expiry, purpose, createdAt) VALUES ?, ?, 'reset password', ?;";
+      "INSERT INTO tokens(token, expiry, purpose, employeeid, createdAt) VALUES (?, ?, 'password reset', ?, ?);";
     db.query(
       sql,
-      [resetToken, passwordResetExpiryMySQL, createdAt],
+      [resetToken, passwordResetExpiryMySQL, employeeid, createdAt],
       (err, result2) => {
-        if (err)
+        if (err) {
+          console.log(err);
           return res.status(500).send({
             msg: "unable to update employee record",
             msgType: "error",
           });
+        }
         const uuid = require("uuid");
         const messageID = uuid.v4();
         const utils = require("../utils");
