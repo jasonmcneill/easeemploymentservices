@@ -1,9 +1,3 @@
-const { access } = require("fs");
-
-exports.GET = (req, res) => {
-  return res.render("login", {});
-};
-
 exports.POST = (req, res) => {
   const bcrypt = require("bcrypt");
   const db = require("../../database");

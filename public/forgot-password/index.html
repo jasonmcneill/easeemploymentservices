@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+
+    <title>Forgot Password</title>
+
+    <link href="/_assets/css/global.css" rel="stylesheet" />
+    <link href="./style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="spinner text-center d-none" id="passwordResetSpinner"></div>
+    <div class="container" id="passwordResetContent">
+      <div class="row">
+        <div class="col col-md-12">
+          <h1 class="h3 mb-4 text-center font-weight-normal">Forgot Password</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col col-md-6 offset-md-3">
+          <div id="alertMessage" class="d-none mt-3 mb-4">
+            <div
+              data-alert-content
+              class="alert alert-danger"
+              role="alert"
+            ></div>
+          </div>
+        </div>
+      </div>
+      <div id="forgotPasswordContent">
+        <div class="row">
+          <div class="col col-md-6 offset-md-3">
+            If you have forgotten your password, it can be reset. Simply
+            complete and submit the form below, then check your e-mail. We
+            will send you a special link that you must click on in order to
+            reset your password.
+          </div>
+        </div>
+        <form id="passwordResetForm" autocomplete="off" novalidate>
+          <div class="row">
+            <div class="col col-md-6 offset-md-3 my-3">
+              <div class="form-group">
+                <label for="passwordResetEmail"><strong>Email address:</strong></label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="passwordResetEmail"
+                  autocomplete="off"
+                  required
+                  autofocus
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-md-6 offset-md-3">
+              <button type="submit" class="btn btn-lg btn-primary btn-block mb-2">
+                Reset Password
+              </button>
+              <div class="mt-4">
+                <p class="text-center">
+                  <a href="/login">Return to Sign In</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script
+      type="text/javascript"
+      src="./logic.js"
+    ></script>
+    <script type="text/javascript" src="/_assets/js/global.js"></script>
+  </body>
+</html>

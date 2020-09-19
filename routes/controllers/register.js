@@ -1,7 +1,3 @@
-exports.GET = (req, res) => {
-  return res.render("register", {});
-};
-
 exports.POST = (req, res) => {
   const firstname = req.body.firstname || "";
   const lastname = req.body.lastname || "";

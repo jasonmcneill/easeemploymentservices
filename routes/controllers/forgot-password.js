@@ -1,7 +1,3 @@
-exports.GET = (req, res) => {
-  return res.render("forgotPassword", {});
-};
-
 exports.POST = (req, res) => {
   const db = require("../../database");
   const email = req.body.email || "";

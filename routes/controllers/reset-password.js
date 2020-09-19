@@ -1,7 +1,3 @@
-exports.GET = (req, res) => {
-  return res.render("resetPassword", {});
-};
-
 exports.POST = (req, res) => {
   const db = require("../../database");
   const token = req.body.token || "";
