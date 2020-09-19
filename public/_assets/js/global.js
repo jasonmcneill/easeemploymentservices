@@ -57,3 +57,9 @@ function hideAlertMessage() {
   const messageElement = document.querySelector("#alertMessage");
   messageElement.classList.remove("d-none");
 }
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js");
+  });
+}
