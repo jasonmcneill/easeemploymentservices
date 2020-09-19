@@ -3,8 +3,6 @@ const router = express.Router();
 const utils = require("./utils");
 const authenticateToken = utils.authenticateToken;
 
-const homePage = require("./controllers/homePage");
-
 const login = require("./controllers/login");
 router.post("/login", login.POST);
 
