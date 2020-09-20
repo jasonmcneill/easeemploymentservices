@@ -2,7 +2,7 @@ function onSubmit(e) {
   e.preventDefault();
   const elementToToggle = document.querySelector("#form-signin");
   const spinnerElement = document.querySelector(".spinner");
-  const username = e.target.inputUsername.value.trim();
+  const username = e.target.inputUsername.value.trim().toLowerCase();
   const password = e.target.inputPassword.value.trim();
   showSpinner(elementToToggle, spinnerElement);
   hideAlertMessage();
