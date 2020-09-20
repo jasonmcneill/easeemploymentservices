@@ -54,9 +54,21 @@ function onSubmit(e) {
         case "token is expired":
           contentExceptAlert.classList.add("d-none");
           showError(
-            "Your password cannot be reset because you did not click on the link prior to its expiration.  Please try again by revisiting the <a href='/forgot-password' class='alert-link'>Forgot Password</a> page.",
+            `
+              <p>
+                Your password cannot be reset because you did not click on the link prior to its expiration. You will now be redirected to start the process again.
+              </p>
+              <div class='text-center my-2'>
+                <div class="spinner-border" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </div>
+            `,
             "Link Expired"
           );
+          setTimeout(() => {
+            window.location.href = "/forgot-password/";
+          }, 5000);
           break;
         case "password is missing":
           showError(
@@ -103,7 +115,7 @@ function onSubmit(e) {
           showSuccess(
             `
               <p class='text-center'>
-                You will now be redirected to <a href='/login' class='alert-link'><u>Sign In</u></a>.
+                You will now be redirected to <a href='/login/' class='alert-link'><u>Sign In</u></a>.
               </p>
               <div class='text-center my-2'>
                 <div class="spinner-border" role="status">
@@ -114,12 +126,12 @@ function onSubmit(e) {
             "Password Reset Successfully"
           );
           setTimeout(() => {
-            window.location.href = "/login";
+            window.location.href = "/login/";
           }, 5000);
           break;
         default:
           console.error("Did not receive a valid HTTP response from the API");
-          window.location.href = "/forgot-password";
+          window.location.href = "/forgot-password/";
           break;
       }
     })
