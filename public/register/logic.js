@@ -4,11 +4,19 @@ function onSubmit(e) {
   const lastname = e.target["lastname"].value.trim();
   const email = e.target["email"].value.trim();
   const smsphone = e.target["smsphone"].value.trim();
+  const smsphonecountry = e.target["smsphonecountry"].value;
   const username = e.target["username"].value.trim();
   const password = e.target["password"].value.trim();
-  const endpoint = `${protocol}//${host}/register`;
+  const endpoint = `${window.location.protocol}//${window.location.host}/register`;
   const spinner = document.querySelector("#registerSpinner");
   const content = document.querySelector("#registerContent");
+
+  if (smsphone.length && !smsphonecountry.length) {
+    return showError(
+      "Please select the country of your mobile phone.",
+      "Form Incomplete"
+    );
+  }
 
   showSpinner(content, spinner);
   fetch(endpoint, {
@@ -19,6 +27,7 @@ function onSubmit(e) {
       lastname: lastname,
       email: email,
       smsphone: smsphone,
+      smsphonecountry: smsphonecountry,
       username: username,
       password: password,
     }),
@@ -31,19 +40,48 @@ function onSubmit(e) {
       hideSpinner(content, spinner);
       switch (data.msg) {
         case "missing first name":
-          showError("Please input your first name.", "Form Incomplete");
+          showError(
+            "<div class='text-center'>Please input your first name.</div>",
+            "Form Incomplete"
+          );
           break;
         case "missing last name":
-          showError("Please input your last name.", "Form Incomplete");
+          showError(
+            "<div class='text-center'>Please input your last name.</div>",
+            "Form Incomplete"
+          );
           break;
         case "missing e-mail":
-          showError("Please input your e-mail address.", "Form Incomplete");
+          showError(
+            "<div class='text-center'>Please input your e-mail address.</div>",
+            "Form Incomplete"
+          );
+          break;
+        case "mobile phone number not valid":
+          showError("Please use a valid phone number.", "Form Incomplete");
+          break;
+        case "mobile phone number not valid for country":
+          showError(
+            "Please use a mobile phone number that matches the country you selected."
+          );
+          break;
+        case "mobile phone number is not sms capable":
+          showError(
+            "Please use a mobile phone number that is capable of receiving text messages.",
+            "Form Incomplete"
+          );
           break;
         case "missing username":
-          showError("Please input your username.", "Form Incomplete");
+          showError(
+            "<div class='text-center'>Please input your username.</div>",
+            "Form Incomplete"
+          );
           break;
         case "missing password":
-          showError("Please input your password.", "Form Incomplete");
+          showError(
+            "<div class='text-center'>Please input your password.</div>",
+            "Form Incomplete"
+          );
           break;
 
         case "confirmation e-mail sent":
@@ -61,12 +99,32 @@ function onSubmit(e) {
     });
 }
 
+function populateSmsPhoneCountries() {
+  const countriesDropdown = document.querySelector("#smsphonecountry");
+  const endpoint = "/_assets/json/world-countries/data/en/countries.json";
+  fetch(endpoint)
+    .then((res) => res.json())
+    .then((data) => {
+      countriesDropdown.append(`<option value="">(Select)</option>`);
+      data.forEach((item) => {
+        const newOption = document.createElement("option");
+        const optionText = document.createTextNode(item.name);
+        newOption.appendChild(optionText);
+        newOption.setAttribute("value", item.alpha2);
+        if (item.alpha2 === "us") newOption.setAttribute("selected", true);
+        countriesDropdown.appendChild(newOption);
+      });
+    })
+    .catch((error) => console.error(error));
+}
+
 function attachEventListeners() {
   document.querySelector("#registerform").addEventListener("submit", onSubmit);
 }
 
 function init() {
   attachEventListeners();
+  populateSmsPhoneCountries();
 }
 
 init();

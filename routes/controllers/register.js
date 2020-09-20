@@ -2,7 +2,8 @@ exports.POST = (req, res) => {
   const firstname = req.body.firstname || "";
   const lastname = req.body.lastname || "";
   const email = req.body.email || "";
-  const smsphone = req.body.smsphone || "";
+  let smsphone = req.body.smsphone || "";
+  const smsphonecountry = req.body.smsphonecountry;
   const username = req.body.username || "";
   const password = req.body.password || "";
   let protocol;
@@ -36,12 +37,32 @@ exports.POST = (req, res) => {
   if (!password.length)
     return res.status(400).send({ msg: "missing password", msgType: "error" });
 
-  // TODO:  Modify DB to store registration token & expiry
-  // TODO:  Check DB for duplicate SMS phone numbers
-  // TODO:  Normalize SMS phone number
+  if (smsphone.length) {
+    const validatedPhone = require("../utils").validatePhone(
+      smsphone,
+      smsphonecountry
+    );
+    if (!validatedPhone.isPossibleNumber)
+      return res
+        .status(400)
+        .send({ msg: "mobile phone number not valid", msgType: "error" });
+    if (!validatedPhone.isValidForRegion)
+      return res.status(400).send({
+        msg: "mobile phone number not valid for country",
+        msgType: "error",
+      });
+    if (!validatedPhone.isValidSmsType)
+      return res.status(400).send({
+        msg: "mobile phone number is not sms capable",
+        msgType: "error",
+      });
+    smsphone = validatedPhone.nationalFormat;
+  }
+
   // TODO:  Check DB for duplicate usernames
   // TODO:  Check defaults.js file
   // TODO:  Ensure sufficient password complexity
+  // TODO:  Check DB for duplicate SMS phone numbers
   // TODO:  Populate DB with registration token & expiry
   // TODO:  Send e-mail with registration token
 
