@@ -19,21 +19,23 @@ function onSubmit(e) {
   })
     .then((res) => (res.ok ? res.json() : {}))
     .then((data) => {
-      hideSpinner(elementToToggle, spinnerElement);
       switch (data.msg) {
         case "unable to query for user":
+          hideSpinner(elementToToggle, spinnerElement);
           showError(
             "The system is unable to verify your login at this time.  Please try again later.",
             "System is down"
           );
           break;
         case "unable to verify login":
+          hideSpinner(elementToToggle, spinnerElement);
           showError(
             "The system is unable to verify your login at this time.  Please try again later.",
             "System is down"
           );
           break;
         case "invalid login":
+          hideSpinner(elementToToggle, spinnerElement);
           showError(
             "Please check your username and/or password for accuracy, then try again.",
             "Unable to Sign In"
@@ -47,6 +49,7 @@ function onSubmit(e) {
           window.location.href = "/";
           break;
         default:
+          hideSpinner(elementToToggle, spinnerElement);
           showError(
             "Please check your username and/or password for accuracy, then try again.",
             "Unable to Sign In"
