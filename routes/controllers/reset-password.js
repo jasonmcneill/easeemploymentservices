@@ -28,6 +28,11 @@ exports.POST = (req, res) => {
         .status(400)
         .send({ msg: "token is expired", msgType: "error" });
 
+    if (!newPassword.length)
+      return res
+        .status(400)
+        .send({ msg: "password is missing", msgType: "error" });
+
     const utils = require("../utils");
     const isValidPassword = utils.validateNewPassword(newPassword);
     if (!isValidPassword)
