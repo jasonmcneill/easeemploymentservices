@@ -26,13 +26,13 @@
     <div class="container-fluid" id="registerContent">
       <div class="row">
         <div class="col col-md-12">
-          <h1 class="h3 text-center mt-4 font-weight-normal">Register</h1>
+          <h1 class="h3 mb-4 text-center font-weight-normal">Register</h1>
         </div>
       </div>
 
       <div class="row">
-        <div class="col col-md-4 offset-md-4">
-          <div id="alertMessage" class="d-none mb-4">
+        <div class="col col-md-12">
+          <div id="alertMessage" class="col col-md-4 offset-md-4 d-none">
             <div
               data-alert-content
               class="alert alert-danger"
@@ -84,7 +84,7 @@
 
         <div class="form-row my-3">
           <div class="form-group col col-md-4 offset-md-4">
-            <label for="smsphone"><strong>Mobile phone:</strong></label>
+            <label for="smsphone"><strong>Mobile phone number:</strong></label>
             <input
               type="tel"
               class="form-control"
@@ -92,6 +92,17 @@
               pattern="[0-9]"
               autocomplete="mobile"
             />
+          </div>
+        </div>
+
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="smsphonecountry">
+              <strong>Country for mobile phone:</strong>
+            </label>
+            <div>
+              <select class="form-control" id="smsphonecountry"></select>
+            </div>
           </div>
         </div>
 
