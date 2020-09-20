@@ -55,7 +55,7 @@ function showSuccess(message, headline) {
 
 function hideAlertMessage() {
   const messageElement = document.querySelector("#alertMessage");
-  messageElement.classList.remove("d-none");
+  messageElement.classList.add("d-none");
 }
 
 if ("serviceWorker" in navigator) {

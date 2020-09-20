@@ -34,6 +34,7 @@ function onSubmit(e) {
   })
     .then((res) => res.json())
     .then((data) => {
+      hideAlertMessage();
       contentExceptAlert.classList.remove("d-none");
       hideSpinner(content, spinner);
       switch (data.msg) {
@@ -57,10 +58,16 @@ function onSubmit(e) {
             "Link Expired"
           );
           break;
+        case "password is missing":
+          showError(
+            "<div class='text-center'>Please input your new password.</div>",
+            "Form Incomplete"
+          );
+          break;
         case "new password lacks sufficient complexity":
           showError(
             `
-              <p>Please revise your new password.  For your protection we require that it must have a minimum level of unpredictability, in order to prevent potential hackers from guessing it.</p>
+              <p>Please revise your new password.  For your protection, we require that it must have a minimum level of unpredictability in order to prevent potential hackers from guessing it.</p>
               <p>A minimum length of 8 characters is required.  Using a phrase (rather than a single word) is encouraged, because phrases are less predictable.
             `,
             "Password is Too Predictable"
@@ -96,7 +103,7 @@ function onSubmit(e) {
           showSuccess(
             `
               <p class='text-center'>
-                In a moment, you will be automatically redirected to the <a href='/login' class='alert-link'><u>Sign In</u></a> page...
+                You will now be redirected to <a href='/login' class='alert-link'><u>Sign In</u></a>.
               </p>
               <div class='text-center my-2'>
                 <div class="spinner-border" role="status">
