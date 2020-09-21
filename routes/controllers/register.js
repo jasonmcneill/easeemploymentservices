@@ -208,7 +208,7 @@ exports.POST = (req, res) => {
                   .toString("hex");
 
                 const expiry = moment()
-                  .add(20, "minutes")
+                  .add(15, "days")
                   .format("YYYY-MM-DD HH:mm:ss");
 
                 const createdAt = moment().format("YYYY-MM-DD HH:mm:ss");
