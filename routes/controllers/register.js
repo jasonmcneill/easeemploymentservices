@@ -241,7 +241,7 @@ exports.POST = (req, res) => {
                     const messageID = require("uuid").v4();
                     const confirmationUrl = `${protocol}//${host}/register-confirm/#token=${registrationToken}`;
                     const recipient = `${firstname} ${lastname} <${email}>`;
-                    const sender = `E.A.S.E. <no-reply@access.easeemploymentservices.com>`;
+                    const sender = `E.A.S.E. <no-reply@em6223.easeemploymentservices.com>`;
                     const subject = "Confirm your registration";
                     const body = `
                       <p>
@@ -271,7 +271,9 @@ exports.POST = (req, res) => {
                         });
                       })
                       .catch((error) => {
-                        console.log(require("util").inspect(error, 7, true, 7));
+                        console.log(
+                          require("util").inspect(error, true, 7, true)
+                        );
                         return res.status(500).send({
                           msg: "confirmation e-mail could not be sent",
                           msgType: "error",
