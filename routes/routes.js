@@ -15,4 +15,7 @@ router.post("/reset-password", resetPassword.POST);
 const register = require("./controllers/register");
 router.post("/register", register.POST);
 
+const registerConfirm = require("./controllers/register-confirm");
+router.post("/register-confirm", registerConfirm.POST);
+
 module.exports = router;
