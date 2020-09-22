@@ -6,9 +6,15 @@ function onSubmit(e) {
   const password = e.target.inputPassword.value.trim();
 
   if (username === "")
-    return showError("Please input your username.", "Form Incomplete");
+    return showError(
+      "<div class='text-center'>Please input your username.</div>",
+      "Form Incomplete"
+    );
   if (password === "")
-    return showError("Please input your password.", "Form Incomplete");
+    return showError(
+      "<div class='text-center'>Please input your password.</div>",
+      "Form Incomplete"
+    );
 
   showSpinner(elementToToggle, spinnerElement);
   hideAlertMessage();
