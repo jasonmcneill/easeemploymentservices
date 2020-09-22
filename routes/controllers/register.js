@@ -268,6 +268,7 @@ exports.POST = (req, res) => {
                         return res.status(result[0].statusCode || 200).send({
                           msg: "confirmation e-mail sent",
                           msgType: "success",
+                          result: result,
                         });
                       })
                       .catch((error) => {
@@ -277,6 +278,7 @@ exports.POST = (req, res) => {
                         return res.status(500).send({
                           msg: "confirmation e-mail could not be sent",
                           msgType: "error",
+                          error: error,
                         });
                       });
                   }
