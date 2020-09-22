@@ -4,6 +4,12 @@ function onSubmit(e) {
   const spinnerElement = document.querySelector(".spinner");
   const username = e.target.inputUsername.value.trim().toLowerCase();
   const password = e.target.inputPassword.value.trim();
+
+  if (username === "")
+    return showError("Please input your username.", "Form Incomplete");
+  if (password === "")
+    return showError("Please input your password.", "Form Incomplete");
+
   showSpinner(elementToToggle, spinnerElement);
   hideAlertMessage();
   fetch("../login", {
