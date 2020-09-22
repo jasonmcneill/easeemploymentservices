@@ -34,6 +34,13 @@ function onSubmit(e) {
             "System is down"
           );
           break;
+        case "employee status is not registered":
+          hideSpinner(elementToToggle, spinnerElement);
+          showError(
+            "It appears that you either haven't completed registration, or your registration status was changed.  If you recently registered, you should have received an e-mail with a special link that you must click on in order to complete your registration.",
+            "Not Registered"
+          );
+          break;
         case "invalid login":
           hideSpinner(elementToToggle, spinnerElement);
           showError(
