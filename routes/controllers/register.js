@@ -54,11 +54,11 @@ exports.POST = (req, res) => {
 
     if (eligibilityResult.length === 0) {
       defaultUsers.users.sysadmins.forEach((user) => {
-        if (user.email === email) isEligibleToRegister = true;
+        if (user.email == email) isEligibleToRegister = true;
       });
 
       defaultUsers.users.directors.forEach((user) => {
-        if (user.email === email) isEligibleToRegister = true;
+        if (user.email == email) isEligibleToRegister = true;
       });
 
       if (!isEligibleToRegister) {
@@ -135,10 +135,10 @@ exports.POST = (req, res) => {
         // Determine user type
         let usertype = "regular";
         defaultUsers.users.sysadmins.forEach((item) => {
-          if (item.email === email) role = "sysadmin";
+          if (item.email == email) role = "sysadmin";
         });
         defaultUsers.users.directors.forEach((item) => {
-          if (item.email === email) role = "director";
+          if (item.email == email) role = "director";
         });
 
         const bcrypt = require("bcrypt");
