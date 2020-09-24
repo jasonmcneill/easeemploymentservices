@@ -18,4 +18,8 @@ router.post("/register", register.POST);
 const registerConfirm = require("./controllers/register-confirm");
 router.post("/register-confirm", registerConfirm.POST);
 
+const employees = require("./controllers/employees");
+router.get("/api/employee/employees-list", employees.LIST);
+router.get("/api/employee/:id", employees.EMPLOYEE);
+
 module.exports = router;
