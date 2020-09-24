@@ -58,6 +58,13 @@ function hideAlertMessage() {
   messageElement.classList.add("d-none");
 }
 
+function protectRoute() {
+  const refreshToken = localStorage.getItem("refreshToken") || "";
+  if (!refreshToken.length) {
+    window.location.href = "/login/";
+  }
+}
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("/sw.js");
