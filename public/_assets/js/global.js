@@ -65,8 +65,64 @@ function protectRoute() {
   }
 }
 
-if ("serviceWorker" in navigator) {
+function getAccessToken() {
+  let needToRefresh = false;
+  const accessToken = sessionStorage.getItem("accessToken") || "";
+  try {
+    const now = Date.now().valueOf() / 1000;
+    const expiry = JSON.parse(atob(accessToken.split(".")[1])).exp || now;
+    if (expiry < now) {
+      console.log("Access token is expired. Refreshing access token...");
+      needToRefresh = true;
+    }
+  } catch (error) {
+    console.error(error);
+    needToRefresh = true;
+  }
+  return new Promise((resolve, reject) => {
+    if (!needToRefresh) {
+      console.log(`Access token OK: ${accessToken}`);
+      return resolve(accessToken);
+    }
+    const refreshToken = localStorage.getItem("refreshToken") || "";
+    if (!refreshToken.length) return reject("refresh token missing");
+
+    const now = Date.now().valueOf() / 1000;
+
+    const endpoint = "/api/refresh-token";
+
+    fetch(endpoint, {
+      mode: "cors",
+      method: "POST",
+      body: JSON.stringify({
+        refreshToken: refreshToken,
+      }),
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        switch (data.msg) {
+          case "tokens renewed":
+            const { accessToken, refreshToken } = data;
+            localStorage.setItem("refreshToken", refreshToken);
+            sessionStorage.setItem("accessToken", accessToken);
+            resolve(accessToken);
+            break;
+          default:
+            window.location.href = "/logout/";
+            break;
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  });
+}
+
+/* if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("/sw.js");
   });
-}
+} */

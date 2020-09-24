@@ -1,10 +1,18 @@
-function listEmployees() {
+async function listEmployees() {
   const spinner = document.querySelector("#spinner");
   const content = document.querySelector("#employeescontainer");
   const endpoint = "/api/employee/employees-list";
+  const accessToken = await getAccessToken();
 
   showSpinner(content, spinner);
-  fetch(endpoint)
+  fetch(endpoint, {
+    method: "GET",
+    mode: "cors",
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
     .then((res) => res.json())
     .then((data) => {
       data.forEach((item) => {
@@ -26,6 +34,7 @@ function listEmployees() {
 }
 
 function init() {
+  protectRoute();
   listEmployees();
 }
 

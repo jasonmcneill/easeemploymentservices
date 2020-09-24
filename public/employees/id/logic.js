@@ -30,6 +30,7 @@ function showEmployee() {
 }
 
 function init() {
+  protectRoute();
   showEmployee();
 }
 

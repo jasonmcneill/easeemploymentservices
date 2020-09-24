@@ -18,8 +18,11 @@ router.post("/register", register.POST);
 const registerConfirm = require("./controllers/register-confirm");
 router.post("/register-confirm", registerConfirm.POST);
 
+const refreshToken = require("./controllers/refresh-token");
+router.post("/api/refresh-token", refreshToken.POST);
+
 const employees = require("./controllers/employees");
-router.get("/api/employee/employees-list", employees.LIST);
-router.get("/api/employee/:id", employees.EMPLOYEE);
+router.get("/api/employee/employees-list", authenticateToken, employees.LIST);
+router.get("/api/employee/:id", authenticateToken, employees.EMPLOYEE);
 
 module.exports = router;

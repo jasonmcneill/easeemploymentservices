@@ -49,7 +49,7 @@ exports.POST = (req, res) => {
           employeeid: employeeid,
         },
         process.env.REFRESH_TOKEN_SECRET,
-        { expiresIn: "180d" }
+        { expiresIn: "30d" }
       );
 
       const accessToken = jsonwebtoken.sign(
