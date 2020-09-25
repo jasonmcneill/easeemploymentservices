@@ -24,13 +24,11 @@ function listEmployees() {
   }
 
   async function getContent() {
-    if (!navigator.onLine) {
-      return showError(
-        "You appear to be offline. Please connect to the internet, then reload the page.",
-        "No Connection"
-      );
-    }
+    const spinner = document.querySelector("#spinner");
+    const content = document.querySelector("#employeelist");
     const accessToken = await getAccessToken();
+
+    showSpinner(content, spinner);
     fetch(endpoint, {
       method: "GET",
       mode: "cors",
@@ -45,6 +43,15 @@ function listEmployees() {
       })
       .catch((error) => {
         console.error(error);
+        if (!navigator.onLine) {
+          return showError(
+            "You appear to be offline. Please connect to the internet, then reload the page.",
+            "No Connection"
+          );
+        }
+      })
+      .finally(() => {
+        hideSpinner(content, spinner);
       });
   }
 

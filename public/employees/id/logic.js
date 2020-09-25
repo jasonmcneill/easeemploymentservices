@@ -23,15 +23,7 @@ function showEmployee() {
   }
 
   async function getContent() {
-    if (!navigator.onLine) {
-      spinner.classList.add("d-none");
-      return showError(
-        "You appear to be offline. Please connect to the internet, then reload the page.",
-        "No Connection"
-      );
-    }
     const accessToken = await getAccessToken();
-    showSpinner(contentEl, spinner);
     fetch(endpoint, {
       mode: "cors",
       method: "GET",
@@ -44,12 +36,21 @@ function showEmployee() {
       .then((data) => {
         localforage.setItem(endpoint, data).then(() => populateContent(data));
       })
-      .catch((error) => console.error(error))
+      .catch((error) => {
+        console.error(error);
+        if (!navigator.onLine) {
+          return showError(
+            "You appear to be offline. Please connect to the internet, then reload the page.",
+            "No Connection"
+          );
+        }
+      })
       .finally(() => {
         hideSpinner(contentEl, spinner);
       });
   }
 
+  showSpinner(contentEl, spinner);
   localforage
     .getItem(endpoint)
     .then((data) => {
@@ -60,7 +61,10 @@ function showEmployee() {
     .then(() => {
       getContent();
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error(error))
+    .finally(() => {
+      hideSpinner(contentEl, spinner);
+    });
 }
 
 function init() {
