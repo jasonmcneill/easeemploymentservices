@@ -18,7 +18,26 @@ exports.LIST = (req, res) => {
 
 exports.EMPLOYEE = (req, res) => {
   const employeeid = req.params.id;
-  const sql = "SELECT * FROM employees WHERE employeeid = ?;";
+  const sql = `
+    SELECT
+      employeeid,
+      email,
+      email_personal,
+      phone,
+      smsphone,
+      firstname,
+      lastname,
+      type,
+      status,
+      username,
+      passwordmustchange,
+      dateEmploymentBegan,
+      dateEmploymentEnded,
+      createdAt,
+      updatedAt
+    FROM employees
+    WHERE employeeid = ?;
+  `;
 
   db.query(sql, [employeeid], (err, result) => {
     if (err) {
