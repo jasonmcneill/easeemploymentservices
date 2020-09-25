@@ -1,9 +1,12 @@
 async function showEmployee() {
+  const spinner = document.querySelector("#spinner");
+  const contentEl = document.querySelector("#employeescontainer");
   const employeeid = document.location.hash.split("")[1] || "";
   if (!employeeid.length) window.location.href = "/employees/";
   const accessToken = await getAccessToken();
-
   const endpoint = `/api/employee/${employeeid}`;
+
+  showSpinner(contentEl, spinner);
   fetch(endpoint, {
     mode: "cors",
     method: "GET",
@@ -28,7 +31,10 @@ async function showEmployee() {
         item.innerHTML = name;
       });
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error(error))
+    .finally(() => {
+      hideSpinner(contentEl, spinner);
+    });
 }
 
 function init() {

@@ -1,6 +1,6 @@
 async function listEmployees() {
   const spinner = document.querySelector("#spinner");
-  const content = document.querySelector("#employeescontainer");
+  const content = document.querySelector("#employeelist");
   const endpoint = "/api/employee/employees-list";
   const accessToken = await getAccessToken();
 
@@ -31,8 +31,12 @@ async function listEmployees() {
         });
       }
     })
-    .catch((error) => console.error(error))
-    .finally(() => hideSpinner(content, spinner));
+    .catch((error) => {
+      console.error(error);
+    })
+    .finally(() => {
+      hideSpinner(content, spinner);
+    });
 }
 
 function init() {
