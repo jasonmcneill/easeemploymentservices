@@ -1,42 +1,58 @@
-async function listEmployees() {
-  const spinner = document.querySelector("#spinner");
-  const content = document.querySelector("#employeelist");
+function listEmployees() {
   const endpoint = "/api/employee/employees-list";
-  const accessToken = await getAccessToken();
 
-  showSpinner(content, spinner);
-  fetch(endpoint, {
-    method: "GET",
-    mode: "cors",
-    headers: new Headers({
-      "Content-Type": "application/json",
-      authorization: `Bearer ${accessToken}`,
-    }),
-  })
-    .then((res) => res.json())
+  function populateContent(data) {
+    if (Array.isArray(data)) {
+      const el = document.querySelector("#employeelist");
+      let employees = document.createElement("div");
+      data.forEach((item) => {
+        const employee = document.createElement("a");
+        const { firstname, lastname } = item;
+        employee.setAttribute(
+          "class",
+          "list-group-item list-group-item-action"
+        );
+        employee.setAttribute("href", `id/#${item.employeeid}`);
+        const content = document.createTextNode(`${firstname} ${lastname}`);
+        employee.appendChild(content);
+        employees.appendChild(employee);
+      });
+      if (el.innerHTML !== employees.innerHTML) {
+        el.innerHTML = employees.innerHTML;
+      }
+    }
+  }
+
+  async function getContent() {
+    const accessToken = await getAccessToken();
+    fetch(endpoint, {
+      method: "GET",
+      mode: "cors",
+      headers: new Headers({
+        "Content-Type": "application/json",
+        authorization: `Bearer ${accessToken}`,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        localforage.setItem(endpoint, data).then(() => populateContent(data));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  localforage
+    .getItem(endpoint)
     .then((data) => {
-      if (Array.isArray(data)) {
-        data.forEach((item) => {
-          const el = document.querySelector("#employeelist");
-          const employee = document.createElement("a");
-          const { firstname, lastname } = item;
-          employee.setAttribute(
-            "class",
-            "list-group-item list-group-item-action"
-          );
-          employee.setAttribute("href", `id/#${item.employeeid}`);
-          const content = document.createTextNode(`${firstname} ${lastname}`);
-          employee.appendChild(content);
-          el.appendChild(employee);
-        });
+      if (data && data.length) {
+        populateContent(data);
       }
     })
-    .catch((error) => {
-      console.error(error);
+    .then(() => {
+      getContent();
     })
-    .finally(() => {
-      hideSpinner(content, spinner);
-    });
+    .catch((error) => console.error(error));
 }
 
 function init() {
