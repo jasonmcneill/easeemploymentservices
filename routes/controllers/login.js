@@ -4,7 +4,7 @@ exports.POST = (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
   const sql =
-    "SELECT employeeid, password, status FROM employees WHERE username = ? LIMIT 1;";
+    "SELECT employeeid, password, status, type FROM employees WHERE username = ? LIMIT 1;";
   db.query(sql, [username], (err, result) => {
     if (err) {
       return res.status(500).send({
@@ -22,6 +22,7 @@ exports.POST = (req, res) => {
     const employeeid = result[0].employeeid;
     const passwordFromDB = result[0].password;
     const status = result[0].status;
+    const type = result[0].type;
 
     if (status !== "registered") {
       return res
@@ -47,6 +48,8 @@ exports.POST = (req, res) => {
       const refreshToken = jsonwebtoken.sign(
         {
           employeeid: employeeid,
+          status: status,
+          type: type,
         },
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: "30d" }
