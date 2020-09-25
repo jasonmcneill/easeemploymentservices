@@ -15,19 +15,21 @@ async function listEmployees() {
   })
     .then((res) => res.json())
     .then((data) => {
-      data.forEach((item) => {
-        const el = document.querySelector("#employeelist");
-        const employee = document.createElement("a");
-        const { firstname, lastname } = item;
-        employee.setAttribute(
-          "class",
-          "list-group-item list-group-item-action"
-        );
-        employee.setAttribute("href", `id/#${item.employeeid}`);
-        const content = document.createTextNode(`${firstname} ${lastname}`);
-        employee.appendChild(content);
-        el.appendChild(employee);
-      });
+      if (Array.isArray(data)) {
+        data.forEach((item) => {
+          const el = document.querySelector("#employeelist");
+          const employee = document.createElement("a");
+          const { firstname, lastname } = item;
+          employee.setAttribute(
+            "class",
+            "list-group-item list-group-item-action"
+          );
+          employee.setAttribute("href", `id/#${item.employeeid}`);
+          const content = document.createTextNode(`${firstname} ${lastname}`);
+          employee.appendChild(content);
+          el.appendChild(employee);
+        });
+      }
     })
     .catch((error) => console.error(error))
     .finally(() => hideSpinner(content, spinner));

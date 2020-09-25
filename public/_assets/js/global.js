@@ -68,26 +68,21 @@ function protectRoute() {
 function getAccessToken() {
   let needToRefresh = false;
   const accessToken = sessionStorage.getItem("accessToken") || "";
+  const now = Date.now().valueOf() / 1000;
+  let expiry = now;
   try {
-    const now = Date.now().valueOf() / 1000;
-    const expiry = JSON.parse(atob(accessToken.split(".")[1])).exp || now;
+    expiry = JSON.parse(atob(accessToken.split(".")[1])).exp;
     if (expiry < now) {
       console.log("Access token is expired. Refreshing access token...");
       needToRefresh = true;
     }
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
     needToRefresh = true;
   }
   return new Promise((resolve, reject) => {
-    if (!needToRefresh) {
-      console.log(`Access token OK: ${accessToken}`);
-      return resolve(accessToken);
-    }
+    if (!needToRefresh) return resolve(accessToken);
     const refreshToken = localStorage.getItem("refreshToken") || "";
     if (!refreshToken.length) return reject("refresh token missing");
-
-    const now = Date.now().valueOf() / 1000;
 
     const endpoint = "/api/refresh-token";
 
@@ -108,12 +103,13 @@ function getAccessToken() {
             const { accessToken, refreshToken } = data;
             localStorage.setItem("refreshToken", refreshToken);
             sessionStorage.setItem("accessToken", accessToken);
-            resolve(accessToken);
+            return resolve(accessToken);
             break;
           default:
             window.location.href = "/logout/";
             break;
         }
+        return;
       })
       .catch((error) => {
         console.error(error);
