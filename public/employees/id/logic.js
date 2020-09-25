@@ -1,6 +1,7 @@
-function showEmployee() {
+async function showEmployee() {
   const employeeid = document.location.hash.split("")[1] || "";
   if (!employeeid.length) window.location.href = "/employees/";
+  const accessToken = await getAccessToken();
 
   const endpoint = `/api/employee/${employeeid}`;
   fetch(endpoint, {
@@ -8,6 +9,7 @@ function showEmployee() {
     method: "GET",
     headers: new Headers({
       "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`,
     }),
   })
     .then((res) => res.json())
