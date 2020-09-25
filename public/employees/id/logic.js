@@ -23,6 +23,13 @@ function showEmployee() {
   }
 
   async function getContent() {
+    if (!navigator.onLine) {
+      spinner.classList.add("d-none");
+      return showError(
+        "You appear to be offline. Please connect to the internet, then reload the page.",
+        "No Connection"
+      );
+    }
     const accessToken = await getAccessToken();
     showSpinner(contentEl, spinner);
     fetch(endpoint, {

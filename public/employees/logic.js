@@ -24,6 +24,12 @@ function listEmployees() {
   }
 
   async function getContent() {
+    if (!navigator.onLine) {
+      return showError(
+        "You appear to be offline. Please connect to the internet, then reload the page.",
+        "No Connection"
+      );
+    }
     const accessToken = await getAccessToken();
     fetch(endpoint, {
       method: "GET",
