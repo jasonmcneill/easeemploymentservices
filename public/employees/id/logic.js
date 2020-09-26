@@ -15,11 +15,18 @@ function showEmployee() {
         "Employee Not Found"
       );
     }
-    const { firstname, lastname } = data[0];
+    console.log(data[0]);
+    const { firstname, lastname, type, status, smsphone, email } = data[0];
     const name = `${firstname} ${lastname}`;
     document.querySelectorAll(".employeeName").forEach((item) => {
       item.innerHTML = name;
     });
+    document.querySelector("[data-type]").innerHTML = type;
+    document.querySelector("[data-status]").innerHTML = status;
+    document.querySelector("[data-smsphone]").innerHTML = smsphone;
+    document.querySelector(
+      "[data-email]"
+    ).innerHTML = `<a href="mailto:${email}">${email}</a>`;
   }
 
   async function getContent() {
