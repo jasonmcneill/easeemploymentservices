@@ -21,12 +21,10 @@ function showEmployee() {
     document.querySelectorAll(".employeeName").forEach((item) => {
       item.innerHTML = name;
     });
-    document.querySelector("[data-type]").innerHTML = type;
-    document.querySelector("[data-status]").innerHTML = status;
-    document.querySelector("[data-smsphone]").innerHTML = smsphone;
-    document.querySelector(
-      "[data-email]"
-    ).innerHTML = `<a href="mailto:${email}">${email}</a>`;
+    render(type, "type");
+    render(status, "status");
+    render(smsphone, "smsphone");
+    render(`<a href="mailto:${email}">${email}</a>`, "email");
   }
 
   async function getContent() {
