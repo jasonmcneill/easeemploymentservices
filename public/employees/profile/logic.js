@@ -102,7 +102,6 @@ function showEmployee() {
     })
     .catch((error) => {
       console.error(error);
-      window.location.href = "/logout/";
     })
     .finally(() => {
       hideSpinner(contentEl, spinner);

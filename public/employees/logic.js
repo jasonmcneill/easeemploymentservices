@@ -69,7 +69,6 @@ function listEmployees() {
     })
     .catch((error) => {
       console.error(error);
-      window.location.href = "/logout/";
     })
     .finally(() => {
       hideSpinner(content, spinner);
