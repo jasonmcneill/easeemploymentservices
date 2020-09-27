@@ -71,9 +71,11 @@ async function populateContent() {
       document.querySelector("#passwordmustchange").checked =
         passwordmustchange == 1 ? true : false;
 
-      document.querySelector("[data-startdate]").value = startdate || "";
+      document.querySelector("[data-startdate]").value =
+        moment(startdate).format("YYYY-MM-DD") || "";
 
-      document.querySelector("[data-enddate]").value = enddate || "";
+      document.querySelector("[data-enddate]").value =
+        moment(enddate).format("YYYY-MM-DD") || "";
     })
     .catch((error) => console.error(error));
 }
