@@ -69,9 +69,9 @@ exports.UPDATE = (req, res) => {
   const passwordmustchange = req.body.passwordmustchange == 1 ? 1 : 0;
   const email = req.body.email || "";
   const email_personal = req.body.email_personal || "";
-  const smsphone = req.body.smsphone || "";
+  let smsphone = req.body.smsphone || "";
   const smsphonecountry = req.body.smsphonecountry || "";
-  const phone = req.body.phone || "";
+  let phone = req.body.phone || "";
   let startdate = req.body.startdate || null;
   let enddate = req.body.enddate || null;
 
@@ -140,6 +140,14 @@ exports.UPDATE = (req, res) => {
 
   if (validatedPhone && !validatedPhone.isPossibleNumber)
     return res.status(400).send({ msg: "invalid phone", msgType: "error" });
+
+  smsphone = validatedSmsPhone.nationalFormat.length
+    ? validatedSmsPhone.nationalFormat
+    : "";
+
+  phone = validatedPhone.nationalFormat.length
+    ? validatedPhone.nationalFormat
+    : "";
 
   startdate =
     typeof startdate === "string" && startdate.length
