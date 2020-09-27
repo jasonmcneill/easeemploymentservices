@@ -66,7 +66,7 @@ exports.UPDATE = (req, res) => {
   const type = req.body.type || "";
   const status = req.body.status || "";
   const username = req.body.username || "";
-  const passwordmustchange = req.body.passwordmustchange === "1" ? 1 : 0;
+  const passwordmustchange = req.body.passwordmustchange == 1 ? 1 : 0;
   const email = req.body.email || "";
   const email_personal = req.body.email_personal || "";
   const smsphone = req.body.smsphone || "";
