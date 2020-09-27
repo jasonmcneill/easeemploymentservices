@@ -37,7 +37,7 @@ function showEmployee() {
       phone,
       `
         ${phone}
-        <p>
+        <p class="mt-2 mb-0">
           <a href="tel:${phoneNums}">Call</a>
         </p>
       `
