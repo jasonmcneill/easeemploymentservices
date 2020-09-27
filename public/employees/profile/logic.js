@@ -32,7 +32,16 @@ function showEmployee() {
       item.innerHTML = name;
     });
     render("type", type, `${type}`);
-    render("phone", phone, `<a href="tel:${phoneNums}">${phone}</a>`);
+    render(
+      "phone",
+      phone,
+      `
+        ${phone}
+        <p>
+          <a href="tel:${phoneNums}">Call</a>
+        </p>
+      `
+    );
     render(
       "smsphone",
       smsphone,
