@@ -65,7 +65,10 @@ function listEmployees() {
     .then(() => {
       getContent();
     })
-    .catch((error) => console.error(error));
+    .catch((error) => {
+      console.error(error);
+      window.location.href = "/logout/";
+    });
 }
 
 function init() {

@@ -77,7 +77,10 @@ async function populateContent() {
       document.querySelector("[data-enddate]").value =
         moment(enddate).format("YYYY-MM-DD") || "";
     })
-    .catch((error) => console.error(error));
+    .catch((error) => {
+      console.error(error);
+      window.location.href = "/logout/";
+    });
 }
 
 function attachListeners() {
@@ -185,10 +188,7 @@ async function onSubmit(e) {
     .then((data) => {
       switch (data.msg) {
         default:
-          showSuccess(
-            "<div class='text-center'>Changes have been saved.</div>",
-            "Update Successful"
-          );
+          window.location.href = `../#${employeeid}`;
           break;
       }
     });
