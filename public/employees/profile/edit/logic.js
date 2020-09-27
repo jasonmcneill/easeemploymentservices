@@ -72,10 +72,10 @@ async function populateContent() {
         passwordmustchange == 1 ? true : false;
 
       document.querySelector("[data-startdate]").value =
-        moment(startdate).format("YYYY-MM-DD") || "";
+        moment(startdate.substring(0, 10)).format("YYYY-MM-DD") || "";
 
       document.querySelector("[data-enddate]").value =
-        moment(enddate).format("YYYY-MM-DD") || "";
+        moment(enddate.substring(0, 10)).format("YYYY-MM-DD") || "";
     })
     .catch((error) => {
       console.error(error);
