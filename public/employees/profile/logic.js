@@ -39,7 +39,7 @@ function showEmployee() {
       `
         ${smsphone}
         <p class="mt-2 mb-0">
-          <a href="sms:${smsphoneNums}">Call</a> <span class="mx-3">|</span> <a href="sms:${smsphoneNums}">Text</a>
+          <a href="tel:${smsphoneNums}">Call</a> <span class="mx-3">|</span> <a href="sms:${smsphoneNums}">Text</a>
         </p>
       `
     );
