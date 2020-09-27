@@ -60,6 +60,8 @@ function listEmployees() {
     .then((data) => {
       if (data && data.length) {
         populateContent(data);
+      } else {
+        showSpinner(content, spinner);
       }
     })
     .then(() => {
@@ -68,6 +70,9 @@ function listEmployees() {
     .catch((error) => {
       console.error(error);
       window.location.href = "/logout/";
+    })
+    .finally(() => {
+      hideSpinner(content, spinner);
     });
 }
 
