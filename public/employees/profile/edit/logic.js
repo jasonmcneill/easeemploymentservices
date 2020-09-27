@@ -39,6 +39,8 @@ async function populateContent() {
         enddate,
       } = data[0];
       const name = `${firstname} ${lastname}`;
+      const startDateTruncated = startdate.substring(0, 10) || "";
+      const endDateTruncated = enddate.substring(0, 10) || "";
 
       // Populate areas of page requiring the employee's full name
       document.querySelectorAll(".employeeName").forEach((item) => {
@@ -72,14 +74,13 @@ async function populateContent() {
         passwordmustchange == 1 ? true : false;
 
       document.querySelector("[data-startdate]").value =
-        moment(startdate.substring(0, 10)).format("YYYY-MM-DD") || "";
+        moment(startDateTruncated).format("YYYY-MM-DD") || "";
 
       document.querySelector("[data-enddate]").value =
-        moment(enddate.substring(0, 10)).format("YYYY-MM-DD") || "";
+        moment(endDateTruncated).format("YYYY-MM-DD") || "";
     })
     .catch((error) => {
       console.error(error);
-      window.location.href = "/logout/";
     });
 }
 
