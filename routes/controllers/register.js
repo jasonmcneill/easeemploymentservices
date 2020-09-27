@@ -169,6 +169,7 @@ exports.POST = (req, res) => {
               INSERT INTO employees(
                 email,
                 smsphone,
+                smsphonecountry,
                 firstname,
                 lastname,
                 type,
@@ -176,7 +177,7 @@ exports.POST = (req, res) => {
                 password,
                 createdAt
               ) VALUES (
-                ?, ?, ?, ?, ?, ?, ?, ?
+                ?, ?, ?, ?, ?, ?, ?, ?, ?
               )
             ;`;
 
@@ -185,6 +186,7 @@ exports.POST = (req, res) => {
               [
                 email,
                 smsphone,
+                smsphonecountry,
                 firstname,
                 lastname,
                 usertype,

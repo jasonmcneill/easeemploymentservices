@@ -12,7 +12,7 @@ function listEmployees() {
           "class",
           "list-group-item list-group-item-action"
         );
-        employee.setAttribute("href", `id/#${item.employeeid}`);
+        employee.setAttribute("href", `profile/#${item.employeeid}`);
         const content = document.createTextNode(`${firstname} ${lastname}`);
         employee.appendChild(content);
         employees.appendChild(employee);

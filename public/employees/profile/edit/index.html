@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+
+    <title>Edit <span class="employeeName"></span></title>
+  </head>
+  <body>
+    <!-- TOP NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand mb-0 h1" href="#">EASE</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/employees/">Employees</a>
+            <span class="sr-only">(current)</span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout/">Sign Out</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/employees/">Employees</a></li>
+        <li class="breadcrumb-item">
+          <a
+            href="javascript:history.go(-1)"
+            class="employeeName"
+            id="employeeProfile"
+          ></a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Edit</li>
+      </ol>
+    </nav>
+
+    <!-- Spinner -->
+    <div class="my-2 text-center d-none" id="spinner">
+      <div class="spinner-border text-light" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="container-fluid" id="employeescontainer">
+      <div class="row">
+        <div class="col col-md-12">
+          <h1 class="h3 my-2 text-center font-weight-normal employeeName"></h1>
+        </div>
+      </div>
+      <!-- Alert -->
+      <div class="row">
+        <div class="col col-md-12">
+          <div id="alertMessage" class="col col-md-4 offset-md-4 d-none">
+            <div
+              data-alert-content
+              class="alert alert-danger"
+              role="alert"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <form id="editemployee" autocomplete="off" novalidate>
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="firstname">
+              <strong>First name:</strong>
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="firstname"
+              maxlength="255"
+              data-firstname
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="lastname">
+              <strong>Last name:</strong>
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="lastname"
+              maxlength="255"
+              data-lastname
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="type">
+              <strong>Role:</strong>
+            </label>
+            <select class="form-control" id="type" data-type>
+              <option value="">(Select)</option>
+              <option value="regular">regular</option>
+              <option value="director">director</option>
+              <option value="sysadmin">sysadmin</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="status">
+              <strong>Status:</strong>
+            </label>
+            <select class="form-control" id="status" data-status>
+              <option value="">(Select)</option>
+              <option value="registered">registered</option>
+              <option value="pending">pending registration</option>
+              <option value="frozen">frozen</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="username">
+              <strong>Username:</strong>
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              maxlength="255"
+              data-username
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="passwordmustchange">
+              <strong>Password:</strong>
+            </label>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="1"
+                id="passwordmustchange"
+              />
+              <label class="form-check-label" for="passwordmustchange">
+                Must be changed on next login
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="email">
+              <strong>E-mail:</strong>
+            </label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              maxlength="255"
+              data-email
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="email_personal">
+              <strong>Personal e-mail:</strong>
+            </label>
+            <input
+              type="email"
+              class="form-control"
+              id="email_personal"
+              maxlength="255"
+              data-email-personal
+            />
+          </div>
+        </div>
+
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="smsphone">
+              <strong>Mobile phone:</strong>
+            </label>
+            <p>(Must be able to receive text messages)</p>
+            <input
+              type="tel"
+              class="form-control"
+              id="smsphone"
+              maxlength="255"
+              pattern="[0-9]"
+              data-smsphone
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="smsphonecountry">
+              <strong>Country for mobile phone:</strong>
+            </label>
+            <div>
+              <select class="form-control" id="smsphonecountry"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="phone">
+              <strong>Phone:</strong>
+            </label>
+            <input
+              type="tel"
+              class="form-control"
+              id="phone"
+              pattern="[0-9]"
+              maxlength="255"
+              data-phone
+            />
+          </div>
+        </div>
+
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="startdate">
+              <strong>Employment Date:</strong>
+            </label>
+            <input
+              type="date"
+              class="form-control"
+              id="startdate"
+              maxlength="10"
+              data-startdate
+            />
+          </div>
+        </div>
+
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="enddate">
+              <strong>Termination Date:</strong>
+            </label>
+            <p>(Leave blank if not applicable)</p>
+            <input
+              type="date"
+              class="form-control"
+              id="enddate"
+              maxlength="10"
+              data-enddate
+            />
+          </div>
+        </div>
+
+        <div class="row mt-3 mb-5">
+          <div class="col col-md-4 offset-md-4">
+            <button type="submit" class="btn btn-primary btn-block">
+              Update
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.9.0/localforage.min.js"></script>
+    <script type="text/javascript" src="/_assets/js/global.js"></script>
+    <script type="text/javascript" src="./logic.js"></script>
+  </body>
+</html>

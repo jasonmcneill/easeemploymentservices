@@ -72,10 +72,7 @@ function getAccessToken() {
   let expiry = now;
   try {
     expiry = JSON.parse(atob(accessToken.split(".")[1])).exp;
-    if (expiry < now) {
-      console.log("Access token is expired. Refreshing access token...");
-      needToRefresh = true;
-    }
+    if (expiry < now) needToRefresh = true;
   } catch (err) {
     needToRefresh = true;
   }
@@ -103,13 +100,12 @@ function getAccessToken() {
             const { accessToken, refreshToken } = data;
             localStorage.setItem("refreshToken", refreshToken);
             sessionStorage.setItem("accessToken", accessToken);
-            return resolve(accessToken);
+            resolve(accessToken);
             break;
           default:
             window.location.href = "/logout/";
             break;
         }
-        return;
       })
       .catch((error) => {
         console.error(error);
@@ -117,13 +113,24 @@ function getAccessToken() {
   });
 }
 
-function render(what, where) {
+/*
+  RENDER
+  Arguments (all required):
+   - where:  a value that helps to select the DOM node. Gets concatenated to "[data-]", e.g. if value is "firstname" then DOM selector will be "[data-firstname]")
+   - what:  the bare value to be rendered
+   - how:  the HTML-decorated value
+*/
+function render(where, what, how) {
   const el = document.querySelector(`[data-${where}]`);
-  el.innerHTML = what;
+  if (typeof what !== "string") {
+    el.parentElement.classList.add("d-none");
+    return;
+  }
+  el.innerHTML = how;
 }
 
-if ("serviceWorker" in navigator) {
+/* if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("/sw.js");
   });
-}
+} */

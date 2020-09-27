@@ -15,16 +15,41 @@ function showEmployee() {
         "Employee Not Found"
       );
     }
-    console.log(data[0]);
-    const { firstname, lastname, type, status, smsphone, email } = data[0];
+    const {
+      firstname,
+      lastname,
+      type,
+      status,
+      phone,
+      smsphone,
+      email,
+      email_personal,
+    } = data[0];
+    const phoneNums = new String(phone).replace(/\D/g, "");
+    const smsphoneNums = new String(smsphone).replace(/\D/g, "");
     const name = `${firstname} ${lastname}`;
     document.querySelectorAll(".employeeName").forEach((item) => {
       item.innerHTML = name;
     });
-    render(type, "type");
-    render(status, "status");
-    render(smsphone, "smsphone");
-    render(`<a href="mailto:${email}">${email}</a>`, "email");
+    render("type", type, `${type}`);
+    render("phone", phone, `<a href="tel:${phoneNums}">${phone}</a>`);
+    render(
+      "smsphone",
+      smsphone,
+      `
+        ${smsphone}
+        <p class="mt-2 mb-0">
+          <a href="sms:${smsphoneNums}">Call</a> <span class="mx-3">|</span> <a href="sms:${smsphoneNums}">Text</a>
+        </p>
+      `
+    );
+    render("email", email, `<a href="mailto:${email}">${email}</a>`);
+    render(
+      "email-personal",
+      email_personal,
+      `<a href="mailto:${email_personal}">${email_personal}</a>`
+    );
+    render("status", status, `${status}`);
   }
 
   async function getContent() {
@@ -72,9 +97,20 @@ function showEmployee() {
     });
 }
 
+function attachListeners() {
+  const employeeid = document.location.hash.split("")[1] || "";
+
+  // Edit button
+  document.querySelector("#btnEdit").addEventListener("click", () => {
+    const destination = `edit/#${employeeid}`;
+    location.href = destination;
+  });
+}
+
 function init() {
   protectRoute();
   showEmployee();
+  attachListeners();
 }
 
 init();
