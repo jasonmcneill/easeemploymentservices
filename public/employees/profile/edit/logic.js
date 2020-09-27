@@ -39,8 +39,10 @@ async function populateContent() {
         enddate,
       } = data[0];
       const name = `${firstname} ${lastname}`;
-      const startDateTruncated = startdate.substring(0, 10) || "";
-      const endDateTruncated = enddate.substring(0, 10) || "";
+      const startDateTruncated = startdate.length
+        ? startdate.substring(0, 10)
+        : "";
+      const endDateTruncated = enddate.length ? enddate.substring(0, 10) : "";
 
       // Populate areas of page requiring the employee's full name
       document.querySelectorAll(".employeeName").forEach((item) => {
