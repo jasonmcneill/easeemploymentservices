@@ -16,3 +16,9 @@
   -ms-hyphens: none;
   -webkit-hyphens: none;
 }
+
+.emailAddress,
+.emailAddress a {
+  font-size: small;
+  text-overflow: ellipsis;
+}
