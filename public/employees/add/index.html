@@ -59,11 +59,8 @@
       </ol>
     </nav>
 
-    <!-- Spinner -->
-    <div class="spinner text-center d-none" id="spinner"></div>
-
     <!-- Content -->
-    <div class="container-fluid" id="employeescontainer">
+    <div class="container-fluid">
       <div class="row">
         <div class="col col-md-12">
           <h1 class="h3 my-2 text-center font-weight-normal">
@@ -72,7 +69,23 @@
         </div>
       </div>
 
-      <form novalidate autocomplete="off">
+      <!-- Alert -->
+      <div class="row">
+        <div class="col col-md-12">
+          <div id="alertMessage" class="col col-md-4 offset-md-4 d-none">
+            <div
+              data-alert-content
+              class="alert alert-danger"
+              role="alert"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Spinner -->
+      <div class="spinner text-center d-none" id="spinner"></div>
+
+      <form novalidate autocomplete="off" id="addemployeeform">
         <div class="form-row my-3">
           <div class="form-group col col-md-4 offset-md-4">
             <label for="firstname"><strong>First name:</strong></label>
