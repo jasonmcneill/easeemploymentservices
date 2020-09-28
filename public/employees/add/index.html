@@ -71,6 +71,88 @@
           </h1>
         </div>
       </div>
+
+      <form novalidate autocomplete="off">
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="firstname"><strong>First name:</strong></label>
+            <input type="text" class="form-control" id="firstname" />
+          </div>
+        </div>
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="lastname"><strong>Last name:</strong></label>
+            <input type="text" class="form-control" id="lastname" />
+          </div>
+        </div>
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="email"><strong>E-mail:</strong></label>
+            <input type="email" class="form-control" id="email" />
+          </div>
+        </div>
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="type"><strong>Role:</strong></label>
+            <select class="form-control" id="type">
+              <option value="">(Select)</option>
+              <option value="regular">regular employee</option>
+              <option value="director">director</option>
+              <option value="sysadmin">sysadmin</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label for="startdate"><strong>Employment date:</strong></label>
+            <input
+              type="date"
+              class="form-control"
+              id="startdate"
+              maxlength="10"
+            />
+          </div>
+        </div>
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <label>
+              <strong> E-mail this employee an invitation to register? </strong>
+            </label>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="notifyemployee"
+                id="notifyEmployeeYes"
+                value="yes"
+                checked
+              />
+              <label class="form-check-label" for="notifyEmployeeYes">
+                Yes
+              </label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="notifyemployee"
+                id="notifyEmployeeNo"
+                value="no"
+              />
+              <label class="form-check-label" for="notifyEmployeeNo">
+                No
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="form-row my-3">
+          <div class="form-group col col-md-4 offset-md-4">
+            <button type="submit" class="btn btn-primary btn-block">
+              Submit
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
 
     <script
