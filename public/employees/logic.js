@@ -55,6 +55,8 @@ function listEmployees() {
       });
   }
 
+  const spinner = document.querySelector("#spinner");
+  const content = document.querySelector("#employeelist");
   localforage
     .getItem(endpoint)
     .then((data) => {
