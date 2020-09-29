@@ -27,6 +27,17 @@ function clearAlertMessageContent() {
   messageContent.innerText = "";
 }
 
+function _scrollTo(selector, yOffset = 0) {
+  const x = selector.getBoundingClientRect().x + window.pageXOffset;
+  const y = selector.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+  try {
+    window.scrollTo({ top: y, behavior: "smooth" });
+  } catch (err) {
+    window.scrollTo(x, y);
+  }
+}
+
 function showError(message, headline) {
   const messageElement = document.querySelector("#alertMessage");
   const messageContent = messageElement.querySelector("[data-alert-content]");
@@ -37,7 +48,7 @@ function showError(message, headline) {
     ? `<h5 class="alert-heading text-center">${headline}</h5><p>${message}</p>`
     : `${message}`;
   messageElement.classList.remove("d-none");
-  messageElement.scrollIntoView();
+  _scrollTo(messageElement, -10);
 }
 
 function showSuccess(message, headline) {
@@ -50,7 +61,7 @@ function showSuccess(message, headline) {
     ? `<h5 class="alert-heading text-center">${headline}</h5><p>${message}</p>`
     : `${message}`;
   messageElement.classList.remove("d-none");
-  messageElement.scrollIntoView();
+  _scrollTo(messageElement, -10);
 }
 
 function hideAlertMessage() {
