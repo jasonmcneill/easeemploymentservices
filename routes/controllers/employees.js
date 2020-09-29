@@ -260,13 +260,11 @@ exports.ADD = (req, res) => {
     }
 
     if (result.length)
-      return res
-        .status(406)
-        .send({
-          msg: "email is already in use",
-          msgType: "error",
-          employeeid: result[0].employeeid,
-        });
+      return res.status(406).send({
+        msg: "email is already in use",
+        msgType: "error",
+        employeeid: result[0].employeeid,
+      });
 
     const startdateSql = moment(startdate).format("YYYY-MM-DD");
     const createdAt = moment().format("YYYY-MM-DD HH:mm:ss");
@@ -324,10 +322,10 @@ exports.ADD = (req, res) => {
           </p>
 
           <p>
-            To register, please visit the following Web address and complete the form:
+            To register, please click on the following link and complete the form:
           </p>
 
-          <p style="margin: 30px 0"><strong><big><a href="${registerUrl}" style="text-decoration: underline">Reset my password</a></big></strong></p>
+          <p style="margin: 30px 0"><strong><big><a href="${registerUrl}" style="text-decoration: underline">Register</a></big></strong></p>
           
           <p>E.A.S.E. Employment Services</p>
           <div style="margin: 40px 0 20px 0">
