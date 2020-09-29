@@ -25,5 +25,6 @@ const employees = require("./controllers/employees");
 router.get("/api/employee/employees-list", authenticateToken, employees.LIST);
 router.get("/api/employee/:id", authenticateToken, employees.EMPLOYEE);
 router.post("/api/employee/edit/:id", employees.UPDATE);
+router.post("/api/employee/add/", employees.ADD);
 
 module.exports = router;
