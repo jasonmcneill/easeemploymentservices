@@ -3,7 +3,7 @@ const db = require("../../database");
 
 exports.LIST = (req, res) => {
   const sql =
-    "SELECT employeeid, firstname, lastname FROM employees WHERE status = 'registered' ORDER BY lastname, firstname;";
+    "SELECT employeeid, firstname, lastname, status, type FROM employees ORDER BY lastname, firstname;";
 
   db.query(sql, [], (err, results) => {
     if (err) {
