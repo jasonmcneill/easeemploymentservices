@@ -48,6 +48,7 @@ async function onSubmit(e) {
   })
     .then((res) => res.json())
     .then((data) => {
+      hideSpinner(content, spinner);
       switch (data.msg) {
         case "missing access token":
           window.location.href = "/logout/";
@@ -77,6 +78,7 @@ async function onSubmit(e) {
           );
           break;
         case "password updated":
+          showSpinner(content, spinner);
           showSuccess(
             `
             Your password was changed successfully.  In a moment you will be redirected...
@@ -107,8 +109,8 @@ async function onSubmit(e) {
           break;
       }
     })
-    .catch((error) => console.error(error))
-    .finally(() => {
+    .catch((error) => {
+      console.error(error);
       hideSpinner(content, spinner);
     });
 }
