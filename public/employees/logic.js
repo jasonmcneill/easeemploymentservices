@@ -6,24 +6,26 @@ function listEmployees() {
       const el = document.querySelector("#employeelist");
       let employees = document.createElement("div");
       data.forEach((item) => {
-        const employee = document.createElement("a");
         const { firstname, lastname, status } = item;
+        let employee = "";
 
-        employee.setAttribute(
-          "class",
-          "list-group-item list-group-item-action"
-        );
-        employee.setAttribute("href", `profile/#${item.employeeid}`);
-        const content =
-          status !== "pending"
-            ? document.createTextNode(`${firstname} ${lastname}`)
-            : document.createTextNode(`
-                ${firstname} ${lastname}
-                <span class="badge badge-warning badge-pill ml-2">
-                  unregistered
-                </span>
-              `);
-        employee.appendChild(content);
+        if (status !== "pending") {
+          employee = `
+            <a href="profile/#${item.employeeid}" class="list-group-item list-group-item-action">
+              ${firstname} ${lastname}
+            </a>
+          `;
+        } else {
+          employee = `
+            <a href="profile/#${item.employeeid}" class="list-group-item list-group-item-action">
+              ${firstname} ${lastname}
+              <span class="badge badge-warning badge-pill ml-2">
+                unregistered
+              </span>
+            </a>
+          `;
+        }
+
         employees.appendChild(employee);
       });
       if (el.innerHTML !== employees.innerHTML) {
