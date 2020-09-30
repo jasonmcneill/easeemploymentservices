@@ -17,6 +17,10 @@
   -webkit-hyphens: none;
 }
 
+#alertMessage a {
+  white-space: nowrap;
+}
+
 .emailAddress,
 .emailAddress a {
   font-size: small;
