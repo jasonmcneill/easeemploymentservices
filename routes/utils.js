@@ -6,7 +6,7 @@ exports.authenticateToken = (req, res, next) => {
   if (!token)
     return res
       .status(400)
-      .send({ msg: "Missing access token", msgType: "error" });
+      .send({ msg: "missing access token", msgType: "error" });
 
   jsonwebtoken.verify(
     token,
@@ -15,7 +15,7 @@ exports.authenticateToken = (req, res, next) => {
       if (err)
         return res
           .status(403)
-          .send({ msg: "invalid access token", msgType: "error" });
+          .send({ msg: "invalid access token", msgType: "error", err: err });
       req.user = userdata;
       next();
     }
