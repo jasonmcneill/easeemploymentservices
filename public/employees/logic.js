@@ -26,7 +26,7 @@ function listEmployees() {
           `;
         }
 
-        employees.appendChild(employee);
+        employees.innerHTML += employee;
       });
       if (el.innerHTML !== employees.innerHTML) {
         el.innerHTML = employees.innerHTML;
