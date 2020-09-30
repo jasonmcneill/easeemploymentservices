@@ -14,17 +14,15 @@ function listEmployees() {
           "list-group-item list-group-item-action"
         );
         employee.setAttribute("href", `profile/#${item.employeeid}`);
-        const content = document.createTextNode(`
-          ${firstname} ${lastname}
-          
-          ${
-            status === "pending" && (
-              <span class="badge badge-warning badge-pill ml-2">
-                unregistered
-              </span>
-            )
-          }
-        `);
+        const content =
+          status !== "pending"
+            ? document.createTextNode(`${firstname} ${lastname}`)
+            : document.createTextNode(`
+                ${firstname} ${lastname}
+                <span class="badge badge-warning badge-pill ml-2">
+                  unregistered
+                </span>
+              `);
         employee.appendChild(content);
         employees.appendChild(employee);
       });
