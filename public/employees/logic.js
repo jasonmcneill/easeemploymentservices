@@ -17,9 +17,9 @@ function listEmployees() {
           `;
         } else {
           employee = `
-            <a href="profile/#${item.employeeid}" class="list-group-item list-group-item-action">
+            <a href="profile/#${item.employeeid}" class="list-group-item list-group-item-action list-group-item-dark">
               ${firstname} ${lastname}
-              <span class="badge badge-warning badge-pill ml-2">
+              <span class="badge badge-dark badge-pill ml-2">
                 unregistered
               </span>
             </a>
