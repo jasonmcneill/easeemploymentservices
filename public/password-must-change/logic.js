@@ -80,15 +80,7 @@ async function onSubmit(e) {
         case "password updated":
           showSpinner(content, spinner);
           showSuccess(
-            `
-            Your password was changed successfully.  In a moment you will be redirected...
-
-            <div class="my-3 text-center">
-              <div class="spinner-border" role="status">
-                <span class="sr-only">Loading...</span>
-              </div>
-            </div>
-          `,
+            "Your password was changed successfully.  In a moment you will be redirected...",
             "Password Changed"
           );
           setTimeout(() => {
