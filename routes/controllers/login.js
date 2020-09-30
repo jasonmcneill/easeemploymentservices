@@ -4,7 +4,7 @@ exports.POST = (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
   const sql =
-    "SELECT employeeid, password, status, type FROM employees WHERE username = ? LIMIT 1;";
+    "SELECT employeeid, password, status, type, passwordmustchange FROM employees WHERE username = ? LIMIT 1;";
   db.query(sql, [username], (err, result) => {
     if (err) {
       return res.status(500).send({
@@ -23,6 +23,8 @@ exports.POST = (req, res) => {
     const passwordFromDB = result[0].password;
     const status = result[0].status;
     const type = result[0].type;
+    const passwordmustchange =
+      result[0].passwordmustchange === 1 ? true : false;
 
     if (status !== "registered") {
       return res
@@ -48,8 +50,6 @@ exports.POST = (req, res) => {
       const refreshToken = jsonwebtoken.sign(
         {
           employeeid: employeeid,
-          status: status,
-          type: type,
         },
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: "30d" }
@@ -58,6 +58,9 @@ exports.POST = (req, res) => {
       const accessToken = jsonwebtoken.sign(
         {
           employeeid: employeeid,
+          status: status,
+          type: type,
+          passwordmustchange: passwordmustchange == 1 ? true : 0,
         },
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: "10m" }

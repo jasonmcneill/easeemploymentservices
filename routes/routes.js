@@ -12,6 +12,13 @@ router.post("/forgot-password", forgotPassword.POST);
 const resetPassword = require("./controllers/reset-password");
 router.post("/reset-password", resetPassword.POST);
 
+const passwordMustChange = require("./controllers/password-must-change");
+router.post(
+  "/api/password-must-change",
+  authenticateToken,
+  passwordMustChange.POST
+);
+
 const register = require("./controllers/register");
 router.post("/register", register.POST);
 

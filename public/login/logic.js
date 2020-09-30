@@ -63,9 +63,22 @@ function onSubmit(e) {
         case "user authenticated":
           const refreshToken = data.refreshToken;
           const accessToken = data.accessToken;
+          let passwordmustchange = false;
+          try {
+            passwordmustchange = JSON.parse(atob(accessToken.split(".")[1]))
+              .passwordmustchange;
+          } catch (err) {
+            console.error(err);
+          }
+          if (typeof passwordmustchange !== "boolean") {
+            passwordmustchange = false;
+          }
           localStorage.setItem("refreshToken", refreshToken);
           sessionStorage.setItem("accessToken", accessToken);
-          window.location.href = "/";
+
+          window.location.href = passwordmustchange
+            ? "/password-must-change/"
+            : "/";
           break;
         default:
           hideSpinner(elementToToggle, spinnerElement);

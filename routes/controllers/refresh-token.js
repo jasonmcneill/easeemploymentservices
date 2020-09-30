@@ -28,7 +28,7 @@ exports.POST = (req, res) => {
 
       const employeeid = userdata.employeeid;
       const sql =
-        "SELECT employeeid, type FROM employees WHERE employeeid = ?;";
+        "SELECT employeeid, status, type, passwordmustchange FROM employees WHERE employeeid = ?;";
       db.query(sql, [employeeid], (err, result) => {
         if (err) {
           console.log(err);
@@ -42,6 +42,11 @@ exports.POST = (req, res) => {
             .status(404)
             .send({ msg: "employee not found", msgType: "error" });
 
+        const status = result[0].status;
+        const type = result[0].type;
+        const passwordmustchange =
+          result[0].passwordmustchange === 1 ? true : false;
+
         const refreshToken = jsonwebtoken.sign(
           {
             employeeid: employeeid,
@@ -53,6 +58,9 @@ exports.POST = (req, res) => {
         const accessToken = jsonwebtoken.sign(
           {
             employeeid: employeeid,
+            status: status,
+            type: type,
+            passwordmustchange: passwordmustchange,
           },
           process.env.ACCESS_TOKEN_SECRET,
           { expiresIn: "10m" }
