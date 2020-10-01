@@ -28,10 +28,20 @@ router.post("/register-confirm", registerConfirm.POST);
 const refreshToken = require("./controllers/refresh-token");
 router.post("/api/refresh-token", refreshToken.POST);
 
-const employees = require("./controllers/employees");
-router.get("/api/employee/employees-list", authenticateToken, employees.LIST);
-router.get("/api/employee/:id", authenticateToken, employees.EMPLOYEE);
-router.post("/api/employee/edit/:id", employees.UPDATE);
-router.post("/api/employee/add/", employees.ADD);
+const employees_list = require("./controllers/employees_list");
+router.get(
+  "/api/employee/employees-list",
+  authenticateToken,
+  employees_list.GET
+);
+
+const employee_view = require("./controllers/employee_view");
+router.get("/api/employee/:id", authenticateToken, employee_view.GET);
+
+const employee_edit = require("./controllers/employee_edit");
+router.post("/api/employee/edit/:id", employee_edit.POST);
+
+const employee_add = require("./controllers/employee_add");
+router.post("/api/employee/add/", employee_add.POST);
 
 module.exports = router;
