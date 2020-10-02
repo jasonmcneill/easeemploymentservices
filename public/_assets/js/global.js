@@ -242,6 +242,7 @@ function showToasts() {
         </div>
       `;
     });
+  toastsHtml = `<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center" style="height: 200px;">${toastsHtml}</div>`;
 
   // Inject toasts as first child of <body>
   const toastContainer = document.querySelector("#toasts");
