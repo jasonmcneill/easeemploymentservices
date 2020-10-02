@@ -122,6 +122,7 @@ function init() {
   protectRoute();
   showEmployee();
   attachListeners();
+  showToasts();
 }
 
 init();

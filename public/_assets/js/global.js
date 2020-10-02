@@ -140,6 +140,126 @@ function render(where, what, how) {
   el.innerHTML = how;
 }
 
+function addToast(
+  text = "",
+  headline = "EASE",
+  type = "",
+  delay = "5000",
+  autohide = "true"
+) {
+  const toasts = JSON.parse(sessionStorage.getItem("toasts")) || [];
+
+  toasts.push({
+    text: text,
+    headline: headline,
+    type: type,
+    delay: delay,
+    autohide: autohide,
+  });
+
+  sessionStorage.setItem("toasts", JSON.stringify(toasts));
+}
+
+function showToasts() {
+  // Get and clear toasts from sessionStorage
+  const toasts = JSON.parse(sessionStorage.getItem("toasts")) || [];
+  sessionStorage.removeItem("toasts");
+
+  // Return if there are no toasts
+  if (!toasts.length) return;
+
+  // Hide spinners
+  document.querySelectorAll(".spinner-border", (item) =>
+    item.parent.classList.add("d-none")
+  );
+
+  // Build toasts
+  let toastHtml = "";
+  toasts.length &&
+    toasts.forEach((item) => {
+      let headerBg = "";
+      let headerText = "";
+      switch (item.type) {
+        case "primary":
+          headerBg = "primary";
+          headerText = "light";
+          break;
+        case "secondary":
+          headerBg = "secondary";
+          headerText = "light";
+          break;
+        case "success":
+          headerBg = "success";
+          headerText = "light";
+          break;
+        case "danger":
+          headerBg = "danger";
+          headerText = "white";
+          break;
+        case "warning":
+          headerBg = "warning";
+          headerText = "dark";
+          break;
+        case "info":
+          headerBg = "info";
+          headerText = "white";
+          break;
+        case "light":
+          headerBg = "light";
+          headerText = "dark";
+          break;
+        case "dark":
+          headerBg = "dark";
+          headerText = "white";
+          break;
+        case "white":
+          headerBg = "white";
+          headerText = "dark";
+          break;
+        case "transparent":
+          headerBg = "transparent";
+          headerText = "dark";
+          break;
+        default:
+          headerBg = "secondary";
+          headerText = "light";
+          break;
+      }
+      toastHtml += `
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="${item.delay}" data-autohide="${item.autohide}">
+          <div class="toast-header bg-${headerBg}">
+            <strong class="mr-auto text-${headerText}">
+              ${item.headline}
+            </strong>
+            <small class="text-${headerText}">just now</small>
+            <button type="button" class="ml-2 mb-1 close text-${headerText}" data-dismiss="toast" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="toast-body">
+            ${item.text}
+          </div>
+        </div>
+      `;
+    });
+
+  // Inject toasts as first child of <body>
+  const toastContainer = document.querySelector("#toasts");
+  toastContainer.innerHTML = toastHtml;
+  $(".toast").toast("show");
+}
+
+function showToast(
+  text = "",
+  headline = "EASE",
+  type = "primary",
+  delay = "5000",
+  autohide = "true"
+) {
+  addToast(text, headline, type, delay, autohide);
+  showToasts();
+}
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("/sw.js");

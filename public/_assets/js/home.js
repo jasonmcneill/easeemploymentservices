@@ -4,7 +4,8 @@ function showParticipantsChart() {
 
 function init() {
   protectRoute();
-  showParticipantsChart();
+  // showParticipantsChart();
+  showToasts();
 }
 
 init();

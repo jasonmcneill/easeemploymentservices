@@ -91,6 +91,7 @@ function listEmployees() {
 function init() {
   protectRoute();
   listEmployees();
+  showToasts();
 }
 
 init();

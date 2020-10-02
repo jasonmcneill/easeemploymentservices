@@ -191,6 +191,7 @@ function attachListeners() {
 function init() {
   protectRoute();
   attachListeners();
+  showToasts();
 }
 
 init();
