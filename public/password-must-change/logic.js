@@ -117,6 +117,7 @@ function init() {
   protectRoute();
   confirmMustChange();
   attachListeners();
+  showToasts();
 }
 
 init();
