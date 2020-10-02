@@ -39,9 +39,12 @@ const employee_view = require("./controllers/employee_view");
 router.get("/api/employee/:id", authenticateToken, employee_view.GET);
 
 const employee_edit = require("./controllers/employee_edit");
-router.post("/api/employee/edit/:id", employee_edit.POST);
+router.post("/api/employee/edit/:id", authenticateToken, employee_edit.POST);
 
 const employee_add = require("./controllers/employee_add");
-router.post("/api/employee/add/", employee_add.POST);
+router.post("/api/employee/add/", authenticateToken, employee_add.POST);
+
+const employee_delete = require("./controllers/employee_delete");
+router.post("/api/employee/delete", authenticateToken, employee_delete.POST);
 
 module.exports = router;

@@ -8,9 +8,25 @@ function populateBreadcrumbLink() {
 }
 
 async function populateContent() {
-  const employeeid = document.location.hash.split("")[1] || "";
+  const employeeid = parseInt(document.location.hash.split("")[1]) || "";
   const endpoint = `/api/employee/${employeeid}`;
   const accessToken = await getAccessToken();
+  const employeeid_of_requestor = JSON.parse(atob(accessToken.split(".")[1]))
+    .employeeid;
+
+  if (typeof employeeid !== "number") {
+    return showError(
+      "<div class='text-center'>An invalid value for the employee ID is specified in the address bar.</div>",
+      "Invalid Employee ID"
+    );
+  }
+
+  // Hide delete button if user is employee shown
+  if (employeeid === employeeid_of_requestor) {
+    document
+      .querySelector("#btnShowDeleteModal_container")
+      .classList.add("d-none");
+  }
 
   fetch(endpoint, {
     mode: "cors",
@@ -79,19 +95,110 @@ async function populateContent() {
       document.querySelector("#passwordmustchange").checked =
         passwordmustchange == 1 ? true : false;
 
-      document.querySelector("[data-startdate]").value =
-        moment(startDateTruncated).format("YYYY-MM-DD") || "";
+      document.querySelector(
+        "[data-startdate]"
+      ).value = startDateTruncated.length
+        ? moment(startDateTruncated).format("YYYY-MM-DD")
+        : null;
 
-      document.querySelector("[data-enddate]").value =
-        moment(endDateTruncated).format("YYYY-MM-DD") || "";
+      document.querySelector("[data-enddate]").value = endDateTruncated.length
+        ? moment(endDateTruncated).format("YYYY-MM-DD")
+        : null;
     })
     .catch((error) => {
       console.error(error);
     });
 }
 
-function attachListeners() {
-  document.querySelector("#editemployee").addEventListener("submit", onSubmit);
+function onShowDeleteModal(e) {
+  e.preventDefault();
+  $("#modalDeleteEmployee").modal();
+}
+
+async function onConfirmDelete(e) {
+  e.preventDefault();
+  const employeeid = parseInt(document.location.hash.split("")[1]) || "";
+  const endpoint = `/api/employee/delete`;
+  const spinner = document.querySelector("#spinner");
+  const content = document.querySelector("#employeescontainer");
+  const accessToken = await getAccessToken();
+
+  if (typeof employeeid !== "number") {
+    return showError(
+      "<div class='text-center'>An invalid value for the employee ID is specified in the address bar.</div>",
+      "Invalid Employee ID"
+    );
+  }
+
+  $("#modalDeleteEmployee").modal("hide");
+
+  showSpinner(content, spinner);
+  fetch(endpoint, {
+    mode: "cors",
+    method: "POST",
+    body: JSON.stringify({
+      employeeid: employeeid,
+    }),
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      switch (data.msg) {
+        case "invalid employee id":
+          showError(
+            "The employee ID parameter in the address bar is in an invalid format.",
+            "Unable to Delete"
+          );
+          break;
+        case "cannot delete oneself":
+          showError(
+            "<div class='text-center'>You may not delete your own employee record.</div>",
+            "Not Permitted"
+          );
+          break;
+        case "unable to query for employeeid":
+          showError(
+            "There was a technical glitch that prevented this request from being processed.  Please wait a moment then try again.",
+            "Database is Down"
+          );
+          break;
+        case "no record of employeeid":
+          addToast(
+            "There was no employee record to be deleted.",
+            "Employee not Found",
+            "warning"
+          );
+          window.location.href = "/employees/";
+          break;
+        case "no record of employeeid":
+          showError(
+            "There was a technical glitch that prevented this request from being processed.  Please wait a moment then try again.",
+            "Database is Down"
+          );
+          break;
+        case "employee deleted":
+          const employeeName = data.name || "";
+          hideSpinner(content, spinner);
+          addToast(
+            `${employeeName} was successfully deleted.`,
+            "Employee Deleted",
+            "success"
+          );
+          window.location.href = "/employees/";
+        default:
+          showError(
+            "There was a technical glitch that prevented this request from being processed.  Please wait a moment then try again.",
+            "Unable to Delete"
+          );
+          break;
+      }
+    })
+    .finally(() => {
+      hideSpinner(content, spinner);
+    });
 }
 
 async function onSubmit(e) {
@@ -114,7 +221,7 @@ async function onSubmit(e) {
   const startdate = document.querySelector("#startdate").value.trim();
   const enddate = document.querySelector("#enddate").value.trim();
 
-  if (!employeeid) {
+  if (typeof employeeid !== "number") {
     return showError(
       "<div class='text-center'>Employee ID missing in URL</div>",
       "URL Error"
@@ -220,11 +327,24 @@ function populateSmsPhoneCountries() {
     .catch((error) => console.error(error));
 }
 
+function attachListeners() {
+  document.querySelector("#editemployee").addEventListener("submit", onSubmit);
+
+  document
+    .querySelector("#btnShowDeleteModal")
+    .addEventListener("click", onShowDeleteModal);
+
+  document
+    .querySelector("#btnConfirmDelete")
+    .addEventListener("click", onConfirmDelete);
+}
+
 function init() {
   populateBreadcrumbLink();
   populateContent();
   populateSmsPhoneCountries();
   attachListeners();
+  showToasts();
 }
 
 init();
