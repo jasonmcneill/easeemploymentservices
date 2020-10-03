@@ -5,7 +5,7 @@ function showEmployee() {
   if (typeof employeeid !== "number") window.location.href = "/employees/";
   const endpoint = `/api/employee/${employeeid}`;
 
-  function populateContent(data) {
+  async function populateContent(data) {
     if (!data.length) {
       return showError(
         `
@@ -28,6 +28,16 @@ function showEmployee() {
     const phoneNums = new String(phone).replace(/\D/g, "");
     const smsphoneNums = new String(smsphone).replace(/\D/g, "");
     const name = `${firstname} ${lastname}`;
+    const accessToken = await getAccessToken();
+    const employeeid_of_requestor = JSON.parse(atob(accessToken.split(".")[1]));
+
+    // Hide delete button if user is employee shown
+    if (employeeid === employeeid_of_requestor) {
+      document
+        .querySelector("#btnShowDeleteModal_container")
+        .classList.add("d-none");
+    }
+
     document.querySelectorAll(".employeeName").forEach((item) => {
       item.innerHTML = name;
     });
@@ -59,6 +69,9 @@ function showEmployee() {
       `<a href="mailto:${email_personal}">${email_personal}</a>`
     );
     render("status", status, `${status}`);
+    if (status === "pending") {
+      document.querySelector("#btnEdit").setAttribute("disabled", true);
+    }
   }
 
   async function getContent() {
@@ -110,6 +123,97 @@ function showEmployee() {
     });
 }
 
+function onShowDeleteModal(e) {
+  e.preventDefault();
+  $("#modalDeleteEmployee").modal();
+}
+
+async function onConfirmDelete(e) {
+  e.preventDefault();
+  const employeeid = parseInt(document.location.hash.split("#")[1]) || "";
+  const endpoint = `/api/employee/delete`;
+  const spinner = document.querySelector("#spinner");
+  const content = document.querySelector("#employeescontainer");
+  const accessToken = await getAccessToken();
+
+  if (typeof employeeid !== "number") {
+    return showError(
+      "<div class='text-center'>An invalid value for the employee ID is specified in the address bar.</div>",
+      "Invalid Employee ID"
+    );
+  }
+
+  $("#modalDeleteEmployee").modal("hide");
+
+  showSpinner(content, spinner);
+  fetch(endpoint, {
+    mode: "cors",
+    method: "POST",
+    body: JSON.stringify({
+      employeeid: employeeid,
+    }),
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      switch (data.msg) {
+        case "invalid employee id":
+          showError(
+            "The employee ID parameter in the address bar is in an invalid format.",
+            "Unable to Delete"
+          );
+          break;
+        case "cannot delete oneself":
+          showError(
+            "<div class='text-center'>You may not delete your own employee record.</div>",
+            "Not Permitted"
+          );
+          break;
+        case "unable to query for employeeid":
+          showError(
+            "There was a technical glitch that prevented this request from being processed.  Please wait a moment then try again.",
+            "Database is Down"
+          );
+          break;
+        case "no record of employeeid":
+          addToast(
+            "There was no employee record to be deleted.",
+            "Employee not Found",
+            "warning"
+          );
+          window.location.href = "/employees/";
+          break;
+        case "no record of employeeid":
+          showError(
+            "There was a technical glitch that prevented this request from being processed.  Please wait a moment then try again.",
+            "Database is Down"
+          );
+          break;
+        case "employee deleted":
+          const employeeName = data.name || "";
+          hideSpinner(content, spinner);
+          addToast(
+            `${employeeName} was successfully deleted.`,
+            "Employee Deleted",
+            "success"
+          );
+          window.location.href = "/employees/";
+        default:
+          showError(
+            "There was a technical glitch that prevented this request from being processed.  Please wait a moment then try again.",
+            "Unable to Delete"
+          );
+          break;
+      }
+    })
+    .finally(() => {
+      hideSpinner(content, spinner);
+    });
+}
+
 function attachListeners() {
   const employeeid = parseInt(document.location.hash.split("#")[1]) || "";
 
@@ -118,6 +222,15 @@ function attachListeners() {
     const destination = `edit/#${employeeid}`;
     location.href = destination;
   });
+
+  // Delete button and modal
+  document
+    .querySelector("#btnShowDeleteModal")
+    .addEventListener("click", onShowDeleteModal);
+
+  document
+    .querySelector("#btnConfirmDelete")
+    .addEventListener("click", onConfirmDelete);
 }
 
 function init() {
