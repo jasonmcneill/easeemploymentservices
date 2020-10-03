@@ -226,7 +226,7 @@ function showToasts() {
           break;
       }
       toastHtml += `
-        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="${item.delay}" data-autohide="${item.autohide}">
+        <div class="toast bg-white" role="alert" aria-live="assertive" aria-atomic="true" data-delay="${item.delay}" data-autohide="${item.autohide}">
           <div class="toast-header bg-${headerBg}">
             <strong class="mr-auto text-${headerText}">
               ${item.headline}
