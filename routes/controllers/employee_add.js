@@ -10,8 +10,21 @@ exports.POST = (req, res) => {
   const type = req.body.type || "";
   const startdate = req.body.startdate || "";
   const notifyemployee = req.body.notifyemployee === "yes" ? true : false;
-  console.log(`req.user: ${req.user}`);
 
+  // Enforce authorization
+  const usertype = req.user.type;
+  const allowedUsertypes = ["sysadmin", "director"];
+  if (!allowedUsertypes.includes(usertype)) {
+    console.log(`User (employeeid ${req.user.employeeid} is not authorized.`);
+    return res
+      .status(401)
+      .send({
+        msg: "user is not authorized for this action",
+        msgType: "error",
+      });
+  }
+
+  // Validate
   if (!firstname.length)
     return res
       .status(400)
