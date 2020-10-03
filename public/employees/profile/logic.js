@@ -182,7 +182,9 @@ async function onConfirmDelete(e) {
           addToast(
             "There was no employee record to be deleted.",
             "Employee not Found",
-            "warning"
+            "warning",
+            5000,
+            false
           );
           window.location.href = "/employees/";
           break;
@@ -196,9 +198,11 @@ async function onConfirmDelete(e) {
           const employeeName = data.name || "";
           hideSpinner(content, spinner);
           addToast(
-            `${employeeName} was successfully deleted.`,
+            `${employeeName} was deleted successfully.`,
             "Employee Deleted",
-            "success"
+            "success",
+            5000,
+            false
           );
           window.location.href = "/employees/";
           break;
