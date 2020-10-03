@@ -201,11 +201,6 @@ async function onConfirmDelete(e) {
             "success"
           );
           window.location.href = "/employees/";
-        default:
-          showError(
-            "There was a technical glitch that prevented this request from being processed.  Please wait a moment then try again.",
-            "Unable to Delete"
-          );
           break;
       }
     })
