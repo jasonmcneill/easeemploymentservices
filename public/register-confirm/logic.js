@@ -56,7 +56,7 @@ function verifyRegistrationToken() {
           break;
         case "token validated":
           showSuccess(
-            "You have successfully registered.  In a few seconds you will automatically be redirected to <nobr><a href='/login' class='alert-link'>Sign In</a>.</nobr>",
+            "You have registered successfully.  In a few seconds you will automatically be redirected to <nobr><a href='/login' class='alert-link'>Sign In</a>.</nobr>",
             "Registration Complete"
           );
           setTimeout(() => {
