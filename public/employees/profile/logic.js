@@ -201,8 +201,7 @@ async function onConfirmDelete(e) {
             `${employeeName} was deleted successfully.`,
             "Employee Deleted",
             "success",
-            5000,
-            false
+            3500
           );
           window.location.href = "/employees/";
           break;
