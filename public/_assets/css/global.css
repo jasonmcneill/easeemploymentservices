@@ -24,5 +24,14 @@
 
 #toasts {
   position: absolute;
-  top: 40px;
-  right: 20px; }
+  top: 168px;
+  right: 50%;
+  z-index: 100;
+  background-color: white; }
+
+#toasts .toast[role="alert"] {
+  position: relative;
+  right: -50%;
+  box-shadow: 5px 5px 5px 2px #aaa;
+  width: 350px;
+  min-height: 95px; }

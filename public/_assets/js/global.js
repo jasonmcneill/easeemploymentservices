@@ -236,7 +236,7 @@ function showToasts() {
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="toast-body text-white">
+          <div class="toast-body bg-white">
             ${item.text}
           </div>
         </div>
@@ -268,8 +268,8 @@ function showToast(
   showToasts();
 }
 
-if ("serviceWorker" in navigator) {
+/* if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("/sw.js");
   });
-}
+} */
