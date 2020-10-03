@@ -6,7 +6,6 @@ exports.POST = (req, res) => {
   const firstname = req.body.firstname || "";
   const lastname = req.body.lastname || "";
   const type = req.body.type || "";
-  const status = req.body.status || "";
   const username = req.body.username || "";
   const passwordmustchange = req.body.passwordmustchange == 1 ? 1 : 0;
   const email = req.body.email || "";
@@ -43,11 +42,6 @@ exports.POST = (req, res) => {
       .status(400)
       .send({ msg: "invalid employee type", msgType: "error" });
 
-  if (!["pending", "registered", "frozen"].includes(status))
-    return res
-      .status(400)
-      .send({ msg: "invalid employee status", msgType: "error" });
-
   if (!username.length)
     return res.status(400).send({ msg: "username missing", msgType: "error" });
 
@@ -68,28 +62,38 @@ exports.POST = (req, res) => {
       .send({ msg: "smsphonecountry missing", msgType: "error" });
 
   if (validatedSmsPhone && !validatedSmsPhone.isPossibleNumber)
-    return res.status(400).send({ msg: "invalid smsphone", msgType: "error" });
+    return res.status(400).send({
+      msg: "invalid smsphone",
+      msgType: "error",
+      validatedSmsPhone: validatedSmsPhone,
+    });
 
   if (validatedSmsPhone && !validatedSmsPhone.isValidForRegion)
-    return res
-      .status(400)
-      .send({ msg: "invalid smsphone for selected country", msgType: "error" });
+    return res.status(400).send({
+      msg: "invalid smsphone for selected country",
+      msgType: "error",
+      validatedSmsPhone: validatedSmsPhone,
+    });
 
   if (validatedSmsPhone && !validatedSmsPhone.isValidSmsType)
-    return res
-      .status(400)
-      .send({ msg: "smsphone is not compatible with sms", msgType: "error" });
+    return res.status(400).send({
+      msg: "smsphone is not compatible with sms",
+      msgType: "error",
+      validatedSmsPhone: validatedSmsPhone,
+    });
 
   if (validatedPhone && !validatedPhone.isPossibleNumber)
-    return res.status(400).send({ msg: "invalid phone", msgType: "error" });
+    return res.status(400).send({
+      msg: "invalid phone",
+      msgType: "error",
+      validatedSmsPhone: validatedSmsPhone,
+    });
 
-  smsphone = validatedSmsPhone.nationalFormat.length
+  smsphone = validatedSmsPhone.nationalFormat
     ? validatedSmsPhone.nationalFormat
     : "";
 
-  phone = validatedPhone.nationalFormat.length
-    ? validatedPhone.nationalFormat
-    : "";
+  phone = validatedPhone.nationalFormat ? validatedPhone.nationalFormat : "";
 
   startdate =
     typeof startdate === "string" && startdate.length
@@ -106,7 +110,6 @@ exports.POST = (req, res) => {
       firstname = ?,
       lastname = ?,
       type = ?,
-      status = ?,
       username = ?,
       passwordmustchange = ?,
       email = ?,
@@ -125,7 +128,6 @@ exports.POST = (req, res) => {
       firstname,
       lastname,
       type,
-      status,
       username,
       passwordmustchange,
       email,
