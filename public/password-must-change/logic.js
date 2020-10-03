@@ -23,7 +23,7 @@ async function onSubmit(e) {
   const accessToken = await getAccessToken();
   const endpoint = "/api/password-must-change";
   const spinner = document.querySelector("#spinner");
-  const content = document.querySelector("#formChangePassword");
+  const content = document.querySelector("#content");
   const newpassword = e.target["newpassword"].value.trim();
 
   // Validation
