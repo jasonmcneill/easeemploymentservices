@@ -147,25 +147,34 @@ async function onSubmit(e) {
           );
           break;
         case "notification e-mail could not be sent":
-          showError(
+          addToast(
             "The employee was added successfully, but a technical glitch prevented the e-mail from being sent to invite the employee to register. Please verify that your e-mail account is in good standing with your provider, SendGrid.",
-            "E-mail is Down"
+            "E-mail is Down",
+            "warning",
+            5000,
+            false
           );
-          document.querySelector("#addemployeeform").reset();
+          window.location.href = "/employees/";
           break;
         case "employee added":
           document.querySelector("#addemployeeform").reset();
-          showSuccess(
-            "<div class='text-center'>The employee was added successfully.</div>",
-            "Employee Added"
+          addToast(
+            "The employee was added successfully.",
+            "Employee Added",
+            "success",
+            5000,
+            false
           );
+          window.location.href = "/employees/";
           break;
         case "notification e-mail sent":
           document.querySelector("#addemployeeform").reset();
-          showSuccess(
+          addToast(
             "The employee was added successfully, and has been e-mailed an invitation to register.",
-            "Employee Added"
+            "Employee Added",
+            "success"
           );
+          window.location.href = "/employees/";
           break;
         default:
           showError(
