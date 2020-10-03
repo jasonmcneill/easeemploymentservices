@@ -200,7 +200,7 @@ async function onConfirmDelete(e) {
           addToast(
             `${employeeName} was deleted successfully.`,
             "Employee Deleted",
-            "success",
+            "secondary",
             3500
           );
           window.location.href = "/employees/";
