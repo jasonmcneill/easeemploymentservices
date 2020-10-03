@@ -92,7 +92,7 @@ exports.POST = (req, res) => {
           return res.status(200).send({
             msg: "employee added",
             msgType: "success",
-            employeeid: result[0].insertId,
+            employeeid: result.insertId,
           });
         }
 
