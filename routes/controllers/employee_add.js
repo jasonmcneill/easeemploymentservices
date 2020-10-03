@@ -10,6 +10,7 @@ exports.POST = (req, res) => {
   const type = req.body.type || "";
   const startdate = req.body.startdate || "";
   const notifyemployee = req.body.notifyemployee === "yes" ? true : false;
+  console.log(`req.user: ${req.user}`);
 
   if (!firstname.length)
     return res
