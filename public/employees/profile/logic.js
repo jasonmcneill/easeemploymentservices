@@ -1,8 +1,8 @@
 function showEmployee() {
   const spinner = document.querySelector("#spinner");
   const contentEl = document.querySelector("#employeescontainer");
-  const employeeid = document.location.hash.split("")[1] || "";
-  if (!employeeid.length) window.location.href = "/employees/";
+  const employeeid = parseInt(document.location.hash.split("#")[1]) || "";
+  if (typeof employeeid !== "number") window.location.href = "/employees/";
   const endpoint = `/api/employee/${employeeid}`;
 
   function populateContent(data) {
@@ -63,6 +63,8 @@ function showEmployee() {
 
   async function getContent() {
     const accessToken = await getAccessToken();
+    const employeeid = parseInt(document.location.hash.split("#")[1]) || "";
+    const endpoint = `/api/employee/${employeeid}`;
     fetch(endpoint, {
       mode: "cors",
       method: "GET",
@@ -109,7 +111,7 @@ function showEmployee() {
 }
 
 function attachListeners() {
-  const employeeid = document.location.hash.split("")[1] || "";
+  const employeeid = parseInt(document.location.hash.split("#")[1]) || "";
 
   // Edit button
   document.querySelector("#btnEdit").addEventListener("click", () => {

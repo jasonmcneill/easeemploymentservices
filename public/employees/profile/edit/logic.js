@@ -8,7 +8,7 @@ function populateBreadcrumbLink() {
 }
 
 async function populateContent() {
-  const employeeid = parseInt(document.location.hash.split("")[1]) || "";
+  const employeeid = parseInt(document.location.hash.split("#")[1]) || "";
   const endpoint = `/api/employee/${employeeid}`;
   const accessToken = await getAccessToken();
   const employeeid_of_requestor = JSON.parse(atob(accessToken.split(".")[1]))
@@ -117,7 +117,7 @@ function onShowDeleteModal(e) {
 
 async function onConfirmDelete(e) {
   e.preventDefault();
-  const employeeid = parseInt(document.location.hash.split("")[1]) || "";
+  const employeeid = parseInt(document.location.hash.split("#")[1]) || "";
   const endpoint = `/api/employee/delete`;
   const spinner = document.querySelector("#spinner");
   const content = document.querySelector("#employeescontainer");
@@ -203,7 +203,7 @@ async function onConfirmDelete(e) {
 
 async function onSubmit(e) {
   e.preventDefault();
-  const employeeid = parseInt(document.location.hash.split("")[1]) || "";
+  const employeeid = parseInt(document.location.hash.split("#")[1]) || "";
   const firstname = document.querySelector("#firstname").value.trim();
   const lastname = document.querySelector("#lastname").value.trim();
   const type = document.querySelector("#type").value;
