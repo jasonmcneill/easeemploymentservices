@@ -4,6 +4,17 @@ exports.POST = (req, res) => {
   const employeeid = parseInt(req.body.employeeid) || "";
   const employeeid_of_requestor = req.user.employeeid || "";
 
+  // Enforce authorization
+  const usertype = req.user.type;
+  const allowedUsertypes = ["sysadmin", "director"];
+  if (!allowedUsertypes.includes(usertype)) {
+    console.log(`User (employeeid ${req.user.employeeid} is not authorized.`);
+    return res.status(401).send({
+      msg: "user is not authorized for this action",
+      msgType: "error",
+    });
+  }
+
   // Validate param type
   if (typeof employeeid !== "number")
     return res
