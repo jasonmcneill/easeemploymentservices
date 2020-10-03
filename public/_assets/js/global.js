@@ -242,7 +242,6 @@ function showToasts() {
         </div>
       `;
     });
-  // toastHtml = `<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">${toastHtml}</div>`;
 
   // Inject toasts as first child of <body>
   const toastContainer = document.querySelector("#toasts");
