@@ -242,12 +242,19 @@ function showToasts() {
         </div>
       `;
     });
-  toastsHtml = `<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center" style="height: 200px;">${toastsHtml}</div>`;
+  // toastHtml = `<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">${toastHtml}</div>`;
 
   // Inject toasts as first child of <body>
   const toastContainer = document.querySelector("#toasts");
   toastContainer.innerHTML = toastHtml;
-  $(".toast").toast("show");
+  $(".toast")
+    .toast("show")
+    .on("show.bs.toast", () => {
+      toastContainer.classList.remove("d-none");
+    })
+    .on("hidden.bs.toast", () => {
+      toastContainer.classList.add("d-none");
+    });
 }
 
 function showToast(
