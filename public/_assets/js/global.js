@@ -236,7 +236,7 @@ function showToasts() {
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="toast-body">
+          <div class="toast-body text-white">
             ${item.text}
           </div>
         </div>
