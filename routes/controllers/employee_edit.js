@@ -16,7 +16,18 @@ exports.POST = (req, res) => {
   let startdate = req.body.startdate || null;
   let enddate = req.body.enddate || null;
 
-  // VALIDATION
+  // Enforce authorization
+  const usertype = req.user.type;
+  const allowedUsertypes = ["sysadmin", "director"];
+  if (!allowedUsertypes.includes(usertype)) {
+    console.log(`User (employeeid ${req.user.employeeid} is not authorized.`);
+    return res.status(401).send({
+      msg: "user is not authorized for this action",
+      msgType: "error",
+    });
+  }
+
+  // Validation
   const emailValidator = require("email-validator");
   const validatePhone = require("../utils").validatePhone;
   const validatedSmsPhone = smsphone.length

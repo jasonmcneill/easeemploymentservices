@@ -31,6 +31,17 @@ async function populateContent() {
   })
     .then((res) => res.json())
     .then((data) => {
+      switch (data.msg) {
+        case "user is not authorized for this action":
+          addToast(
+            "Your account does not have sufficient permissions to perform that action.",
+            "Not Authorized",
+            "danger"
+          );
+          window.location.href = "/";
+          break;
+      }
+
       const {
         employeeid,
         email,
@@ -203,6 +214,14 @@ async function onSubmit(e) {
     .then((res) => res.json())
     .then((data) => {
       switch (data.msg) {
+        case "user is not authorized for this action":
+          addToast(
+            "Your account does not have sufficient permissions to perform that action.",
+            "Not Authorized",
+            "danger"
+          );
+          window.location.href = "/";
+          break;
         default:
           window.location.href = `../#${employeeid}`;
           break;
