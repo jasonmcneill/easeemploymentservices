@@ -15,6 +15,18 @@ function showEmployee() {
         "Employee Not Found"
       );
     }
+
+    switch (data.msg) {
+      case "user is not authorized for this action":
+        addToast(
+          "Your account does not have sufficient permissions to perform that action.",
+          "Not Authorized",
+          "danger"
+        );
+        window.location.href = "/";
+        break;
+    }
+
     const {
       firstname,
       lastname,
@@ -88,6 +100,17 @@ function showEmployee() {
     })
       .then((res) => res.json())
       .then((data) => {
+        switch (data.msg) {
+          case "user is not authorized for this action":
+            addToast(
+              "Your account does not have sufficient permissions to view that content.",
+              "Not Authorized",
+              "danger"
+            );
+            window.location.href = "/";
+            break;
+        }
+
         localforage.setItem(endpoint, data).then(() => populateContent(data));
       })
       .catch((error) => {
@@ -160,6 +183,14 @@ async function onConfirmDelete(e) {
     .then((res) => res.json())
     .then((data) => {
       switch (data.msg) {
+        case "user is not authorized for this action":
+          addToast(
+            "Your account does not have sufficient permissions to perform that action.",
+            "Not Authorized",
+            "danger"
+          );
+          window.location.href = "/";
+          break;
         case "invalid employee id":
           showError(
             "The employee ID parameter in the address bar is in an invalid format.",

@@ -24,6 +24,17 @@ exports.GET = (req, res) => {
     WHERE employeeid = ?;
   `;
 
+  // Enforce authorization
+  const usertype = req.user.type;
+  const allowedUsertypes = ["sysadmin", "director"];
+  if (!allowedUsertypes.includes(usertype)) {
+    console.log(`User (employeeid ${req.user.employeeid} is not authorized.`);
+    return res.status(401).send({
+      msg: "user is not authorized for this action",
+      msgType: "error",
+    });
+  }
+
   db.query(sql, [employeeid], (err, result) => {
     if (err) {
       console.log(err);
