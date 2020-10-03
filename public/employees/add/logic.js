@@ -162,8 +162,7 @@ async function onSubmit(e) {
             "The employee was added successfully.",
             "Employee Added",
             "success",
-            5000,
-            false
+            3500
           );
           window.location.href = "/employees/";
           break;
@@ -172,7 +171,8 @@ async function onSubmit(e) {
           addToast(
             "The employee was added successfully, and has been e-mailed an invitation to register.",
             "Employee Added",
-            "success"
+            "success",
+            3500
           );
           window.location.href = "/employees/";
           break;
