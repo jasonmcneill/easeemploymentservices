@@ -68,7 +68,14 @@
           <div class="card border-primary">
             <h5 class="card-header bg-primary text-white">Time Entry</h5>
             <div class="card-body">
-              <div id="clocktime" class="text-center h3 mb-3">3:25:32 PM</div>
+              <!-- Date and time -->
+              <div id="clockdate" class="text-center mb-2"></div>
+              <div id="clocktime" class="text-center mb-3">
+                <div class="spinner-border text-secondary" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </div>
+
               <table class="table">
                 <tr>
                   <td class="text-right">
@@ -86,20 +93,24 @@
               </table>
 
               <div class="text-center">
-                <button class="btn btn-primary">Clock In Again</button>
+                <button class="btn btn-primary" id="btnClockIn">
+                  Clock In Again
+                </button>
 
-                <button class="btn btn-primary d-none">Clock Out</button>
+                <button class="btn btn-primary d-none" id="btnClockOut">
+                  Clock Out
+                </button>
               </div>
 
-              <div class="text-center mt-3">
+              <div class="text-center mt-3" id="doneForTheDayContainer">
                 <div class="form-check form-check-inline">
                   <input
                     class="form-check-input"
                     type="checkbox"
-                    id="inlineCheckbox1"
-                    value="option1"
+                    id="doneForTheDay"
+                    value="1"
                   />
-                  <label class="form-check-label" for="inlineCheckbox1">
+                  <label class="form-check-label" for="doneForTheDay">
                     Done for the day
                   </label>
                 </div>
