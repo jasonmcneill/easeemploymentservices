@@ -16,6 +16,12 @@
       crossorigin="anonymous"
     />
 
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="_assets/font-awesome-4.7.0/css/font-awesome.min.css"
+    />
+
     <link rel="stylesheet" href="/_assets/css/global.css" />
     <title>Access</title>
   </head>
@@ -56,16 +62,50 @@
     <div id="toasts"></div>
 
     <!-- Content -->
-    <div class="container-fluid fade-in">
+    <div class="container-fluid pt-3 fade-in">
       <div class="row">
-        <div class="col-md-6">
-          <!-- Chart: Participants -->
-          <canvas id="chartParticipants" width="100%" height="400"></canvas>
-        </div>
+        <div class="col col-xl-2 col-lg-3 col-md-3 col-sm-6">
+          <div class="card border-primary">
+            <h5 class="card-header bg-primary text-white">Time Entry</h5>
+            <div class="card-body">
+              <div id="clocktime" class="text-center h3 mb-3">3:25:32 PM</div>
+              <table class="table">
+                <tr>
+                  <td class="text-right">
+                    <span class="text-success"><strong>IN:</strong></span>
+                  </td>
+                  <td>8:58:38 AM</td>
+                </tr>
 
-        <div class="col-md-6">
-          <!-- Chart: Jobs -->
-          <canvas id="chartJobs" width="400" height="400"></canvas>
+                <tr>
+                  <td class="text-right">
+                    <span class="text-success"><strong>OUT:</strong></span>
+                  </td>
+                  <td>5:31:38 PM</td>
+                </tr>
+              </table>
+
+              <div class="text-center">
+                <button class="btn btn-primary">Clock In Again</button>
+
+                <button class="btn btn-primary d-none">Clock Out</button>
+              </div>
+
+              <div class="text-center mt-3">
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="inlineCheckbox1"
+                    value="option1"
+                  />
+                  <label class="form-check-label" for="inlineCheckbox1">
+                    Done for the day
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
