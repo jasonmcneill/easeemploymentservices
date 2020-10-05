@@ -155,6 +155,8 @@ function onDoneForTheDayClicked(e) {
 
 async function getTimeEntriesForToday() {
   const timeEntries = document.querySelector("#timeEntries");
+  const btnClockIn = document.querySelector("#btnClockIn");
+  const btnClockOut = document.querySelector("#btnClockOut");
   const timeZoneOffset = new Date().getTimezoneOffset() / 60;
   const endpoint = "/api/timeentries-today";
   const accessToken = await getAccessToken();
@@ -189,6 +191,8 @@ async function getTimeEntriesForToday() {
           break;
         case "no time entries found for today":
           timeEntries.innerHTML = "";
+          btnClockIn.classList.remove("d-none");
+          btnClockOut.classList.add("d-none");
           break;
         case "time entries found for today":
           showTimeEntries(data.entries);
