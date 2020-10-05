@@ -79,6 +79,7 @@ function showTimeEntries(entries) {
   entries.forEach((item) => {
     let timeEntry = new Date(item.entry_utc);
     const timeOffsetInHours = (timeEntry.getTimezoneOffset() / 60) * -1;
+    console.log(`timeOffsetInHours: ${timeOffsetInHours}`);
     timeEntry.setHours(timeEntry.getHours() + timeOffsetInHours);
 
     if (!renderedFirstRow) {
