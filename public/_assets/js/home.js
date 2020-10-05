@@ -18,6 +18,7 @@ function populateClockTime() {
 }
 
 async function onClockInClicked() {
+  const timeZoneOffset = new Date().getTimezoneOffset() / 60;
   const btnClockIn = document.querySelector("#btnClockIn");
   const btnClockOut = document.querySelector("#btnClockOut");
   const timeEntries = document.querySelector("#timeEntries");
@@ -36,6 +37,9 @@ async function onClockInClicked() {
   fetch(endpoint, {
     mode: "cors",
     method: "POST",
+    body: JSON.stringify({
+      timeZoneOffset: timeZoneOffset,
+    }),
     headers: new Headers({
       "Content-Type": "application/json",
       authorization: `Bearer ${accessToken}`,
@@ -77,12 +81,7 @@ function showTimeEntries(entries) {
   let renderedFirstRow = false;
 
   entries.forEach((item) => {
-    let timeEntry = new Date(item.entry_utc);
-    const timeOffsetInHours = (timeEntry.getTimezoneOffset() / 60) * -1;
-    console.log(`item: ${JSON.stringify(item)}`);
-    console.log(`timeEntry.getHours(): ${timeEntry.getHours()}`);
-    console.log(`timeOffsetInHours: ${timeOffsetInHours}`);
-    timeEntry.setHours(timeEntry.getHours() + timeOffsetInHours);
+    let timeEntry = new Date(item.entry_utc).toLocaleTimeString();
 
     if (!renderedFirstRow) {
       renderedFirstRow = true;
@@ -94,7 +93,7 @@ function showTimeEntries(entries) {
             </span>
           </td>
           <td width="50%" class="text-right">
-            ${timeEntry.toLocaleTimeString()}
+            ${timeEntry}
           </td>
         </tr>
       `;
@@ -107,7 +106,7 @@ function showTimeEntries(entries) {
             </span>
           </td>
           <td class="text-right">
-            ${timeEntry.toLocaleTimeString()}
+            ${timeEntry}
           </td>
         </tr>
       `;

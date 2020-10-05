@@ -3,6 +3,7 @@ const moment = require("moment");
 
 exports.POST = (req, res) => {
   const employeeid = req.user.employeeid;
+  const timeZoneOffset = parseInt(req.body.timeZoneOffset) || 0;
   const entry_utc = moment.utc().format("YYYY-MM-DD HH:mm:ss");
   const createdAt = moment().format("YYYY-MM-DD");
   const sql = `
@@ -38,10 +39,21 @@ exports.POST = (req, res) => {
         });
       }
 
+      const entries = result.map((item) => {
+        const entry = moment(item.entry_utc)
+          .subtract(timeZoneOffset, "hours")
+          .format();
+        const changedItem = {
+          ...item,
+          entry_utc: entry,
+        };
+        return changedItem;
+      });
+
       return res.status(200).send({
         msg: "clock-in succeeded",
         msgType: "success",
-        entries: result,
+        entries: entries,
       });
     });
   });
