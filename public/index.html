@@ -69,32 +69,20 @@
             <h5 class="card-header bg-primary text-white">Time Entry</h5>
             <div class="card-body">
               <!-- Date and time -->
-              <div id="clockdate" class="text-center mb-2"></div>
-              <div id="clocktime" class="text-center mb-3">
-                <div class="spinner-border text-secondary" role="status">
+              <div id="clockDate" class="text-center mb-2"></div>
+              <div id="clockTime" class="text-center mb-3">
+                <div class="spinner-border" role="status">
                   <span class="sr-only">Loading...</span>
                 </div>
               </div>
 
-              <table class="table">
-                <tr>
-                  <td class="text-right">
-                    <span class="text-success"><strong>IN:</strong></span>
-                  </td>
-                  <td>8:58:38 AM</td>
-                </tr>
+              <!-- Time entries -->
+              <div id="timeEntries"></div>
 
-                <tr>
-                  <td class="text-right">
-                    <span class="text-success"><strong>OUT:</strong></span>
-                  </td>
-                  <td>5:31:38 PM</td>
-                </tr>
-              </table>
-
+              <!-- Buttons -->
               <div class="text-center">
                 <button class="btn btn-primary" id="btnClockIn">
-                  Clock In Again
+                  Clock In
                 </button>
 
                 <button class="btn btn-primary d-none" id="btnClockOut">
@@ -102,7 +90,8 @@
                 </button>
               </div>
 
-              <div class="text-center mt-3" id="doneForTheDayContainer">
+              <!-- Done for the day -->
+              <div class="text-center mt-3 d-none" id="doneForTheDayContainer">
                 <div class="form-check form-check-inline">
                   <input
                     class="form-check-input"
@@ -136,8 +125,11 @@
       integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
       crossorigin="anonymous"
     ></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.9.0/localforage.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/moment.min.js"
+      integrity="sha512-Izh34nqeeR7/nwthfeE0SI3c8uhFSnqxV0sI9TvTcXiFJkMd6fB644O64BRq2P/LA/+7eRvCw4GmLsXksyTHBg=="
+      crossorigin="anonymous"
+    ></script>
     <script type="text/javascript" src="/_assets/js/global.js"></script>
     <script type="text/javascript" src="/_assets/js/home.js"></script>
   </body>
