@@ -2,7 +2,7 @@ function populateClockTime() {
   const clockTime = document.querySelector("#clockTime");
   const clockDate = document.querySelector("#clockDate");
 
-  setInterval(() => {
+  const showTime = () => {
     const dateObj = new Date();
     const currentDate = dateObj.toLocaleDateString("en-US", {
       weekday: "long",
@@ -14,6 +14,12 @@ function populateClockTime() {
 
     clockDate.innerHTML = `${currentDate}`;
     clockTime.innerHTML = `<h3 class="h3">${currentTime}</h3>`;
+  };
+
+  showTime();
+
+  setInterval(() => {
+    showTime();
   }, 1000);
 }
 
@@ -212,9 +218,9 @@ function attachListeners() {
 function init() {
   protectRoute();
   attachListeners();
-  showToasts();
   populateClockTime();
   getTimeEntriesForToday();
+  showToasts();
 }
 
 init();
