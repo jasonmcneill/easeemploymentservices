@@ -77,7 +77,10 @@ function showTimeEntries(entries) {
   let renderedFirstRow = false;
 
   entries.forEach((item) => {
-    const timeEntry = convertUTCDateToLocal(new Date(item.entry_utc), "time");
+    let timeEntry = new Date(item.entry_utc);
+    const timeOffsetInHours = (timeEntry.getTimezoneOffset() / 60) * -1;
+    timeEntry.setHours(timeEntry.getHours() + timeOffsetInHours);
+
     if (!renderedFirstRow) {
       renderedFirstRow = true;
       timeHtml += `
@@ -88,7 +91,7 @@ function showTimeEntries(entries) {
             </span>
           </td>
           <td width="50%" class="text-right">
-            ${timeEntry}
+            ${timeEntry.toLocaleTimeString()}
           </td>
         </tr>
       `;
@@ -101,7 +104,7 @@ function showTimeEntries(entries) {
             </span>
           </td>
           <td class="text-right">
-            ${timeEntry}
+            ${timeEntry.toLocaleTimeString()}
           </td>
         </tr>
       `;
