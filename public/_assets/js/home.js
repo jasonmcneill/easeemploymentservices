@@ -21,7 +21,6 @@ async function onClockInClicked() {
   const btnClockIn = document.querySelector("#btnClockIn");
   const btnClockOut = document.querySelector("#btnClockOut");
   const timeEntries = document.querySelector("#timeEntries");
-  const now = new Date();
   const spinner = `
   <div class="text-center my-3">
     <div class="spinner-border" role="status">
@@ -77,9 +76,8 @@ function showTimeEntries(entries) {
   let timeHtml = ``;
   let renderedFirstRow = false;
 
-  console.log(entries);
-
   entries.forEach((item) => {
+    const timeEntry = convertUTCDateToLocal(new Date(item.entry_utc), "time");
     if (!renderedFirstRow) {
       renderedFirstRow = true;
       timeHtml += `
@@ -90,7 +88,7 @@ function showTimeEntries(entries) {
             </span>
           </td>
           <td width="50%" class="text-right">
-            ${item.entry_utc}
+            ${timeEntry}
           </td>
         </tr>
       `;
@@ -103,7 +101,7 @@ function showTimeEntries(entries) {
             </span>
           </td>
           <td class="text-right">
-            ${item.entry_utc}
+            ${timeEntry}
           </td>
         </tr>
       `;

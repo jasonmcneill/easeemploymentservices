@@ -267,6 +267,19 @@ function showToast(
   showToasts();
 }
 
+function convertUTCDateToLocal(date, type = "time") {
+  var newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+
+  var offset = date.getTimezoneOffset() / 60;
+  var hours = date.getHours();
+
+  newDate.setHours(hours - offset);
+
+  return type === "time"
+    ? newDate.toLocaleTimeString()
+    : newDate.toLocaleDateString();
+}
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("/sw.js");
