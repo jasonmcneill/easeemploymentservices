@@ -42,10 +42,10 @@ exports.POST = (req, res) => {
       const entries = result.map((item) => {
         const entry = moment(item.entry_utc)
           .subtract(timeZoneOffset, "hours")
-          .format();
+          .format("h:mm:ss A");
         const changedItem = {
-          ...item,
-          entry_utc: entry,
+          type: item.type,
+          entry: entry,
         };
         return changedItem;
       });

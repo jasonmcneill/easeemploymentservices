@@ -81,7 +81,7 @@ function showTimeEntries(entries) {
   let renderedFirstRow = false;
 
   entries.forEach((item) => {
-    let timeEntry = new Date(item.entry_utc).toLocaleTimeString();
+    let timeEntry = item.entry;
 
     if (!renderedFirstRow) {
       renderedFirstRow = true;
