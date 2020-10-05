@@ -77,8 +77,21 @@ function onClockOutClicked() {}
 
 function showTimeEntries(entries) {
   const timeEntries = document.querySelector("#timeEntries");
+  const btnClockIn = document.querySelector("#btnClockIn");
+  const btnClockOut = document.querySelector("#btnClockOut");
   let timeHtml = ``;
   let renderedFirstRow = false;
+
+  // Decide whether to show "Clock In" or "Clock Out" button
+  if (entries[entries.length - 1].type === "in") {
+    // Show "Clock Out"
+    btnClockIn.classList.add("d-none");
+    btnClockOut.classList.remove("d-none");
+  } else {
+    // Show "Clock In"
+    btnClockIn.classList.remove("d-none");
+    btnClockOut.classList.add("d-none");
+  }
 
   entries.forEach((item) => {
     let timeEntry = item.entry;
@@ -134,6 +147,54 @@ function onDoneForTheDayClicked(e) {
   }
 }
 
+async function getTimeEntriesForToday() {
+  const timeEntries = document.querySelector("#timeEntries");
+  const timeZoneOffset = new Date().getTimezoneOffset() / 60;
+  const endpoint = "/api/timeentries-today";
+  const accessToken = await getAccessToken();
+  const spinner = `
+  <div class="text-center my-3">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>`;
+
+  timeEntries.innerHTML = spinner;
+  fetch(endpoint, {
+    mode: "cors",
+    method: "POST",
+    body: JSON.stringify({
+      timeZoneOffset: timeZoneOffset,
+    }),
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearar ${accessToken}`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      switch (data.msg) {
+        case "unable to query for time entries for today":
+          showToast(
+            "Unable to retrieve time entries",
+            "Database is down",
+            "danger"
+          );
+          break;
+        case "no time entries found for today":
+          timeEntries.innerHTML = "";
+          break;
+        case "time entries found for today":
+          showTimeEntries(data.entries);
+          break;
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      timeEntries.innerHTML = "";
+    });
+}
+
 function attachListeners() {
   document
     .querySelector("#btnClockIn")
@@ -153,6 +214,7 @@ function init() {
   attachListeners();
   showToasts();
   populateClockTime();
+  getTimeEntriesForToday();
 }
 
 init();
