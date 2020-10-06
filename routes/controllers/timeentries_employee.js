@@ -4,6 +4,20 @@ const db = require("../../database");
 exports.POST = (req, res) => {
   const employeeid = req.body.employeeid || "";
   const timeZoneOffset = parseInt(req.body.timeZoneOffset) || 0;
+  const now = moment();
+
+  const defaultFromDate = moment()
+    .subtract(7, "days")
+    .utc()
+    .format("YYYY-MM-DD 00:00:00");
+  const defaultToDate = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+
+  let fromdate = req.body.fromdate
+    ? moment(req.body.fromdate).format("YYYY-MM-DD 00:00:00")
+    : defaultFromDate;
+  let todate = req.body.todate
+    ? moment(req.body.todate).format("YYYY-MM-DD HH:mm:ss")
+    : defaultToDate;
 
   // Enforce authorization
   const usertype = req.user.type;
@@ -14,6 +28,22 @@ exports.POST = (req, res) => {
       msg: "user is not authorized for this action",
       msgType: "error",
     });
+  }
+
+  // Validate:  "from date" must be before "to date"
+  if (moment(fromdate).isAfter(todate)) {
+    const oldFromDate = fromdate;
+    const oldToDate = todate;
+    fromdate = oldToDate;
+    todate = oldFromDate;
+  }
+
+  // Validate:  dates must not be in the future
+  if (moment(fromdate).isAfter(now)) {
+    fromdate = defaultFromDate;
+  }
+  if (moment(todate).isAfter(now)) {
+    todate = defaultToDate;
   }
 
   // Validate:  employeeid is required
@@ -53,10 +83,21 @@ exports.POST = (req, res) => {
         employees__timelogs
       WHERE
         employeeid = ?
+      AND
+        entry_utc BETWEEN ? AND ?
+      ORDER BY
+        entry_utc
       ;
     `;
 
-    db.query(sql, [employeeid], (err, result) => {
+    db.query(sql, [employeeid, fromdate, todate], (err, result) => {
+      fromdate = moment(fromdate)
+        .subtract(timeZoneOffset, "hours")
+        .format("YYYY-MM-DD");
+      todate = moment(todate)
+        .subtract(timeZoneOffset, "hours")
+        .format("YYYY-MM-DD");
+
       if (err) {
         console.log(err);
         return res.status(500).send({
@@ -66,10 +107,12 @@ exports.POST = (req, res) => {
           lastname: lastname,
           type: type,
           status: status,
+          fromdate: fromdate,
+          todate: todate,
         });
       }
 
-      if (!result.length)
+      if (!result.length) {
         return res.status(404).send({
           msg: "no time entries found",
           msgType: "error",
@@ -77,15 +120,22 @@ exports.POST = (req, res) => {
           lastname: lastname,
           type: type,
           status: status,
+          fromdate: fromdate,
+          todate: todate,
         });
+      }
 
       const entries = result.map((item) => {
-        const entry = moment(item.entry_utc)
+        const time = moment(item.entry_utc)
           .subtract(timeZoneOffset, "hours")
           .format("h:mm:ss A");
+        const date = moment(item.entry_utc)
+          .subtract(timeZoneOffset, "hours")
+          .format("YYYY-MM-DD");
         const changedItem = {
           type: item.type,
-          entry: entry,
+          time: time,
+          date: date,
         };
         return changedItem;
       });
@@ -98,6 +148,8 @@ exports.POST = (req, res) => {
         type: type,
         status: status,
         entries: entries,
+        fromdate: fromdate,
+        todate: todate,
       });
     });
   });

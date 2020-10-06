@@ -24,13 +24,76 @@ async function populateContent() {
   })
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
-      const { firstname, lastname, type, status, entries } = data;
+      const {
+        firstname,
+        lastname,
+        type,
+        status,
+        entries,
+        fromdate,
+        todate,
+      } = data;
+
+      document.title = `Time Entries for ${firstname} ${lastname}`;
       breadcrumbProfileLink.innerText = `${data.firstname} ${data.lastname}`;
       breadcrumbProfileLink.setAttribute("href", `../profile/#${employeeid}`);
       document
         .querySelectorAll(".employeeName")
         .forEach((item) => (item.innerHTML = `${firstname} ${lastname}`));
+
+      // Populate date range
+      const fromDateEl = document.querySelector("#fromdate");
+      const toDateEl = document.querySelector("#todate");
+      fromDateEl.value = fromdate;
+      toDateEl.value = todate;
+
+      // Get handles
+      const timeentries = document.querySelector("#timeentries");
+      const timerange = document.querySelector("#timerange");
+
+      // If no entries, only show a message
+      if (data.msg === "no time entries found") {
+        timeentries.innerHTML = `<p class="text-center my-3">${firstname} ${lastname} does not have any time entries.</p>`;
+        timerange.classList.add("d-none");
+      }
+
+      // Populate time entries
+      let html = "";
+
+      entries.forEach((item, i) => {
+        let date = "";
+        let previousDate = "";
+        if (i === 0) {
+          date = item.date;
+          previousDate = item.date;
+        } else {
+          previousDate = entries[i].date;
+          date = item.date;
+          if (previousDate === date) {
+            date = "";
+          }
+        }
+        html += `
+          <tr>
+            <td>${date}</td>
+            <td>${item.time}</td>
+            <td>${item.type.toUpperCase()}</td>
+          </tr>`;
+      });
+
+      html = `
+        <table class="table">
+          <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>In/Out</th>
+          </tr>
+          ${html}
+        </table>`;
+
+      timeentries.innerHTML = html;
+      timeentries.classList.remove("d-none");
+      timerange.classList.remove("d-none");
     })
     .catch((err) => {
       console.error(err);
