@@ -47,6 +47,13 @@ router.post("/api/employee/add/", authenticateToken, employee_add.POST);
 const employee_delete = require("./controllers/employee_delete");
 router.post("/api/employee/delete", authenticateToken, employee_delete.POST);
 
+const timeentries_employee = require("./controllers/timeentries_employee");
+router.post(
+  "/api/timeentries/employee",
+  authenticateToken,
+  timeentries_employee.POST
+);
+
 const timeentries_today = require("./controllers/timeentries_today");
 router.post(
   "/api/timeentries-today",
