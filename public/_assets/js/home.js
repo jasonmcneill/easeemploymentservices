@@ -164,36 +164,18 @@ function showTimeEntries(entries) {
   }
 
   entries.forEach((item) => {
-    let timeEntry = item.entry;
-
-    if (!renderedFirstRow) {
-      renderedFirstRow = true;
-      timeHtml += `
-        <tr>
-          <td width="50%">
-            <span class="text-success">
-              <strong>${item.type === "in" ? "IN" : "OUT"}:</strong>
-            </span>
-          </td>
-          <td width="50%" class="text-right">
-            ${timeEntry}
-          </td>
-        </tr>
-      `;
-    } else {
-      timeHtml += `
-        <tr>
-          <td>
-            <span class="text-success">
-              <strong>${item.type === "in" ? "IN" : "OUT"}:</strong>
-            </span>
-          </td>
-          <td class="text-right">
-            ${timeEntry}
-          </td>
-        </tr>
-      `;
-    }
+    timeHtml += `
+      <tr>
+        <td>
+          <span class="text-success">
+            <strong>${item.type === "in" ? "IN" : "OUT"}:</strong>
+          </span>
+        </td>
+        <td class="text-right">
+          ${item.timeEntry}
+        </td>
+      </tr>
+    `;
   });
 
   timeHtml = `<table class="table mt-3">${timeHtml}</table>`;
@@ -267,7 +249,6 @@ function attachListeners() {
 }
 
 function init() {
-  protectRoute();
   attachListeners();
   populateClockTime();
   getTimeEntriesForToday();
