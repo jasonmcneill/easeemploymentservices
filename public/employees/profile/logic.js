@@ -84,6 +84,9 @@ function showEmployee() {
     if (status === "pending") {
       document.querySelector("#btnEdit").setAttribute("disabled", true);
     }
+
+    const linkTimeEntries = document.querySelector("#linkTimeEntries");
+    linkTimeEntries.setAttribute("href", `../time/#${employeeid}`);
   }
 
   async function getContent() {
