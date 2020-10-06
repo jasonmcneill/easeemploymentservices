@@ -23,7 +23,7 @@
     />
 
     <link rel="stylesheet" type="text/css" href="/_assets/css/global.css" />
-    <title class="employeeName"></title>
+    <title></title>
   </head>
   <body>
     <!-- TOP NAVBAR -->
@@ -80,19 +80,46 @@
 
     <!-- Content -->
     <div class="container-fluid fade-in" id="content">
-      <div class="row">
-        <div class="col col-md-12">
-          <h1 class="h3 my-2 text-center font-weight-normal employeeName"></h1>
-          <p class="lead text-center">Time Entries</p>
+      <form>
+        <div class="row">
+          <div class="col col-md-12">
+            <h1
+              class="h3 my-2 text-center font-weight-normal employeeName"
+            ></h1>
+            <p class="lead text-center">Time Entries</p>
+          </div>
         </div>
-      </div>
 
-      <!-- Alert -->
-      <div class="row">
-        <div id="alertMessage" class="col col-md-4 offset-md-4 d-none">
-          <div data-alert-content class="alert alert-danger" role="alert"></div>
+        <!-- Alert -->
+        <div class="row">
+          <div id="alertMessage" class="col col-md-4 offset-md-4 d-none">
+            <div
+              data-alert-content
+              class="alert alert-danger"
+              role="alert"
+            ></div>
+          </div>
         </div>
-      </div>
+
+        <!-- Time Range -->
+        <div class="row" id="timerange">
+          <div class="col col-md-2 offset-md-4 mt-2">
+            <label for="fromdate"><strong>From:</strong></label>
+            <input type="date" id="fromdate" value="" class="form-control" />
+          </div>
+          <div class="col col-md-2 mt-2 mb-4">
+            <label for="todate"><strong>To:</strong></label>
+            <input type="date" id="todate" value="" class="form-control" />
+          </div>
+        </div>
+
+        <!-- Time Entries -->
+        <div class="row">
+          <div class="col col-md-4 offset-md-4">
+            <div id="timeentries"></div>
+          </div>
+        </div>
+      </form>
     </div>
 
     <!-- Modal -->
@@ -151,7 +178,11 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.9.0/localforage.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/moment.min.js"
+      integrity="sha512-Izh34nqeeR7/nwthfeE0SI3c8uhFSnqxV0sI9TvTcXiFJkMd6fB644O64BRq2P/LA/+7eRvCw4GmLsXksyTHBg=="
+      crossorigin="anonymous"
+    ></script>
     <script type="text/javascript" src="/_assets/js/global.js"></script>
     <script type="text/javascript" src="./logic.js"></script>
   </body>
