@@ -8,6 +8,12 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
 
+    <!-- Redirect to login if refreshToken not detected -->
+    <script type="text/javascript">
+      const refreshToken = localStorage.getItem("refreshToken") || "";
+      if (!refreshToken.length) window.location.href = "/login/";
+    </script>
+
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
