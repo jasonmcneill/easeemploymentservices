@@ -172,7 +172,7 @@ function showTimeEntries(entries) {
           </span>
         </td>
         <td class="text-right">
-          ${item.timeEntry}
+          ${item.entry}
         </td>
       </tr>
     `;
