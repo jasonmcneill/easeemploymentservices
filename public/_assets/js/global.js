@@ -160,10 +160,20 @@ function addToast(
   sessionStorage.setItem("toasts", JSON.stringify(toasts));
 }
 
-function showToasts() {
-  // Get and clear toasts from sessionStorage
-  const toasts = JSON.parse(sessionStorage.getItem("toasts")) || [];
-  sessionStorage.removeItem("toasts");
+function showToasts(samePageToasts) {
+  const toastContainer = document.querySelector("#toasts");
+  let toasts = [];
+
+  toastContainer.innerHTML = "";
+
+  if (!samePageToasts) {
+    // Get and clear toasts from sessionStorage
+    toasts = JSON.parse(sessionStorage.getItem("toasts")) || [];
+    sessionStorage.removeItem("toasts");
+  } else {
+    // Get toasts from args
+    toasts = samePageToasts;
+  }
 
   // Return if there are no toasts
   if (!toasts.length) return;
@@ -244,27 +254,32 @@ function showToasts() {
     });
 
   // Inject toasts as first child of <body>
-  const toastContainer = document.querySelector("#toasts");
   toastContainer.innerHTML = toastHtml;
   $(".toast")
     .toast("show")
-    .on("show.bs.toast", () => {
-      toastContainer.classList.remove("d-none");
-    })
     .on("hidden.bs.toast", () => {
-      toastContainer.classList.add("d-none");
+      toastContainer.innerHTML = "";
     });
 }
 
 function showToast(
   text = "",
   headline = "EASE",
-  type = "primary",
+  type = "",
   delay = "5000",
   autohide = "true"
 ) {
-  addToast(text, headline, type, delay, autohide);
-  showToasts();
+  const samePageToasts = [];
+
+  samePageToasts.push({
+    text: text,
+    headline: headline,
+    type: type,
+    delay: delay,
+    autohide: autohide,
+  });
+
+  showToasts(samePageToasts);
 }
 
 function convertUTCDateToLocal(date, type = "time") {
