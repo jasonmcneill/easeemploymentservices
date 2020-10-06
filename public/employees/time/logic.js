@@ -64,11 +64,11 @@ async function populateContent() {
         let date = "";
         let previousDate = "";
         if (i === 0) {
-          date = item.date;
-          previousDate = item.date;
+          date = `${item.date} <span class="ml-2 text-muted">(${item.weekday})</span>`;
+          previousDate = `${item.date} <span class="ml-2 text-muted">(${item.weekday})</span>`;
         } else {
-          previousDate = entries[i].date;
-          date = item.date;
+          previousDate = `${entries[i].date} <span class="ml-2 text-muted">(${entries[i].weekday})</span>`;
+          date = `${item.date} <span class="ml-2 text-muted">(${item.weekday})</span>`;
           if (previousDate === date) {
             date = "";
           }

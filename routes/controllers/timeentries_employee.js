@@ -131,11 +131,15 @@ exports.POST = (req, res) => {
           .format("h:mm:ss A");
         const date = moment(item.entry_utc)
           .subtract(timeZoneOffset, "hours")
-          .format("YYYY-MM-DD");
+          .format("MMM. D");
+        const weekday = moment(item.entry_utc)
+          .subtract(timeZoneOffset, "hours")
+          .format("ddd");
         const changedItem = {
           type: item.type,
           time: time,
           date: date,
+          weekday: weekday,
         };
         return changedItem;
       });
