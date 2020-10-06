@@ -263,7 +263,6 @@ function attachListeners() {
 }
 
 function init() {
-  protectRoute();
   showEmployee();
   attachListeners();
   showToasts();

@@ -69,13 +69,6 @@ function hideAlertMessage() {
   messageElement.classList.add("d-none");
 }
 
-function protectRoute() {
-  const refreshToken = localStorage.getItem("refreshToken") || "";
-  if (!refreshToken.length) {
-    window.location.href = "/login/";
-  }
-}
-
 function getAccessToken() {
   let needToRefresh = false;
   const accessToken = sessionStorage.getItem("accessToken") || "";

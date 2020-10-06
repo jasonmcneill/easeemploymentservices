@@ -81,7 +81,6 @@ function populateContent(data) {
 }
 
 function init() {
-  protectRoute();
   listEmployees();
   showToasts();
 }

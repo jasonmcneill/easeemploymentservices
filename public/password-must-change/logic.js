@@ -114,7 +114,6 @@ function attachListeners() {
 }
 
 function init() {
-  protectRoute();
   confirmMustChange();
   attachListeners();
   showToasts();
