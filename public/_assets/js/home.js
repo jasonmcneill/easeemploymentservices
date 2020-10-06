@@ -67,6 +67,7 @@ async function onClockInClicked() {
           );
           break;
         case "clock-in succeeded":
+          showToast("You are now clocked in.", "Clock-in Succeeded", "success");
           showTimeEntries(data.entries);
           break;
       }
@@ -79,7 +80,70 @@ async function onClockInClicked() {
     });
 }
 
-function onClockOutClicked() {}
+function onClockOutClicked(e) {
+  e.preventDefault();
+  $("#modalConfirmClockOut").modal();
+}
+
+async function onClockOutConfirmed(e) {
+  e.preventDefault();
+  const timeZoneOffset = new Date().getTimezoneOffset() / 60;
+  const btnClockIn = document.querySelector("#btnClockIn");
+  const btnClockOut = document.querySelector("#btnClockOut");
+  const timeEntries = document.querySelector("#timeEntries");
+  const spinner = `
+  <div class="text-center my-3">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>`;
+
+  timeEntries.innerHTML = spinner;
+  btnClockOut.setAttribute("disabled", true);
+
+  const accessToken = await getAccessToken();
+  const endpoint = "/api/timeentry-out";
+  $("#modalConfirmClockOut").modal("hide");
+
+  fetch(endpoint, {
+    mode: "cors",
+    method: "POST",
+    body: JSON.stringify({
+      timeZoneOffset: timeZoneOffset,
+    }),
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      switch (data.msg) {
+        case "unable to insert time entry":
+          showError(
+            "A glitch occurred which prevented the clock-in from being processed.  Please wait a moment then try again.",
+            "Clock Out Failed"
+          );
+          break;
+        case "unable to query for time entries":
+          showError(
+            "A glitch occurred which prevented your clock-out from being displayed, but <strong>your clock-out succeeded.</strong>",
+            "Unable to List Time Entries"
+          );
+          break;
+        case "clock-out succeeded":
+          showToast("You are now clocked out.", "Clock-out Succeeded", "info");
+          showTimeEntries(data.entries);
+          break;
+      }
+    })
+    .catch((err) => console.error(err))
+    .finally(() => {
+      btnClockOut.removeAttribute("disabled");
+      btnClockOut.classList.add("d-none");
+      btnClockIn.classList.remove("d-none");
+    });
+}
 
 function showTimeEntries(entries) {
   const timeEntries = document.querySelector("#timeEntries");
@@ -134,23 +198,6 @@ function showTimeEntries(entries) {
 
   timeHtml = `<table class="table mt-3">${timeHtml}</table>`;
   timeEntries.innerHTML = timeHtml;
-}
-
-function onDoneForTheDayClicked(e) {
-  const clockTime = document.querySelector("#clockTime");
-  const clockIn = document.querySelector("#btnClockIn");
-  const clockOut = document.querySelector("#btnClockOut");
-  const doneForTheDayContainer = document.querySelector(
-    "#doneForTheDayContainer"
-  );
-  const checked = e.target.checked || false;
-
-  if (checked) {
-    clockTime.classList.add("d-none");
-    clockIn.classList.add("d-none");
-    clockOut.classList.add("d-none");
-    doneForTheDayContainer.classList.add("d-none");
-  }
 }
 
 async function getTimeEntriesForToday() {
@@ -215,8 +262,8 @@ function attachListeners() {
     .addEventListener("click", onClockOutClicked);
 
   document
-    .querySelector("#doneForTheDay")
-    .addEventListener("click", onDoneForTheDayClicked);
+    .querySelector("#btnClockOutConfirm")
+    .addEventListener("click", onClockOutConfirmed);
 }
 
 function init() {

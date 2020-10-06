@@ -57,4 +57,7 @@ router.post(
 const timeentry_in = require("./controllers/timeentry_in");
 router.post("/api/timeentry-in", authenticateToken, timeentry_in.POST);
 
+const timeentry_out = require("./controllers/timeentry_out");
+router.post("/api/timeentry-out", authenticateToken, timeentry_out.POST);
+
 module.exports = router;
