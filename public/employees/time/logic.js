@@ -1,4 +1,4 @@
-async function populateContent() {
+async function populateContent(scrollAfterFetch = false) {
   const employeeid = parseInt(document.location.hash.split("#")[1]) || "";
   const content = document.querySelector("#content");
   const spinner = document.querySelector("#spinner");
@@ -46,8 +46,8 @@ async function populateContent() {
         .forEach((item) => (item.innerHTML = `${firstname} ${lastname}`));
 
       // Populate date range
-      fromDateEl.value = fromdate;
-      toDateEl.value = todate;
+      fromDateEl.value = fromdate.substring(0, 10);
+      toDateEl.value = todate.substring(0, 10);
 
       // Get handles
       const timeentries = document.querySelector("#timeentries");
@@ -56,7 +56,10 @@ async function populateContent() {
       // If no entries, only show a message
       if (data.msg === "no time entries found") {
         timeentries.innerHTML = `<p class="text-center mb-5">No records matched the date range above.</p>`;
-        return;
+        timeentries.classList.remove("d-none");
+        return setTimeout(() => {
+          if (scrollAfterFetch) timeentries.scrollIntoView();
+        }, 10);
       }
 
       // Populate time entries
@@ -94,9 +97,14 @@ async function populateContent() {
         </table>`;
 
       timeentries.innerHTML = html;
-      timeentries.scrollIntoView();
       timeentries.classList.remove("d-none");
       timerange.classList.remove("d-none");
+
+      if (scrollAfterFetch) {
+        setTimeout(() => {
+          timeentries.scrollIntoView();
+        }, 10);
+      }
     })
     .catch((err) => {
       console.error(err);
@@ -106,9 +114,8 @@ async function populateContent() {
     });
 }
 
-function onUpdateTimeRange(e) {
-  e.preventDefault();
-  populateContent();
+function onUpdateTimeRange() {
+  populateContent(true);
 }
 
 function attachListeners() {
