@@ -80,29 +80,23 @@
 
     <!-- Content -->
     <div class="container-fluid fade-in" id="content">
-      <form>
-        <div class="row">
-          <div class="col col-md-12">
-            <h1
-              class="h3 my-2 text-center font-weight-normal employeeName"
-            ></h1>
-            <p class="lead text-center">Time Entries</p>
-          </div>
+      <div class="row">
+        <div class="col col-md-12">
+          <h1 class="h3 my-2 text-center font-weight-normal employeeName"></h1>
+          <p class="lead text-center">Time Entries</p>
         </div>
+      </div>
 
-        <!-- Alert -->
-        <div class="row">
-          <div id="alertMessage" class="col col-md-4 offset-md-4 d-none">
-            <div
-              data-alert-content
-              class="alert alert-danger"
-              role="alert"
-            ></div>
-          </div>
+      <!-- Alert -->
+      <div class="row">
+        <div id="alertMessage" class="col col-md-4 offset-md-4 d-none">
+          <div data-alert-content class="alert alert-danger" role="alert"></div>
         </div>
+      </div>
 
-        <!-- Time Range -->
-        <div id="timerange" class="mt-2">
+      <!-- Time Range -->
+      <div id="timerange" class="mt-2">
+        <form id="timerange_form">
           <div class="row">
             <div class="col col-md-2 offset-md-5 py-2">
               <label for="fromdate"><strong>From:</strong></label>
@@ -118,18 +112,20 @@
           <div class="row">
             <div class="col col-md-2 offset-md-5 py-2 text-center">
               <label for="updateTimeRange">&nbsp;</label>
-              <button class="btn btn-dark" id="updateTimeRange">Update</button>
+              <button type="submit" class="btn btn-dark" id="updateTimeRange">
+                Update
+              </button>
             </div>
           </div>
-        </div>
+        </form>
+      </div>
 
-        <!-- Time Entries -->
-        <div class="row">
-          <div class="col col-md-4 offset-md-4">
-            <div id="timeentries" class="my-5"></div>
-          </div>
+      <!-- Time Entries -->
+      <div class="row">
+        <div class="col col-md-4 offset-md-4">
+          <div id="timeentries" class="my-5"></div>
         </div>
-      </form>
+      </div>
     </div>
 
     <!-- Modal -->
