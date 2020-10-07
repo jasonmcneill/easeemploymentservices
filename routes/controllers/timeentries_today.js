@@ -33,8 +33,6 @@ exports.POST = (req, res) => {
       });
     }
 
-    console.log(require("util").inspect(result, true, 7, true));
-
     if (!result.length) {
       return res
         .status(404)
