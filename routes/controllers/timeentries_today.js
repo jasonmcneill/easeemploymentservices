@@ -4,12 +4,18 @@ const db = require("../../database");
 exports.POST = (req, res) => {
   const employeeid = req.user.employeeid;
   const timeZoneOffset = parseInt(req.body.timeZoneOffset) || 0;
-  const todayStart = moment.utc().format("YYYY-MM-DD 00:00:00");
-  const todayEnd = moment.utc().format("YYYY-MM-DD 23:59:00");
+  const todayStart = moment.format("YYYY-MM-DD 00:00:00");
+  const todayStartSql = moment(todayStart)
+    .add(timeZoneOffset, "hours")
+    .format("YYYY-MM-DD HH:mm:ss");
+  const todayEnd = moment.format("YYYY-MM-DD 23:59:00");
+  const todayEndSql = moment(todayEnd)
+    .add(timeZoneOffset, "hours")
+    .format("YYYY-MM-DD HH:mm:ss");
   const sql =
     "SELECT entry_utc, type FROM employees__timelogs WHERE entry_utc BETWEEN ? AND ? AND employeeid = ? ORDER BY createdAt ASC;";
 
-  db.query(sql, [todayStart, todayEnd, employeeid], (err, result) => {
+  db.query(sql, [todayStartSql, todayEndSql, employeeid], (err, result) => {
     if (err) {
       console.log(err);
       return res.status(500).send({
