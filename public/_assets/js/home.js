@@ -150,7 +150,6 @@ function showTimeEntries(entries) {
   const btnClockIn = document.querySelector("#btnClockIn");
   const btnClockOut = document.querySelector("#btnClockOut");
   let timeHtml = ``;
-  let renderedFirstRow = false;
 
   // Decide whether to show "Clock In" or "Clock Out" button
   if (entries[entries.length - 1].type === "in") {
