@@ -94,6 +94,7 @@ async function populateContent() {
         </table>`;
 
       timeentries.innerHTML = html;
+      timeentries.scrollIntoView();
       timeentries.classList.remove("d-none");
       timerange.classList.remove("d-none");
     })
@@ -107,7 +108,6 @@ async function populateContent() {
 
 function onUpdateTimeRange(e) {
   e.preventDefault();
-  timeentries.scrollIntoView();
   populateContent();
 }
 
