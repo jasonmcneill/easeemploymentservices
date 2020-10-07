@@ -5,7 +5,10 @@ exports.POST = (req, res) => {
   const employeeid = req.user.employeeid;
   const timeZoneOffset = parseInt(req.body.timeZoneOffset) || 0;
   const entry_utc = moment.utc().format("YYYY-MM-DD HH:mm:ss");
-  const createdAt = moment().format("YYYY-MM-DD HH:mm:ss");
+  const createdAt = moment
+    .utc()
+    .subtract(timeZoneOffset, "hours")
+    .format("YYYY-MM-DD HH:mm:ss");
   const sql = `
     INSERT INTO employees__timelogs (
       employeeid,
