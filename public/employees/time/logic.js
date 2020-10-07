@@ -114,19 +114,20 @@ async function populateContent(scrollAfterFetch = false) {
     });
 }
 
-function onUpdateTimeRange() {
+function onUpdateTimeRange(e) {
+  e.preventDefault();
   populateContent(true);
 }
 
 function attachListeners() {
   document
-    .querySelector("#updateTimeRange")
-    .addEventListener("click", onUpdateTimeRange);
+    .querySelector("#timerange_form")
+    .addEventListener("submit", onUpdateTimeRange);
 }
 
 function init() {
   attachListeners();
-  populateContent();
+  populateContent(false);
 }
 
 init();
