@@ -96,11 +96,6 @@ async function populateContent() {
       timeentries.innerHTML = html;
       timeentries.classList.remove("d-none");
       timerange.classList.remove("d-none");
-      try {
-        timeentries.scrollIntoView({ behavior: "smooth" });
-      } catch (err) {
-        timeentries.scrollIntoView();
-      }
     })
     .catch((err) => {
       console.error(err);
@@ -112,6 +107,11 @@ async function populateContent() {
 
 function onUpdateTimeRange(e) {
   e.preventDefault();
+  try {
+    timeentries.scrollIntoView({ behavior: "smooth" });
+  } catch (err) {
+    timeentries.scrollIntoView();
+  }
   populateContent();
 }
 
