@@ -55,7 +55,7 @@ async function populateContent() {
 
       // If no entries, only show a message
       if (data.msg === "no time entries found") {
-        timeentries.innerHTML = `<p class="text-center mb-5">${firstname} ${lastname} does not have any time entries.</p>`;
+        timeentries.innerHTML = `<p class="text-center mb-5">No records matched the date range above.</p>`;
         return;
       }
 
