@@ -107,11 +107,7 @@ async function populateContent() {
 
 function onUpdateTimeRange(e) {
   e.preventDefault();
-  try {
-    timeentries.scrollIntoView({ behavior: "smooth" });
-  } catch (err) {
-    timeentries.scrollIntoView();
-  }
+  timeentries.scrollIntoView();
   populateContent();
 }
 
