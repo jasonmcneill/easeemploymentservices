@@ -13,10 +13,14 @@ exports.POST = (req, res) => {
   const defaultToDate = moment().utc().format("YYYY-MM-DD HH:mm:ss");
 
   let fromdate = req.body.fromdate
-    ? moment(req.body.fromdate).format("YYYY-MM-DD 00:00:00")
+    ? moment(req.body.fromdate)
+        .add(timeZoneOffset, "hours")
+        .format("YYYY-MM-DD 00:00:00")
     : defaultFromDate;
   let todate = req.body.todate
-    ? moment(req.body.todate).format("YYYY-MM-DD HH:mm:ss")
+    ? moment(req.body.todate)
+        .add(timeZoneOffset, "hours")
+        .format("YYYY-MM-DD 23:59:59")
     : defaultToDate;
 
   // Enforce authorization
@@ -152,8 +156,8 @@ exports.POST = (req, res) => {
         type: type,
         status: status,
         entries: entries,
-        fromdate: fromdate,
-        todate: todate,
+        fromdate: req.body.fromdate.length ? req.body.fromdate : fromdate,
+        todate: req.body.todate.length ? req.body.todate : todate,
       });
     });
   });
