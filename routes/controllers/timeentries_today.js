@@ -24,11 +24,6 @@ exports.POST = (req, res) => {
     ORDER BY
     entry_utc ASC;`;
 
-  console.log(`todayFrom: ${todayFrom}`);
-  console.log(`todayTo: ${todayTo}`);
-  console.log(`todayFromSql: ${todayFromSql}`);
-  console.log(`todayToSql: ${todayToSql}`);
-
   db.query(sql, [todayFromSql, todayToSql, employeeid], (err, result) => {
     if (err) {
       console.log(err);
