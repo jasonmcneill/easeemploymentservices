@@ -8,7 +8,10 @@ exports.POST = (req, res) => {
   // Set "from" date
   let fromdate;
   if (req.body.fromdate === "") {
-    fromdate = moment().subtract(7, "days").format("YYYY-MM-DD 00:00:00");
+    fromdate = moment
+      .utc()
+      .subtract(timeZoneOffset, "hours")
+      .format("YYYY-MM-DD 00:00:00");
   } else {
     fromdate = moment(req.body.fromdate).format("YYYY-MM-DD 00:00:00");
   }
@@ -16,7 +19,10 @@ exports.POST = (req, res) => {
   // Set "to" date
   let todate;
   if (req.body.todate === "") {
-    todate = moment().format("YYYY-MM-DD 23:59:59");
+    todate = moment
+      .utc()
+      .subtract(timeZoneOffset, "hours")
+      .format("YYYY-MM-DD 23:59:59");
   } else {
     todate = moment(req.body.todate).format("YYYY-MM-DD 23:59:59");
   }
@@ -41,7 +47,7 @@ exports.POST = (req, res) => {
   }
 
   // Modification:  set dates to today if they're in the future.
-  const now = moment();
+  const now = moment.utc().subtract(timeZoneOffset, "hours");
   if (moment(fromdate).isAfter(now)) {
     fromdate = moment().format("YYYY-MM-DD 00:00:00");
   }

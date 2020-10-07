@@ -28,9 +28,23 @@ exports.POST = (req, res) => {
         .send({ msg: "unable to insert time entry", msgType: "error" });
     }
 
+    const timeFrom = moment
+      .utc()
+      .subtract(timeZoneOffset, "hours")
+      .format("YYYY-MM-DD 00:00:00");
+    const timeTo = moment
+      .utc()
+      .subtract(timeZoneOffset, "hours")
+      .format("YYYY-MM-DD 23:59:59");
+    const timeFromSql = moment(timeFrom)
+      .add(timeZoneOffset, "hours")
+      .format("YYYY-MM-DD HH:mm:ss");
+    const timeToSql = moment(timeTo)
+      .add(timeZoneOffset, "hours")
+      .format("YYYY-MM-DD HH:mm:ss");
     const sql =
-      "SELECT entry_utc, type FROM employees__timelogs WHERE createdAt = ? AND employeeid = ? ORDER BY createdAt ASC;";
-    db.query(sql, [createdAt, employeeid], (err, result) => {
+      "SELECT entry_utc, type FROM employees__timelogs WHERE entry_utc > ? AND entry_utc < ? AND employeeid = ? ORDER BY createdAt ASC;";
+    db.query(sql, [timeFromSql, timeToSql, employeeid], (err, result) => {
       if (err) {
         console.log(err);
         return res.status(500).send({

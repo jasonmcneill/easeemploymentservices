@@ -4,18 +4,32 @@ const db = require("../../database");
 exports.POST = (req, res) => {
   const employeeid = req.user.employeeid;
   const timeZoneOffset = parseInt(req.body.timeZoneOffset) || 0;
-  const todayStart = moment().format("YYYY-MM-DD 00:00:00");
-  const todayStartSql = moment(todayStart)
-    .add(timeZoneOffset, "hours")
-    .format("YYYY-MM-DD HH:mm:ss");
-  const todayEnd = moment().format("YYYY-MM-DD 23:59:00");
-  const todayEndSql = moment(todayEnd)
-    .add(timeZoneOffset, "hours")
-    .format("YYYY-MM-DD HH:mm:ss");
-  const sql =
-    "SELECT entry_utc, type FROM employees__timelogs WHERE entry_utc BETWEEN ? AND ? AND employeeid = ? ORDER BY createdAt ASC;";
 
-  db.query(sql, [todayStartSql, todayEndSql, employeeid], (err, result) => {
+  const todayFrom = moment().format("YYYY-MM-DD 00:00:00");
+  const todayFromSql = moment(todayFrom)
+    .add(timeZoneOffset, "hours")
+    .format("YYYY-MM-DD HH:mm:ss");
+
+  const todayTo = moment().format("YYYY-MM-DD 23:59:59");
+  const todayToSql = moment(todayTo)
+    .add(timeZoneOffset, "hours")
+    .format("YYYY-MM-DD HH:mm:ss");
+
+  const sql = `
+    SELECT entry_utc, type
+    FROM employees__timelogs
+    WHERE entry_utc > ?
+    AND entry_utc < ?
+    AND employeeid = ?
+    ORDER BY
+    entry_utc ASC;`;
+
+  console.log(`todayFrom: ${todayFrom}`);
+  console.log(`todayTo: ${todayTo}`);
+  console.log(`todayFromSql: ${todayFromSql}`);
+  console.log(`todayToSql: ${todayToSql}`);
+
+  db.query(sql, [todayFromSql, todayToSql, employeeid], (err, result) => {
     if (err) {
       console.log(err);
       return res.status(500).send({
@@ -23,6 +37,8 @@ exports.POST = (req, res) => {
         msgType: "error",
       });
     }
+
+    console.log(require("util").inspect(result, true, 7, true));
 
     if (!result.length) {
       return res
