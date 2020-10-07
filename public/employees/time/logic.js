@@ -5,6 +5,8 @@ async function populateContent() {
   const breadcrumbProfileLink = document.querySelector(
     "#breadcrumbProfileLink"
   );
+  const fromDateEl = document.querySelector("#fromdate");
+  const toDateEl = document.querySelector("#todate");
   const endpoint = "/api/timeentries/employee";
   const timeZoneOffset = new Date().getTimezoneOffset() / 60;
   const accessToken = await getAccessToken();
@@ -16,6 +18,8 @@ async function populateContent() {
     body: JSON.stringify({
       employeeid: employeeid,
       timeZoneOffset: timeZoneOffset,
+      fromdate: fromDateEl.value,
+      todate: toDateEl.value,
     }),
     headers: new Headers({
       "Content-Type": "application/json",
@@ -42,8 +46,6 @@ async function populateContent() {
         .forEach((item) => (item.innerHTML = `${firstname} ${lastname}`));
 
       // Populate date range
-      const fromDateEl = document.querySelector("#fromdate");
-      const toDateEl = document.querySelector("#todate");
       fromDateEl.value = fromdate;
       toDateEl.value = todate;
 
@@ -53,8 +55,8 @@ async function populateContent() {
 
       // If no entries, only show a message
       if (data.msg === "no time entries found") {
-        timeentries.innerHTML = `<p class="text-center my-3">${firstname} ${lastname} does not have any time entries.</p>`;
-        timerange.classList.add("d-none");
+        timeentries.innerHTML = `<p class="text-center mb-5">${firstname} ${lastname} does not have any time entries.</p>`;
+        return;
       }
 
       // Populate time entries
@@ -103,7 +105,19 @@ async function populateContent() {
     });
 }
 
+function onUpdateTimeRange(e) {
+  e.preventDefault();
+  populateContent();
+}
+
+function attachListeners() {
+  document
+    .querySelector("#updateTimeRange")
+    .addEventListener("click", onUpdateTimeRange);
+}
+
 function init() {
+  attachListeners();
   populateContent();
 }
 
