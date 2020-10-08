@@ -131,7 +131,7 @@
     <!-- Modal -->
     <div
       class="modal fade"
-      id="modalDeleteEmployee"
+      id="modalChangeTimeEntry"
       tabindex="-1"
       aria-labelledby="modalLabel"
       aria-hidden="true"
@@ -139,7 +139,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="modalLabel">Confirm Delete</h5>
+            <h5 class="modal-title" id="modalLabel">Change Time Entry</h5>
             <button
               type="button"
               class="close"
@@ -150,18 +150,132 @@
             </button>
           </div>
           <div class="modal-body">
-            Are you sure you want to delete <span class="employeeName"></span>?
+            <p><strong>Current:</strong></p>
+            <p>
+              Oct. 7
+              <span class="text-muted">(Wed.)</span>
+              <span class="mx-4">1:53:21 PM</span>
+              <strong class="text-success">IN</strong>
+            </p>
+
+            <p class="mt-5 mb-0"><strong>Revised:</strong></p>
+            <table class="table">
+              <tbody>
+                <form>
+                  <tr>
+                    <td class="border-0">
+                      <label for="reviseddate" class="my-1">Date:</label>
+                    </td>
+                    <td colspan="2" class="border-0">
+                      <input
+                        type="date"
+                        id="reviseddate"
+                        class="form-control"
+                        value="2020-10-07"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border-0">
+                      <label for="revisedtime" class="my-1">Time:</label>
+                    </td>
+                    <td colspan="2" class="border-0">
+                      <div class="time-input-supported">
+                        <input
+                          type="time"
+                          id="revisedtime"
+                          class="form-control"
+                          value="13:53:21"
+                          pattern="[0-9]{2}:[0-9]{2}"
+                        />
+                      </div>
+                      <div class="time-input-unsupported d-none">
+                        <div class="container">
+                          <div class="row">
+                            <div class="col px-0">
+                              <input
+                                type="text"
+                                id="revisedtime_alt"
+                                class="form-control"
+                                value="1:53:21"
+                                pattern="[0-9]{2}:[0-9]{2}"
+                              />
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col px-0 pt-2">
+                              <select
+                                class="form-control"
+                                id="revisedtime_alt_ampm"
+                              >
+                                <option value="PM" selected>PM</option>
+                                <option value="AM">AM</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="border-0">
+                      <label for="">In/Out:</label>
+                    </td>
+                    <td colspan="2" class="border-0">
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          name="revisedInOut"
+                          id="revisedInOutIn"
+                          value="in"
+                          checked
+                        />
+                        <label class="form-check-label" for="revisedInOutIn">
+                          IN
+                        </label>
+                      </div>
+                      <div class="form-check form-check-inline ml-3">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          name="revisedInOut"
+                          id="revisedInOutOut"
+                          value="out"
+                        />
+                        <label class="form-check-label" for="revisedInOutOut">
+                          OUT
+                        </label>
+                      </div>
+                    </td>
+                  </tr>
+                </form>
+              </tbody>
+            </table>
           </div>
           <div class="modal-footer">
             <button
               type="button"
-              class="btn btn-secondary mr-3"
+              class="btn btn-secondary"
               data-dismiss="modal"
             >
               Cancel
             </button>
-            <button type="button" class="btn btn-danger" id="btnConfirmDelete">
-              Yes, delete
+
+            <button
+              type="button"
+              class="btn btn-danger mx-3"
+              id="btnDeleteTimeEntry"
+            >
+              Delete
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="btnUpdateTimeEntry"
+            >
+              Update
             </button>
           </div>
         </div>
