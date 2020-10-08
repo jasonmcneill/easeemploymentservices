@@ -1,3 +1,17 @@
+function supportsTimeInputType() {
+  let result = false;
+  var test = document.createElement("input");
+
+  try {
+    test.type = "time";
+    result = true;
+  } catch (e) {
+    console.log(e.description);
+  }
+
+  return result;
+}
+
 async function populateContent(scrollAfterFetch = false) {
   const employeeid = parseInt(document.location.hash.split("#")[1]) || "";
   const content = document.querySelector("#content");
@@ -64,26 +78,21 @@ async function populateContent(scrollAfterFetch = false) {
 
       // Populate time entries
       let html = "";
+      let lastDate = "";
 
       entries.forEach((item, i) => {
-        let date = "";
-        let previousDate = "";
-        if (i === 0) {
-          date = `${item.date} <span class="ml-2 text-muted">(${item.weekday}.)</span>`;
-          previousDate = `${item.date} <span class="ml-2 text-muted">(${item.weekday}.)</span>`;
-        } else {
-          previousDate = `${entries[i].date} <span class="ml-2 text-muted">(${entries[i].weekday}.)</span>`;
-          date = `${item.date} <span class="ml-2 text-muted">(${item.weekday}.)</span>`;
-          if (previousDate === date) {
-            date = "";
-          }
-        }
+        let date =
+          lastDate !== item.date
+            ? `${item.date} <span class="ml-2 text-muted">(${item.weekday}.)</span>`
+            : "";
+
         html += `
           <tr>
             <td>${date}</td>
-            <td>${item.time}</td>
+            <td><a href="#" data-entry-id="${item.id}">${item.time}</a></td>
             <td>${item.type.toUpperCase()}</td>
           </tr>`;
+        lastDate = item.date;
       });
 
       html = `
@@ -99,6 +108,18 @@ async function populateContent(scrollAfterFetch = false) {
       timeentries.innerHTML = html;
       timeentries.classList.remove("d-none");
       timerange.classList.remove("d-none");
+
+      // Make time entry editable in a modal
+      const timeInputSupported = supportsTimeInputType() || false;
+      if (!timeInputSupported) {
+        document.querySelector(".time-input-supported").classList.add("d-none");
+        document
+          .querySelector(".time-input-unsupported")
+          .classList.remove("d-none");
+      }
+      document.querySelectorAll("[data-entry-id]").forEach((item) => {
+        item.addEventListener("click", onTimeEntryClick);
+      });
 
       if (scrollAfterFetch) {
         setTimeout(() => {
@@ -119,10 +140,34 @@ function onUpdateTimeRange(e) {
   populateContent(true);
 }
 
+function onTimeEntryClick(e) {
+  const id = e.target.getAttribute("data-entry-id");
+  $("#modalChangeTimeEntry").modal();
+  e.preventDefault();
+}
+
+function onDeleteTimeEntry(e) {
+  e.preventDefault();
+  console.log("onDeleteTimeEntry()");
+}
+
+function onUpdateTimeEntry(e) {
+  e.preventDefault();
+  console.log("onUpdateTimeEntry()");
+}
+
 function attachListeners() {
   document
     .querySelector("#timerange_form")
     .addEventListener("submit", onUpdateTimeRange);
+
+  document
+    .querySelector("#btnDeleteTimeEntry")
+    .addEventListener("click", onDeleteTimeEntry);
+
+  document
+    .querySelector("#btnUpdateTimeEntry")
+    .addEventListener("click", onUpdateTimeEntry);
 }
 
 function init() {
