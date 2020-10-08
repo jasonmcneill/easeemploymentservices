@@ -11,9 +11,12 @@ exports.POST = (req, res) => {
     fromdate = moment
       .utc()
       .subtract(timeZoneOffset, "hours")
+      .subtract(7, "days")
       .format("YYYY-MM-DD 00:00:00");
   } else {
-    fromdate = moment(req.body.fromdate).format("YYYY-MM-DD 00:00:00");
+    fromdate = moment(req.body.fromdate)
+      .subtract(7, "days")
+      .format("YYYY-MM-DD 00:00:00");
   }
 
   // Set "to" date
@@ -89,6 +92,7 @@ exports.POST = (req, res) => {
 
     const sql = `
       SELECT
+        timelogid,
         entry_utc,
         type
       FROM
@@ -149,6 +153,7 @@ exports.POST = (req, res) => {
           .subtract(timeZoneOffset, "hours")
           .format("ddd");
         const changedItem = {
+          id: item.timelogid,
           type: item.type,
           time: time,
           date: date,
