@@ -298,17 +298,19 @@ function registerSW() {
 
 function checkIfOffline() {
   const currentUrl = window.location.href;
-  const noRedirectPages = ["/offline/", "/login/"];
-  const isOnNoRedirectPage = (noRedirectPages.includes(window.location.pathname)) ;
+  const currentPath = window.location.pathname;
+  const isRedirectOK = (currentPath !== "/offline/");
+
   function doCheck() {
-    if (!isOnNoRedirectPage) {
-      if (!navigator.onLine) {
-        console.error("Now offline.  Redirecting...");
+    if (!navigator.onLine) {
+      if (isRedirectOK) {
+        console.error("Now offline.  Redirecting...", currentPath);
         sessionStorage.setItem("redirectWhenOnline", currentUrl);
         window.location.href = "/offline/";
       }
     }
   }
+
   doCheck();
   setInterval(() => {
     doCheck();

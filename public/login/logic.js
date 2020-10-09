@@ -109,9 +109,8 @@ function attachEventListeners() {
 }
 
 function init() {
-  checkIfOffline();
-  checkIfOffline();
   clearLoginTokens();
+  checkIfOffline();
   attachEventListeners();
 }
 

@@ -1,15 +1,15 @@
 function pollForOffline() {
   setInterval(() => {
     if (navigator.onLine) {
-      const redirectWhenOnline = sessionStorage.getItem("redirectWhenOnline") || "";
-      const refreshToken = localStorage.getItem("refreshToken") || "";
+      const urlBeforeRedirection = sessionStorage.getItem("redirectWhenOnline") || "";
 
-      sessionStorage.removeItem("redirectWhenOnline");
-
-      if (!refreshToken.length) {
-        window.location.href = "/login/";
+      if (urlBeforeRedirection.length) {
+        console.warn("Now online.  Redirecting to former URL...");
+        sessionStorage.removeItem("redirectWhenOnline");
+        window.location.href = urlBeforeRedirection;
       } else {
-        window.location.href = redirectWhenOnline.length ? redirectWhenOnline : "/";
+        console.warn("Now online.  Redirecting to home page...");
+        window.location.href = "/";
       }
     }
   }, 300);
