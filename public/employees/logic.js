@@ -31,7 +31,7 @@ async function getContent() {
           break;
       }
 
-      localforage.setItem(endpoint, data).then(() => populateContent(data));
+      populateContent(data);
     })
     .catch((error) => {
       console.error(error);
