@@ -157,10 +157,10 @@ function onTimeEntryClick(e) {
   const id = e.target.getAttribute("data-entry-id");
   const currentName = e.target.getAttribute("data-name");
   const currentDate = e.target.getAttribute("data-date");
+  const fullDate = e.target.getAttribute("data-fulldate");
   const currentWeekday = e.target.getAttribute("data-weekday");
   const currentTime = e.target.getAttribute("data-time");
   const currentType = e.target.getAttribute("data-type");
-  const fullDate = e.target.getAttribute("data-fulldate");
 
   const elEmployeeName = document.querySelector(
     "[data-changeEntryEmployeeName]"
@@ -170,7 +170,7 @@ function onTimeEntryClick(e) {
   const elCurrentdDate = document.querySelector(
     "[data-changeEntryCurrentDate]"
   );
-  elCurrentdDate.innerText = moment(currentDate).format("MMM. D");
+  elCurrentdDate.innerText = moment(fullDate).format("MMM. D");
 
   const elCurrentWeekday = document.querySelector(
     "[data-changeEntryCurrentWeekday]"
