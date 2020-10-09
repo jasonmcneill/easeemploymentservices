@@ -298,9 +298,10 @@ function registerSW() {
 
 function checkIfOffline() {
   const currentUrl = window.location.href;
-  const notOnOfflinePage = (window.location.pathname !== "/offline/");
+  const noRedirectPages = ["/offline/", "/login/"];
+  const isOnNoRedirectPage = (noRedirectPages.includes(window.location.pathname)) ;
   function doCheck() {
-    if (notOnOfflinePage) {
+    if (!isOnNoRedirectPage) {
       if (!navigator.onLine) {
         console.error("Now offline.  Redirecting...");
         sessionStorage.setItem("redirectWhenOnline", currentUrl);
