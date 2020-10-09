@@ -1,9 +1,16 @@
 function pollForOffline() {
   setInterval(() => {
     if (navigator.onLine) {
-      const redirectOnceOnline = sessionStorage.getItem("redirectOnceOnline") || "";
-      sessionStorage.removeItem("redirectOnceOnline");
-      window.location.href = redirectOnceOnline.length ? redirectOnceOnline : "/";
+      const redirectWhenOnline = sessionStorage.getItem("redirectWhenOnline") || "";
+      const refreshToken = localStorage.getItem("refreshToken") || "";
+
+      sessionStorage.removeItem("redirectWhenOnline");
+
+      if (!refreshToken.length) {
+        window.location.href = "/login/";
+      } else {
+        window.location.href = redirectWhenOnline.length ? redirectWhenOnline : "/";
+      }
     }
   }, 300);
 }
