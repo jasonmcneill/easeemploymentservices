@@ -288,8 +288,23 @@ function convertUTCDateToLocal(date, type = "time") {
     : newDate.toLocaleDateString();
 }
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js");
-  });
+function registerSW() {
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js");
+    });
+  }
 }
+
+function checkIfOffline() {
+  if (!navigator.onLine) {
+    window.location.href = "/offline/";
+  }
+}
+
+function init() {
+  registerSW();
+  checkIfOffline();
+}
+
+init();
