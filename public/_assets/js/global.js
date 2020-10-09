@@ -303,7 +303,7 @@ function checkIfOffline() {
     if (notOnOfflinePage) {
       if (!navigator.onLine) {
         console.error("Now offline.  Redirecting...");
-        sessionStorage.setItem("redirectOnceOnline", currentUrl);
+        sessionStorage.setItem("redirectWhenOnline", currentUrl);
         window.location.href = "/offline/";
       }
     }
