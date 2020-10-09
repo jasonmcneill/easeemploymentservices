@@ -149,6 +149,9 @@ exports.POST = (req, res) => {
         const date = moment(item.entry_utc)
           .subtract(timeZoneOffset, "hours")
           .format("MMM. D");
+        const fulldate = moment(item.entry_utc)
+          .subtract(timeZoneOffset, "hours")
+          .format("YYYY-MM-DD");
         const weekday = moment(item.entry_utc)
           .subtract(timeZoneOffset, "hours")
           .format("ddd");
@@ -157,6 +160,7 @@ exports.POST = (req, res) => {
           type: item.type,
           time: time,
           date: date,
+          fulldate: fulldate,
           weekday: weekday,
         };
         return changedItem;

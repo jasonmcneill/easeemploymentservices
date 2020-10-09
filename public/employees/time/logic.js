@@ -86,10 +86,22 @@ async function populateContent(scrollAfterFetch = false) {
             ? `${item.date} <span class="ml-2 text-muted">(${item.weekday}.)</span>`
             : "";
 
+        const fulldate = item.fulldate;
+
         html += `
           <tr>
             <td>${date}</td>
-            <td><a href="#" data-entry-id="${item.id}">${item.time}</a></td>
+            <td>
+              <a href="#"
+                data-entry-id="${item.id}"
+                data-name="${firstname} ${lastname}"
+                data-id="${item.id}"
+                data-type="${item.type}"
+                data-time="${item.time}"
+                data-date="${item.date}"
+                data-fulldate="${item.fulldate}"
+                data-weekday="${item.weekday}"
+              >${item.time}</a></td>
             <td>${item.type.toUpperCase()}</td>
           </tr>`;
         lastDate = item.date;
@@ -141,9 +153,59 @@ function onUpdateTimeRange(e) {
 }
 
 function onTimeEntryClick(e) {
-  const id = e.target.getAttribute("data-entry-id");
-  $("#modalChangeTimeEntry").modal();
   e.preventDefault();
+  const id = e.target.getAttribute("data-entry-id");
+  const currentName = e.target.getAttribute("data-name");
+  const currentDate = e.target.getAttribute("data-date");
+  const currentWeekday = e.target.getAttribute("data-weekday");
+  const currentTime = e.target.getAttribute("data-time");
+  const currentType = e.target.getAttribute("data-type");
+  const fullDate = e.target.getAttribute("data-fulldate");
+
+  const elEmployeeName = document.querySelector(
+    "[data-changeEntryEmployeeName]"
+  );
+  elEmployeeName.innerText = currentName;
+
+  const elCurrentdDate = document.querySelector(
+    "[data-changeEntryCurrentDate]"
+  );
+  elCurrentdDate.innerText = moment(currentDate).format("MMM. D");
+
+  const elCurrentWeekday = document.querySelector(
+    "[data-changeEntryCurrentWeekday]"
+  );
+  elCurrentWeekday.innerText = `(${currentWeekday}.)`;
+
+  const elChangeEntryCurrentTime = document.querySelector(
+    "[data-changeEntryCurrentTime]"
+  );
+  elChangeEntryCurrentTime.innerText = currentTime;
+
+  const elChangeEntryInOut = document.querySelector("[data-changeEntryInOut]");
+  elChangeEntryInOut.innerText = currentType.toUpperCase();
+
+  const elRevisedDate = document.querySelector("#reviseddate");
+  elRevisedDate.value = moment(fullDate).format("YYYY-MM-DD");
+
+  const elRevisedTime = document.querySelector("#revisedtime");
+  elRevisedTime.value = moment(currentTime, ["h:mm A"]).format("HH:mm");
+
+  const elRevisedtime_alt = document.querySelector("#revisedtime_alt");
+  elRevisedtime_alt.value = moment(currentTime).format("h:mm:ss");
+
+  const elRevisedtime_alt_ampm = document.querySelector(
+    "#revisedtime_alt_ampm"
+  );
+  elRevisedtime_alt_ampm.value = moment(currentTime).format("A");
+
+  const revisedTypeIn = document.querySelector("#revisedTypeIn");
+  revisedTypeIn.checked = currentType === "in" ? true : false;
+
+  const revisedTypeOut = document.querySelector("#revisedTypeOut");
+  revisedTypeOut.checked = currentType === "out" ? true : false;
+
+  $("#modalChangeTimeEntry").modal();
 }
 
 function onDeleteTimeEntry(e) {

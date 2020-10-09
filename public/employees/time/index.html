@@ -141,9 +141,7 @@
           <div class="modal-header">
             <h5 class="modal-title" id="modalLabel">
               Change Time Entry
-              <p class="lead mt-2 mb-0" id="changeEntryEmployeeName">
-                Jason McNeill
-              </p>
+              <p class="lead mt-2 mb-0" data-changeEntryEmployeeName></p>
             </h5>
             <button
               type="button"
@@ -157,10 +155,13 @@
           <div class="modal-body">
             <p><strong>Current:</strong></p>
             <p>
-              Oct. 7
-              <span class="text-muted">(Wed.)</span>
-              <span class="mx-4">1:53:21 PM</span>
-              <strong class="text-success">IN</strong>
+              <span data-changeEntryCurrentDate></span>
+              <span
+                class="ml-2 text-muted"
+                data-changeEntryCurrentWeekday
+              ></span>
+              <span class="mx-4" data-changeEntryCurrentTime></span>
+              <strong class="text-success" data-changeEntryInOut></strong>
             </p>
 
             <p class="mt-5 mb-0"><strong>Revised:</strong></p>
@@ -176,7 +177,7 @@
                         type="date"
                         id="reviseddate"
                         class="form-control"
-                        value="2020-10-07"
+                        value=""
                       />
                     </td>
                   </tr>
@@ -190,7 +191,7 @@
                           type="time"
                           id="revisedtime"
                           class="form-control"
-                          value="13:53:21"
+                          value=""
                           pattern="[0-9]{2}:[0-9]{2}"
                         />
                       </div>
@@ -202,7 +203,7 @@
                                 type="text"
                                 id="revisedtime_alt"
                                 class="form-control"
-                                value="1:53:21"
+                                value=""
                                 pattern="[0-9]{2}:[0-9]{2}"
                               />
                             </div>
@@ -231,12 +232,12 @@
                         <input
                           class="form-check-input"
                           type="radio"
-                          name="revisedInOut"
-                          id="revisedInOutIn"
+                          name="revisedType"
+                          id="revisedTypeIn"
                           value="in"
                           checked
                         />
-                        <label class="form-check-label" for="revisedInOutIn">
+                        <label class="form-check-label" for="revisedTypeIn">
                           IN
                         </label>
                       </div>
@@ -244,11 +245,11 @@
                         <input
                           class="form-check-input"
                           type="radio"
-                          name="revisedInOut"
-                          id="revisedInOutOut"
+                          name="revisedType"
+                          id="revisedTypeOut"
                           value="out"
                         />
-                        <label class="form-check-label" for="revisedInOutOut">
+                        <label class="form-check-label" for="revisedTypeOut">
                           OUT
                         </label>
                       </div>
