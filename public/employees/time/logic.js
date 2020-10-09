@@ -189,15 +189,18 @@ function onTimeEntryClick(e) {
   elRevisedDate.value = moment(fullDate).format("YYYY-MM-DD");
 
   const elRevisedTime = document.querySelector("#revisedtime");
-  elRevisedTime.value = moment(currentTime, ["h:mm A"]).format("HH:mm");
+  elRevisedTime.value = moment(currentTime, ["h:mm:ss A"]).format("HH:mm:ss");
 
   const elRevisedtime_alt = document.querySelector("#revisedtime_alt");
-  elRevisedtime_alt.value = moment(currentTime).format("h:mm:ss");
+  elRevisedtime_alt.value = moment(currentTime, ["h:mm:ss A"]).format(
+    "h:mm:ss"
+  );
 
   const elRevisedtime_alt_ampm = document.querySelector(
     "#revisedtime_alt_ampm"
   );
-  elRevisedtime_alt_ampm.value = moment(currentTime).format("A");
+  const ampm = moment(currentTime, ["h:mm:ss A"]).format("A");
+  elRevisedtime_alt_ampm.value = ampm;
 
   const revisedTypeIn = document.querySelector("#revisedTypeIn");
   revisedTypeIn.checked = currentType === "in" ? true : false;
