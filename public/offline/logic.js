@@ -5,7 +5,7 @@ function pollForOffline() {
       sessionStorage.removeItem("redirectOnceOnline");
       window.location.href = redirectOnceOnline.length ? redirectOnceOnline : "/";
     }
-  }, 3000);
+  }, 300);
 }
 
 function showAlert() {
