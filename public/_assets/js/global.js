@@ -298,7 +298,7 @@ function registerSW() {
 
 function checkIfOffline() {
   const currentUrl = window.location.href;
-  const notOnOfflinePage = (currentUrl !== "/offline/");
+  const notOnOfflinePage = (window.location.pathname !== "/offline/");
   function doCheck() {
     if (notOnOfflinePage) {
       if (!navigator.onLine) {
