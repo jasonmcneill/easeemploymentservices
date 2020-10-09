@@ -15,7 +15,6 @@ exports.POST = (req, res) => {
       .format("YYYY-MM-DD 00:00:00");
   } else {
     fromdate = moment(req.body.fromdate)
-      .subtract(7, "days")
       .format("YYYY-MM-DD 00:00:00");
   }
 
