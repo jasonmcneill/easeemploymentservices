@@ -35,12 +35,6 @@ async function getContent() {
     })
     .catch((error) => {
       console.error(error);
-      if (!navigator.onLine) {
-        return showError(
-          "You appear to be offline. Please connect to the internet, then reload the page.",
-          "No Connection"
-        );
-      }
     })
     .finally(() => {
       hideSpinner(content, spinner);
