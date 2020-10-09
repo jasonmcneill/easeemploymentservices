@@ -6,7 +6,7 @@ function showEmployee() {
   const endpoint = `/api/employee/${employeeid}`;
 
   async function populateContent(data) {
-    if (!data.length) {
+    if (Array.isArray(data) && !data.length) {
       return showError(
         `
         <p class='text-center'>There is no record corresponding to this employee ID.</p>
@@ -114,7 +114,7 @@ function showEmployee() {
             break;
         }
 
-        localforage.setItem(endpoint, data).then(() => populateContent(data));
+        populateContent(data);
       })
       .catch((error) => {
         console.error(error);
@@ -131,22 +131,8 @@ function showEmployee() {
   }
 
   showSpinner(contentEl, spinner);
-  localforage
-    .getItem(endpoint)
-    .then((data) => {
-      if (data && data.length) {
-        populateContent(data);
-      }
-    })
-    .then(() => {
-      getContent();
-    })
-    .catch((error) => {
-      console.error(error);
-    })
-    .finally(() => {
-      hideSpinner(contentEl, spinner);
-    });
+  getContent();
+  hideSpinner(contentEl, spinner);
 }
 
 function onShowDeleteModal(e) {
