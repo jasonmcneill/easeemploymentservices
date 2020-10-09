@@ -114,6 +114,7 @@ function attachListeners() {
 }
 
 function init() {
+  checkIfOffline();
   confirmMustChange();
   attachListeners();
   showToasts();

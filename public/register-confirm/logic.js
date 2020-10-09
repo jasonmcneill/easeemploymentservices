@@ -85,6 +85,7 @@ function verifyRegistrationToken() {
 }
 
 function init() {
+  checkIfOffline();
   verifyRegistrationToken();
 }
 

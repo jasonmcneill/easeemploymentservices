@@ -225,6 +225,7 @@ function attachEventListeners() {
 }
 
 function init() {
+  checkIfOffline();
   attachEventListeners();
   populateSmsPhoneCountries();
 }

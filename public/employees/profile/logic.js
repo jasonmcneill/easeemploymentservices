@@ -266,6 +266,7 @@ function attachListeners() {
 }
 
 function init() {
+  checkIfOffline();
   showEmployee();
   attachListeners();
   showToasts();

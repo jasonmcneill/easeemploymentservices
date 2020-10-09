@@ -8,6 +8,7 @@ function redirect() {
 }
 
 function init() {
+  checkIfOffline();
   removeTokens();
   redirect();
 }

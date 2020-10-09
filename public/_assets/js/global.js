@@ -297,9 +297,21 @@ function registerSW() {
 }
 
 function checkIfOffline() {
-  if (!navigator.onLine) {
-    window.location.href = "/offline/";
+  const currentUrl = window.location.pathname;
+  const notOnOfflinePage = (currentUrl !== "/offline/");
+  function doCheck() {
+    if (notOnOfflinePage) {
+      if (!navigator.onLine) {
+        console.error("Now offline.  Redirecting...");
+        sessionStorage.setItem("redirectOnceOnline", currentUrl);
+        window.location.href = "/offline/";
+      }
+    }
   }
+  doCheck();
+  setInterval(() => {
+    doCheck();
+  }, 3000);
 }
 
 function init() {

@@ -147,6 +147,7 @@ function attachEventListeners() {
 }
 
 function init() {
+  checkIfOffline();
   attachEventListeners();
 }
 

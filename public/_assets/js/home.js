@@ -248,6 +248,7 @@ function attachListeners() {
 }
 
 function init() {
+  checkIfOffline();
   attachListeners();
   populateClockTime();
   getTimeEntriesForToday();

@@ -1,14 +1,10 @@
 function pollForOffline() {
   setInterval(() => {
     if (navigator.onLine) {
-      try {
-        history.go(-1);
-      }
-      catch(err) {
-        window.location.href = "/";
-      }
+      const redirectOnceOnline = sessionStorage.getItem("redirectOnceOnline") || "";
+      window.location.href = redirectOnceOnline.length ? redirectOnceOnline : "/";
     }
-  }, 10000);
+  }, 3000);
 }
 
 function showAlert() {

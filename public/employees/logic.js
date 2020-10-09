@@ -81,6 +81,7 @@ function populateContent(data) {
 }
 
 function init() {
+  checkIfOffline();
   listEmployees();
   showToasts();
 }
