@@ -2,6 +2,7 @@ function pollForOffline() {
   setInterval(() => {
     if (navigator.onLine) {
       const redirectOnceOnline = sessionStorage.getItem("redirectOnceOnline") || "";
+      sessionStorage.removeItem("redirectOnceOnline");
       window.location.href = redirectOnceOnline.length ? redirectOnceOnline : "/";
     }
   }, 3000);
