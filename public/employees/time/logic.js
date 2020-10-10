@@ -208,12 +208,54 @@ function onTimeEntryClick(e) {
   const revisedTypeOut = document.querySelector("#revisedTypeOut");
   revisedTypeOut.checked = currentType === "out" ? true : false;
 
+  document.querySelector("#btnDeleteTimeEntry").setAttribute("data-id", id);
+  document.querySelector("#btnUpdateTimeEntry").setAttribute("data-id", id);
+
   $("#modalChangeTimeEntry").modal();
 }
 
-function onDeleteTimeEntry(e) {
+async function onDeleteTimeEntry(e) {
   e.preventDefault();
-  console.log("onDeleteTimeEntry()");
+  const entryid = e.target.getAttribute("data-id");
+  const endpoint = "/api/timeentry-delete";
+  const accessToken = await getAccessToken();
+  const content = document.querySelector("#content");
+  const spinner = document.querySelector("#spinner");
+
+  $("#modalChangeTimeEntry").modal("hide");
+  showSpinner(content, spinner);
+  fetch(endpoint, {
+    mode: "cors",
+    method: "POST",
+    body: JSON.stringify({
+      id: entryid,
+    }),
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      switch(data.msg) {
+        case "user is not authorized for this action":
+          window.location.href = "/logout/";
+          break;
+        case "missing time entry id":
+          showError("The time entry could not be deleted because it was not properly transmitted from the browser to the server.", "Unable to Delete");
+          break;
+        case "unable to query for time log":
+          showError("The time entry could not be deleted because of a technical glitch.  Please wait a moment and try again.", "Database is Down");
+          break;
+        case "time entry deleted":
+          populateContent();
+          showSuccess("<div class='text-center'>The time entry was deleted successfully.</div>", "Time Entry Deleted");
+          break;
+      }
+    })
+    .catch(err => {
+      console.error(err);
+    });
 }
 
 function onUpdateTimeEntry(e) {
