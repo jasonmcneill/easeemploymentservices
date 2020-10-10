@@ -249,7 +249,7 @@ async function onDeleteTimeEntry(e) {
           break;
         case "time entry deleted":
           populateContent();
-          showSuccess("<div class='text-center'>The time entry was deleted successfully.</div>", "Time Entry Deleted");
+          showToast("The time entry was deleted successfully.", "Time Entry Deleted", success);
           break;
       }
     })
