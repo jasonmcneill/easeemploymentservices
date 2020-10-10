@@ -136,18 +136,12 @@ exports.POST = (req, res) => {
       }
 
       const entries = result.map((item) => {
-        const time = moment(item.entry_utc)
-          .subtract(timeZoneOffset, "hours")
-          .format("h:mm:ss A");
-        const date = moment(item.entry_utc)
-          .subtract(timeZoneOffset, "hours")
-          .format("MMM. D");
-        const fulldate = moment(item.entry_utc)
-          .subtract(timeZoneOffset, "hours")
+        const time = moment.tz(item.entry_utc, timeZone).format("h:mm:ss A");
+        const date = moment.tz(item.entry_utc, timeZone).format("MMM. D");
+        const fulldate = moment
+          .tz(item.entry_utc, timeZone)
           .format("YYYY-MM-DD");
-        const weekday = moment(item.entry_utc)
-          .subtract(timeZoneOffset, "hours")
-          .format("ddd");
+        const weekday = moment.tz(item.entry_utc, timeZone).format("ddd");
         const changedItem = {
           id: item.timelogid,
           type: item.type,
