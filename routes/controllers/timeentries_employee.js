@@ -26,7 +26,7 @@ exports.POST = (req, res) => {
       .subtract(timeZoneOffset, "hours")
       .format("YYYY-MM-DD 23:59:59");
   } else {
-    todate = moment(req.body.todate).subtract(1, "days").format("YYYY-MM-DD 23:59:59");
+    todate = moment(req.body.todate).format("YYYY-MM-DD 23:59:59");
   }
 
   // Enforce authorization
