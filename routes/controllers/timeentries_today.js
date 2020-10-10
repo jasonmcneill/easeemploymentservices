@@ -5,12 +5,12 @@ exports.POST = (req, res) => {
   const employeeid = req.user.employeeid;
   const timeZoneOffset = parseInt(req.body.timeZoneOffset) || 0;
 
-  const todayFrom = moment().format("YYYY-MM-DD 00:00:00");
+  const todayFrom = moment.utc().subtract(timeZoneOffset, "hours").format("YYYY-MM-DD 00:00:00");
   const todayFromSql = moment(todayFrom)
     .add(timeZoneOffset, "hours")
     .format("YYYY-MM-DD HH:mm:ss");
 
-  const todayTo = moment().format("YYYY-MM-DD 23:59:59");
+  const todayTo = moment.utc().subtract(timeZoneOffset, "hours").format("YYYY-MM-DD 23:59:59");
   const todayToSql = moment(todayTo)
     .add(timeZoneOffset, "hours")
     .format("YYYY-MM-DD HH:mm:ss");
