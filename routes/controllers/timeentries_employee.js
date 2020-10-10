@@ -1,33 +1,30 @@
-const moment = require("moment");
+const moment = require("moment-timezone");
 const db = require("../../database");
 
 exports.POST = (req, res) => {
   const employeeid = req.body.employeeid || "";
-  const timeZoneOffset = parseInt(req.body.timeZoneOffset) || 0;
+  const timeZone = req.body.timeZone;
+  const timeZoneOffset = req.body.timeZoneOffset;
 
   // Set "from" date
   let fromdate;
   if (req.body.fromdate === "") {
     fromdate = moment
-      .utc()
-      .subtract(timeZoneOffset, "hours")
+      .tz(moment(), timeZone)
       .subtract(7, "days")
       .format("YYYY-MM-DD 00:00:00");
   } else {
-    fromdate = moment(req.body.fromdate)
+    fromdate = moment
+      .tz(req.body.fromdate, timeZone)
       .format("YYYY-MM-DD 00:00:00");
   }
 
   // Set "to" date
   let todate;
   if (req.body.todate === "") {
-    todate = moment
-      .utc()
-      .subtract(timeZoneOffset, "hours")
-      .format("YYYY-MM-DD 23:59:59");
+    todate = moment.tz(moment(), timeZone).format("YYYY-MM-DD 23:59:59");
   } else {
-    const localDate = moment(req.body.fromdate);
-    todate = moment.utc(localDate).subtract(timeZoneOffset, "hours").format("YYYY-MM-DD 23:59:59");
+    todate = moment.tz(moment(), timeZone).format("YYYY-MM-DD 23:59:59");
   }
 
   // Enforce authorization
@@ -50,12 +47,12 @@ exports.POST = (req, res) => {
   }
 
   // Modification:  set dates to today if they're in the future.
-  const now = moment.utc().subtract(timeZoneOffset, "hours");
+  const now = moment.tz(moment(), timeZone);
   if (moment(fromdate).isAfter(now)) {
-    fromdate = moment().format("YYYY-MM-DD 00:00:00");
+    fromdate = moment.tz(moment(), timeZone).format("YYYY-MM-DD 00:00:00");
   }
   if (moment(todate).isAfter(now)) {
-    todate = moment().format("YYYY-MM-DD 23:59:59");
+    todate = moment.tz(moment(), timeZone).format("YYYY-MM-DD 23:59:59");
   }
 
   // Validate:  employeeid is required
@@ -106,13 +103,9 @@ exports.POST = (req, res) => {
       ;
     `;
 
-    let fromDateSql = moment(fromdate)
-      .add(timeZoneOffset, "hours")
-      .format("YYYY-MM-DD HH:mm:ss");
+    let fromDateSql = moment(fromdate).utc().format("YYYY-MM-DD HH:mm:ss");
 
-    let toDateSql = moment(todate)
-      .add(timeZoneOffset, "hours")
-      .format("YYYY-MM-DD HH:mm:ss");
+    let toDateSql = moment(todate).utc().format("YYYY-MM-DD HH:mm:ss");
 
     db.query(sql, [employeeid, fromDateSql, toDateSql], (err, result) => {
       if (err) {

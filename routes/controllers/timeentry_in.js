@@ -1,14 +1,16 @@
-const moment = require("moment");
+const moment = require("moment-timezone");
 const db = require("../../database");
 
 exports.POST = (req, res) => {
   const employeeid = req.user.employeeid;
-  const timeZoneOffset = parseInt(req.body.timeZoneOffset) || 0;
-  const entry_utc = moment.utc().format("YYYY-MM-DD HH:mm:ss");
-  const createdAt = moment
+  const timeZone = req.body.timeZone;
+  const timeZoneOffset = req.body.timeZoneOffset;
+  const entry_utc = moment
+    .tz(moment(), timeZone)
     .utc()
-    .subtract(timeZoneOffset, "hours")
     .format("YYYY-MM-DD HH:mm:ss");
+  const createdAt = moment.tz(moment(), timeZone).format("YYYY-MM-DD HH:mm:ss");
+
   const sql = `
     INSERT INTO employees__timelogs (
       employeeid,
@@ -32,19 +34,12 @@ exports.POST = (req, res) => {
     }
 
     const timeFrom = moment
-      .utc()
-      .subtract(timeZoneOffset, "hours")
+      .tz(moment(), timeZone)
       .format("YYYY-MM-DD 00:00:00");
-    const timeTo = moment
-      .utc()
-      .subtract(timeZoneOffset, "hours")
-      .format("YYYY-MM-DD 23:59:59");
-    const timeFromSql = moment(timeFrom)
-      .add(timeZoneOffset, "hours")
-      .format("YYYY-MM-DD HH:mm:ss");
-    const timeToSql = moment(timeTo)
-      .add(timeZoneOffset, "hours")
-      .format("YYYY-MM-DD HH:mm:ss");
+    const timeTo = moment.tz(moment(), timeZone).format("YYYY-MM-DD 23:59:59");
+    const timeFromSql = moment(timeFrom).utc().format("YYYY-MM-DD HH:mm:ss");
+    const timeToSql = moment(timeTo).utc().format("YYYY-MM-DD HH:mm:ss");
+
     const sql =
       "SELECT entry_utc, type FROM employees__timelogs WHERE entry_utc > ? AND entry_utc < ? AND employeeid = ? ORDER BY createdAt ASC;";
     db.query(sql, [timeFromSql, timeToSql, employeeid], (err, result) => {

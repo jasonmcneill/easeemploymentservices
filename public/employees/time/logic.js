@@ -23,7 +23,7 @@ async function populateContent(scrollAfterFetch = false) {
   const toDateEl = document.querySelector("#todate");
   const endpoint = "/api/timeentries/employee";
   const timeZone = moment.tz.guess();
-  const timeZoneOffset = new Date().getTimezoneOffset() / 60;
+  const timeZoneOffset = new Date().getTimezoneOffset() * 60;
   const accessToken = await getAccessToken();
 
   showSpinner(content, spinner);
@@ -234,28 +234,38 @@ async function onDeleteTimeEntry(e) {
     }),
     headers: new Headers({
       "Content-Type": "application/json",
-      authorization: `Bearer ${accessToken}`
-    })
+      authorization: `Bearer ${accessToken}`,
+    }),
   })
-    .then(res => res.json())
-    .then(data => {
-      switch(data.msg) {
+    .then((res) => res.json())
+    .then((data) => {
+      switch (data.msg) {
         case "user is not authorized for this action":
           window.location.href = "/logout/";
           break;
         case "missing time entry id":
-          showError("The time entry could not be deleted because it was not properly transmitted from the browser to the server.", "Unable to Delete");
+          showError(
+            "The time entry could not be deleted because it was not properly transmitted from the browser to the server.",
+            "Unable to Delete"
+          );
           break;
         case "unable to query for time log":
-          showError("The time entry could not be deleted because of a technical glitch.  Please wait a moment and try again.", "Database is Down");
+          showError(
+            "The time entry could not be deleted because of a technical glitch.  Please wait a moment and try again.",
+            "Database is Down"
+          );
           break;
         case "time entry deleted":
           populateContent();
-          showToast("The time entry was deleted successfully.", "Time Entry Deleted", "success");
+          showToast(
+            "The time entry was deleted successfully.",
+            "Time Entry Deleted",
+            "success"
+          );
           break;
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
     });
 }

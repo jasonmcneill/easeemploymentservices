@@ -1,19 +1,16 @@
-const moment = require("moment");
+const moment = require("moment-timezone");
 const db = require("../../database");
 
 exports.POST = (req, res) => {
   const employeeid = req.user.employeeid;
-  const timeZoneOffset = parseInt(req.body.timeZoneOffset) || 0;
+  const timeZone = req.body.timeZone;
+  const timeZoneOffset = req.body.timeZoneOffset;
 
-  const todayFrom = moment.utc().subtract(timeZoneOffset, "hours").format("YYYY-MM-DD 00:00:00");
-  const todayFromSql = moment(todayFrom)
-    .add(timeZoneOffset, "hours")
-    .format("YYYY-MM-DD HH:mm:ss");
+  let todayFrom = moment.tz(moment(), timeZone).format("YYYY-MM-DD 00:00:00");
+  let todayFromSql = moment(todayFrom).utc().format("YYYY-MM-DD HH:mm:ss");
 
-  const todayTo = moment.utc().subtract(timeZoneOffset, "hours").format("YYYY-MM-DD 23:59:59");
-  const todayToSql = moment(todayTo)
-    .add(timeZoneOffset, "hours")
-    .format("YYYY-MM-DD HH:mm:ss");
+  let todayTo = moment.tz(moment(), timeZone).format("YYYY-MM-DD 23:59:59");
+  let todayToSql = moment(todayTo).utc().format("YYYY-MM-DD HH:mm:ss");
 
   const sql = `
     SELECT entry_utc, type
