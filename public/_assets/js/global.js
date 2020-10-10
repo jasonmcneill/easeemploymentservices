@@ -275,19 +275,6 @@ function showToast(
   showToasts(samePageToasts);
 }
 
-function convertUTCDateToLocal(date, type = "time") {
-  var newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
-
-  var offset = date.getTimezoneOffset() / 60;
-  var hours = date.getHours();
-
-  newDate.setHours(hours - offset);
-
-  return type === "time"
-    ? newDate.toLocaleTimeString()
-    : newDate.toLocaleDateString();
-}
-
 function registerSW() {
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
@@ -299,7 +286,7 @@ function registerSW() {
 function checkIfOffline() {
   const currentUrl = window.location.href;
   const currentPath = window.location.pathname;
-  const isRedirectOK = (currentPath !== "/offline/");
+  const isRedirectOK = currentPath !== "/offline/";
 
   function doCheck() {
     if (!navigator.onLine) {
