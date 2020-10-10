@@ -37,7 +37,7 @@ exports.POST = (req, res) => {
     }
 
     const entries = result.map((item) => {
-      const entry = moment.tz(item.entry_utc, timeZone).format("h:mm:ss A");
+      const entry = moment.utc().tz(timeZone).format("h:mm:ss A");
       const changedItem = {
         type: item.type,
         entry: entry,
