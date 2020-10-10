@@ -10,7 +10,7 @@ exports.POST = (req, res) => {
     .add(timeZoneOffset, "hours")
     .format("YYYY-MM-DD HH:mm:ss");
 
-  const todayTo = moment.utc().subtract(timeZoneOffset, "hours").format("YYYY-MM-DD 23:59:59");
+  const todayTo = moment.utc().subtract(1, "days").subtract(timeZoneOffset, "hours").format("YYYY-MM-DD 23:59:59");
   const todayToSql = moment(todayTo)
     .add(timeZoneOffset, "hours")
     .format("YYYY-MM-DD HH:mm:ss");
