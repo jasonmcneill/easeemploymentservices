@@ -24,6 +24,7 @@ function populateClockTime() {
 }
 
 async function onClockInClicked() {
+  const timeZone = moment.tz.guess();
   const timeZoneOffset = new Date().getTimezoneOffset() / 60;
   const btnClockIn = document.querySelector("#btnClockIn");
   const btnClockOut = document.querySelector("#btnClockOut");
@@ -44,6 +45,7 @@ async function onClockInClicked() {
     mode: "cors",
     method: "POST",
     body: JSON.stringify({
+      timeZone: timeZone,
       timeZoneOffset: timeZoneOffset,
     }),
     headers: new Headers({
@@ -87,6 +89,7 @@ function onClockOutClicked(e) {
 
 async function onClockOutConfirmed(e) {
   e.preventDefault();
+  const timeZone = moment.tz.guess();
   const timeZoneOffset = new Date().getTimezoneOffset() / 60;
   const btnClockIn = document.querySelector("#btnClockIn");
   const btnClockOut = document.querySelector("#btnClockOut");
@@ -109,6 +112,7 @@ async function onClockOutConfirmed(e) {
     mode: "cors",
     method: "POST",
     body: JSON.stringify({
+      timeZone: timeZone,
       timeZoneOffset: timeZoneOffset,
     }),
     headers: new Headers({
@@ -185,6 +189,7 @@ async function getTimeEntriesForToday() {
   const timeEntries = document.querySelector("#timeEntries");
   const btnClockIn = document.querySelector("#btnClockIn");
   const btnClockOut = document.querySelector("#btnClockOut");
+  const timeZone = moment.tz.guess();
   const timeZoneOffset = new Date().getTimezoneOffset() / 60;
   const endpoint = "/api/timeentries-today";
   const accessToken = await getAccessToken();
@@ -200,6 +205,7 @@ async function getTimeEntriesForToday() {
     mode: "cors",
     method: "POST",
     body: JSON.stringify({
+      timeZone: timeZone,
       timeZoneOffset: timeZoneOffset,
     }),
     headers: new Headers({

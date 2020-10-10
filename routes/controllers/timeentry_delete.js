@@ -1,6 +1,7 @@
 const db = require("../../database");
 
 exports.POST = (req, res) => {
+  console.log(require("util").inspect(req.body, true, 7, true));
   const id = req.body.id || "";
 
   // Enforce authorization

@@ -22,6 +22,7 @@ async function populateContent(scrollAfterFetch = false) {
   const fromDateEl = document.querySelector("#fromdate");
   const toDateEl = document.querySelector("#todate");
   const endpoint = "/api/timeentries/employee";
+  const timeZone = moment.tz.guess();
   const timeZoneOffset = new Date().getTimezoneOffset() / 60;
   const accessToken = await getAccessToken();
 
@@ -31,6 +32,7 @@ async function populateContent(scrollAfterFetch = false) {
     method: "POST",
     body: JSON.stringify({
       employeeid: employeeid,
+      timeZone: timeZone,
       timeZoneOffset: timeZoneOffset,
       fromdate: fromDateEl.value,
       todate: toDateEl.value,
