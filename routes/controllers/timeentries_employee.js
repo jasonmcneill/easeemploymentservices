@@ -24,6 +24,7 @@ exports.POST = (req, res) => {
     todate = moment
       .utc()
       .subtract(timeZoneOffset, "hours")
+      .subtract(1, "days")
       .format("YYYY-MM-DD 23:59:59");
   } else {
     todate = moment(req.body.todate).format("YYYY-MM-DD 23:59:59");
