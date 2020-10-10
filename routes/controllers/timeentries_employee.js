@@ -26,12 +26,9 @@ exports.POST = (req, res) => {
       .subtract(timeZoneOffset, "hours")
       .format("YYYY-MM-DD 23:59:59");
   } else {
-    const localDate = moment(req.body.fromdate).format("YYYY-MM-DD 23:59:59");
-    todate = moment.utc(localDate).subtract(timeZoneOffset, "hours");
+    const localDate = moment(req.body.fromdate);
+    todate = moment.utc(localDate).subtract(timeZoneOffset, "hours").format("YYYY-MM-DD 23:59:59");
   }
-
-  console.log(`fromdate: ${fromdate}`)
-  console.log(`todate: ${todate}`)
 
   // Enforce authorization
   const usertype = req.user.type;
