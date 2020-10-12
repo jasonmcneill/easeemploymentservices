@@ -8,22 +8,17 @@ exports.POST = (req, res) => {
   // Set "from" date
   let fromdate;
   if (req.body.fromdate === "") {
-    fromdate = moment
-      .tz(moment(), timeZone)
-      .subtract(7, "days")
-      .format("YYYY-MM-DD 00:00:00");
+    fromdate = moment().subtract(7, "days").format("YYYY-MM-DD 00:00:00");
   } else {
-    fromdate = moment
-      .tz(req.body.fromdate, timeZone)
-      .format("YYYY-MM-DD 00:00:00");
+    fromdate = moment(req.body.fromdate).format("YYYY-MM-DD 00:00:00");
   }
 
   // Set "to" date
   let todate;
   if (req.body.todate === "") {
-    todate = moment.tz(moment(), timeZone).format("YYYY-MM-DD 23:59:59");
+    todate = moment().format("YYYY-MM-DD 23:59:59");
   } else {
-    todate = moment.tz(req.body.todate, timeZone).format("YYYY-MM-DD 23:59:59");
+    todate = moment(req.body.todate).format("YYYY-MM-DD 23:59:59");
   }
 
   // Enforce authorization
@@ -131,8 +126,8 @@ exports.POST = (req, res) => {
       }
 
       const entries = result.map((item) => {
-        const time = moment().format("h:mm:ss A");
-        const date = moment().format("MMM. D");
+        const time = moment(item.entry).format("h:mm:ss A");
+        const date = moment(item.entry).format("MMM. D");
         const fulldate = moment(item.entry).format("YYYY-MM-DD");
         const weekday = moment(item.entry).format("ddd");
         const changedItem = {
