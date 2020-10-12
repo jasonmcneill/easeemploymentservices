@@ -15,7 +15,7 @@ exports.POST = (req, res) => {
       createdAt
     ) VALUES (
       ?,
-      ?,
+      now(),
       'out',
       ?
     )
