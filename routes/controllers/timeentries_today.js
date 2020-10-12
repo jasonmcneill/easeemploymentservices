@@ -12,8 +12,7 @@ exports.POST = (req, res) => {
   const sql = `
     SELECT entry, type
     FROM employees__timelogs
-    WHERE entry > ?
-    AND entry < ?
+    WHERE entry BETWEEN ? AND ?
     AND employeeid = ?
     ORDER BY
     entry ASC;`;
