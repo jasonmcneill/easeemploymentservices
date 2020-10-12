@@ -46,12 +46,12 @@ exports.POST = (req, res) => {
   }
 
   // Modification:  set dates to today if they're in the future.
-  const now = moment.tz(moment(), timeZone);
+  const now = moment();
   if (moment(fromdate).isAfter(now)) {
-    fromdate = moment.tz(moment(), timeZone).format("YYYY-MM-DD 00:00:00");
+    fromdate = moment().format("YYYY-MM-DD 00:00:00");
   }
   if (moment(todate).isAfter(now)) {
-    todate = moment.tz(moment(), timeZone).format("YYYY-MM-DD 23:59:59");
+    todate = moment().format("YYYY-MM-DD 23:59:59");
   }
 
   // Validate:  employeeid is required
@@ -131,10 +131,10 @@ exports.POST = (req, res) => {
       }
 
       const entries = result.map((item) => {
-        const time = moment.tz(timeZone).format("h:mm:ss A");
-        const date = moment.tz(item.entry, timeZone).format("MMM. D");
-        const fulldate = moment.tz(item.entry, timeZone).format("YYYY-MM-DD");
-        const weekday = moment.tz(item.entry, timeZone).format("ddd");
+        const time = moment().format("h:mm:ss A");
+        const date = moment().format("MMM. D");
+        const fulldate = moment(item.entry).format("YYYY-MM-DD");
+        const weekday = moment(item.entry).format("ddd");
         const changedItem = {
           id: item.timelogid,
           type: item.type,

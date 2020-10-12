@@ -4,8 +4,8 @@ const db = require("../../database");
 exports.POST = (req, res) => {
   const employeeid = req.user.employeeid;
   const timeZone = req.body.timeZone;
-  const entry = moment.tz(moment(), timeZone).format("YYYY-MM-DD HH:mm:ss");
-  const createdAt = moment.tz(moment(), timeZone).format("YYYY-MM-DD HH:mm:ss");
+  const entry = moment().format("YYYY-MM-DD HH:mm:ss");
+  const createdAt = moment().format("YYYY-MM-DD HH:mm:ss");
 
   const sql = `
     INSERT INTO employees__timelogs (
@@ -29,10 +29,8 @@ exports.POST = (req, res) => {
         .send({ msg: "unable to insert time entry", msgType: "error" });
     }
 
-    const timeFrom = moment
-      .tz(moment(), timeZone)
-      .format("YYYY-MM-DD 00:00:00");
-    const timeTo = moment.tz(moment(), timeZone).format("YYYY-MM-DD 23:59:59");
+    const timeFrom = moment().format("YYYY-MM-DD 00:00:00");
+    const timeTo = moment().format("YYYY-MM-DD 23:59:59");
 
     const sql =
       "SELECT entry, type FROM employees__timelogs WHERE entry > ? AND entry < ? AND employeeid = ? ORDER BY createdAt ASC;";
@@ -48,7 +46,7 @@ exports.POST = (req, res) => {
       const entries = result2.map((item) => {
         const changedItem = {
           type: item.type,
-          entry: moment.tz(item.entry, timeZone).format("h:mm:ss A"),
+          entry: moment(item.entry).format("h:mm:ss A"),
         };
         return changedItem;
       });
