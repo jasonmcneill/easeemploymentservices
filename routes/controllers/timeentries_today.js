@@ -8,6 +8,7 @@ exports.POST = (req, res) => {
   const sql = `
     SELECT
       TIME_FORMAT(entry, "%h:%i:%s %p") AS entry,
+      entry AS fulldate,
       type
     FROM
       employees__timelogs
@@ -39,6 +40,7 @@ exports.POST = (req, res) => {
       const changedItem = {
         type: item.type,
         entry: item.entry,
+        fulldate: item.fulldate,
       };
       return changedItem;
     });
