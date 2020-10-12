@@ -32,8 +32,7 @@ exports.POST = (req, res) => {
     const timeFrom = moment().format("YYYY-MM-DD 00:00:00");
     const timeTo = moment().format("YYYY-MM-DD 23:59:59");
 
-    const sql =
-      "SELECT entry, type FROM employees__timelogs WHERE entry > ? AND entry < ? AND employeeid = ? ORDER BY createdAt ASC;";
+    const sql = `SELECT DATE_FORMAT(entry, "%h:%m:%s %p") AS entry, type FROM employees__timelogs WHERE entry > ? AND entry < ? AND employeeid = ? ORDER BY createdAt ASC;`;
     db.query(sql, [timeFrom, timeTo, employeeid], (err, result2) => {
       if (err) {
         console.log(err);
@@ -46,7 +45,7 @@ exports.POST = (req, res) => {
       const entries = result2.map((item) => {
         const changedItem = {
           type: item.type,
-          entry: moment(item.entry).format("h:mm:ss A"),
+          entry: item.entry,
         };
         return changedItem;
       });

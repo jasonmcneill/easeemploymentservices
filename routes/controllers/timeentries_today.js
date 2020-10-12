@@ -10,7 +10,7 @@ exports.POST = (req, res) => {
   let todayTo = moment().format("YYYY-MM-DD 23:59:59");
 
   const sql = `
-    SELECT entry, type
+    SELECT DATE_FORMAT(entry, "%h:%m:%s %p") AS entry, type
     FROM employees__timelogs
     WHERE entry BETWEEN ? AND ?
     AND employeeid = ?
@@ -33,10 +33,9 @@ exports.POST = (req, res) => {
     }
 
     const entries = result.map((item) => {
-      const entry = new String(item.entry).toString();
       const changedItem = {
         type: item.type,
-        entry: moment(entry).format("h:mm:ss A"),
+        entry: item.entry,
       };
       return changedItem;
     });
