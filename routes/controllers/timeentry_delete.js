@@ -1,7 +1,6 @@
 const db = require("../../database");
 
 exports.POST = (req, res) => {
-  console.log(require("util").inspect(req.body, true, 7, true));
   const id = req.body.id || "";
 
   // Enforce authorization
@@ -15,15 +14,22 @@ exports.POST = (req, res) => {
     });
   }
 
-  if (!id.length) return res.status(404).send({msg: "missing time entry id", msgType: "error"});
+  if (!id.length)
+    return res
+      .status(404)
+      .send({ msg: "missing time entry id", msgType: "error" });
 
   const sql = "DELETE FROM employees__timelogs WHERE timelogid = ?;";
   db.query(sql, [id], (err) => {
     if (err) {
       console.log(err);
-      return res.status(500).send({msg: "unable to query for time log", msgType: "error"});
+      return res
+        .status(500)
+        .send({ msg: "unable to query for time log", msgType: "error" });
     }
 
-    return res.status(200).send({msg: "time entry deleted", msgType: "success"});
+    return res
+      .status(200)
+      .send({ msg: "time entry deleted", msgType: "success" });
   });
-}
+};
