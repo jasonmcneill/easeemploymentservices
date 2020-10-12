@@ -5,9 +5,9 @@ exports.POST = (req, res) => {
   const employeeid = req.user.employeeid;
   const timeZone = req.body.timeZone;
 
-  let todayFrom = moment.tz(timeZone).format("YYYY-MM-DD 00:00:00");
+  let todayFrom = moment.tz("UTC").format("YYYY-MM-DD 00:00:00");
 
-  let todayTo = moment.tz(timeZone).format("YYYY-MM-DD 23:59:59");
+  let todayTo = moment.tz("UTC").format("YYYY-MM-DD 23:59:59");
 
   const sql = `
     SELECT entry, type
