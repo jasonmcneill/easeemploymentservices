@@ -4,17 +4,13 @@ const db = require("../../database");
 exports.POST = (req, res) => {
   const employeeid = req.user.employeeid;
   const timeZone = req.body.timeZone;
-  const timeZoneOffset = req.body.timeZoneOffset;
-  const entry_utc = moment
-    .tz(moment(), timeZone)
-    .utc()
-    .format("YYYY-MM-DD HH:mm:ss");
+  const entry = moment.tz(moment(), timeZone).format("YYYY-MM-DD HH:mm:ss");
   const createdAt = moment.tz(moment(), timeZone).format("YYYY-MM-DD HH:mm:ss");
 
   const sql = `
     INSERT INTO employees__timelogs (
       employeeid,
-      entry_utc,
+      entry,
       type,
       createdAt
     ) VALUES (
@@ -25,7 +21,7 @@ exports.POST = (req, res) => {
     )
   ;`;
 
-  db.query(sql, [employeeid, entry_utc, createdAt], (err, result1) => {
+  db.query(sql, [employeeid, entry, createdAt], (err, result1) => {
     if (err) {
       console.log(err);
       return res
@@ -37,12 +33,10 @@ exports.POST = (req, res) => {
       .tz(moment(), timeZone)
       .format("YYYY-MM-DD 00:00:00");
     const timeTo = moment.tz(moment(), timeZone).format("YYYY-MM-DD 23:59:59");
-    const timeFromSql = moment(timeFrom).utc().format("YYYY-MM-DD HH:mm:ss");
-    const timeToSql = moment(timeTo).utc().format("YYYY-MM-DD HH:mm:ss");
 
     const sql =
-      "SELECT entry_utc, type FROM employees__timelogs WHERE entry_utc > ? AND entry_utc < ? AND employeeid = ? ORDER BY createdAt ASC;";
-    db.query(sql, [timeFromSql, timeToSql, employeeid], (err, result2) => {
+      "SELECT entry, type FROM employees__timelogs WHERE entry > ? AND entry < ? AND employeeid = ? ORDER BY createdAt ASC;";
+    db.query(sql, [timeFrom, timeTo, employeeid], (err, result2) => {
       if (err) {
         console.log(err);
         return res.status(500).send({
@@ -52,12 +46,9 @@ exports.POST = (req, res) => {
       }
 
       const entries = result2.map((item) => {
-        const entry = moment(item.entry_utc)
-          .subtract(timeZoneOffset, "hours")
-          .format("h:mm:ss A");
         const changedItem = {
           type: item.type,
-          entry: entry,
+          entry: moment.tz(item.entry, timeZone).format("h:mm:ss A"),
         };
         return changedItem;
       });

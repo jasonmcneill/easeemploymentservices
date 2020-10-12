@@ -4,7 +4,6 @@ const db = require("../../database");
 exports.POST = (req, res) => {
   const employeeid = req.body.employeeid || "";
   const timeZone = req.body.timeZone;
-  const timeZoneOffset = req.body.timeZoneOffset;
 
   // Set "from" date
   let fromdate;
@@ -24,7 +23,7 @@ exports.POST = (req, res) => {
   if (req.body.todate === "") {
     todate = moment.tz(moment(), timeZone).format("YYYY-MM-DD 23:59:59");
   } else {
-    todate = moment.tz(moment(), timeZone).format("YYYY-MM-DD 23:59:59");
+    todate = moment.tz(req.body.todate, timeZone).format("YYYY-MM-DD 23:59:59");
   }
 
   // Enforce authorization
@@ -90,24 +89,20 @@ exports.POST = (req, res) => {
     const sql = `
       SELECT
         timelogid,
-        entry_utc,
+        entry,
         type
       FROM
         employees__timelogs
       WHERE
         employeeid = ?
       AND
-        entry_utc BETWEEN ? AND ?
+      entry BETWEEN ? AND ?
       ORDER BY
-        entry_utc
+      entry
       ;
     `;
 
-    let fromDateSql = moment(fromdate).utc().format("YYYY-MM-DD HH:mm:ss");
-
-    let toDateSql = moment(todate).utc().format("YYYY-MM-DD HH:mm:ss");
-
-    db.query(sql, [employeeid, fromDateSql, toDateSql], (err, result) => {
+    db.query(sql, [employeeid, fromdate, todate], (err, result) => {
       if (err) {
         console.log(err);
         return res.status(500).send({
@@ -136,16 +131,10 @@ exports.POST = (req, res) => {
       }
 
       const entries = result.map((item) => {
-        const time = moment
-          .utc(item.entry_utc)
-          .tz(timeZone)
-          .format("h:mm:ss A");
-        const date = moment.utc(item.entry_utc).tz(timeZone).format("MMM. D");
-        const fulldate = moment
-          .utc(item.entry_utc)
-          .tz(timeZone)
-          .format("YYYY-MM-DD");
-        const weekday = moment.utc(item.entry_utc).tz(timeZone).format("ddd");
+        const time = moment.tz(timeZone).format("h:mm:ss A");
+        const date = moment.tz(item.entry, timeZone).format("MMM. D");
+        const fulldate = moment.tz(item.entry, timeZone).format("YYYY-MM-DD");
+        const weekday = moment.tz(item.entry, timeZone).format("ddd");
         const changedItem = {
           id: item.timelogid,
           type: item.type,

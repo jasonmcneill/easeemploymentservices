@@ -4,24 +4,21 @@ const db = require("../../database");
 exports.POST = (req, res) => {
   const employeeid = req.user.employeeid;
   const timeZone = req.body.timeZone;
-  const timeZoneOffset = req.body.timeZoneOffset;
 
   let todayFrom = moment.tz(moment(), timeZone).format("YYYY-MM-DD 00:00:00");
-  let todayFromSql = moment(todayFrom).utc().format("YYYY-MM-DD HH:mm:ss");
 
   let todayTo = moment.tz(moment(), timeZone).format("YYYY-MM-DD 23:59:59");
-  let todayToSql = moment(todayTo).utc().format("YYYY-MM-DD HH:mm:ss");
 
   const sql = `
-    SELECT entry_utc, type
+    SELECT entry, type
     FROM employees__timelogs
-    WHERE entry_utc > ?
-    AND entry_utc < ?
+    WHERE entry > ?
+    AND entry < ?
     AND employeeid = ?
     ORDER BY
-    entry_utc ASC;`;
+    entry ASC;`;
 
-  db.query(sql, [todayFromSql, todayToSql, employeeid], (err, result) => {
+  db.query(sql, [todayFrom, todayTo, employeeid], (err, result) => {
     if (err) {
       console.log(err);
       return res.status(500).send({
@@ -37,10 +34,9 @@ exports.POST = (req, res) => {
     }
 
     const entries = result.map((item) => {
-      const entry = moment.utc().tz(timeZone).format("h:mm:ss A");
       const changedItem = {
         type: item.type,
-        entry: entry,
+        entry: moment.tz(item.entry, timeZone).format("h:mm:ss A"),
       };
       return changedItem;
     });
