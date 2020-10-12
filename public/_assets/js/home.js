@@ -168,7 +168,7 @@ function showTimeEntries(entries) {
   }
 
   entries.forEach((item) => {
-    const entry = moment.tz(item.entry, timeZone).format("h:mm:ss A");
+    const entry = moment(item.entry).format("h:mm:ss A");
     timeHtml += `
       <tr>
         <td>
