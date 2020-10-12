@@ -5,19 +5,22 @@ exports.POST = (req, res) => {
   const employeeid = req.user.employeeid;
   const timeZone = req.body.timeZone;
 
-  let todayFrom = moment().format("YYYY-MM-DD 00:00:00");
-
-  let todayTo = moment().format("YYYY-MM-DD 23:59:59");
-
   const sql = `
-    SELECT DATE_FORMAT(entry, "%h:%m:%s %p") AS entry, type
-    FROM employees__timelogs
-    WHERE entry BETWEEN ? AND ?
-    AND employeeid = ?
+    SELECT
+      TIME_FORMAT(entry, "%h:%i:%s %p") AS entry,
+      type
+    FROM
+      employees__timelogs
+    WHERE
+      entry >= CURDATE()
+    AND
+      entry < CURRENT_DATE() + INTERVAL 1 DAY
+    AND
+      employeeid = ?
     ORDER BY
-    entry ASC;`;
+      entry ASC;`;
 
-  db.query(sql, [todayFrom, todayTo, employeeid], (err, result) => {
+  db.query(sql, [employeeid], (err, result) => {
     if (err) {
       console.log(err);
       return res.status(500).send({
