@@ -29,8 +29,7 @@ exports.POST = (req, res) => {
 
     const sql = `
       SELECT
-        TIME_FORMAT(entry, "%h:%i:%s %p") AS entry,
-        entry AS fulldate,
+        DATE_FORMAT(entry, "%Y-%m-%d %H:%i:%s") AS entry,
         type
       FROM
         employees__timelogs
@@ -41,7 +40,7 @@ exports.POST = (req, res) => {
       AND
         employeeid = ?
       ORDER BY
-      createdAt ASC;`;
+        entry ASC;`;
 
     db.query(sql, [employeeid], (err, result2) => {
       if (err) {
