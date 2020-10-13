@@ -153,7 +153,6 @@ function showTimeEntries(entries) {
   const timeEntries = document.querySelector("#timeEntries");
   const btnClockIn = document.querySelector("#btnClockIn");
   const btnClockOut = document.querySelector("#btnClockOut");
-  const timeZone = moment.tz.guess();
   let timeHtml = ``;
 
   // Decide whether to show "Clock In" or "Clock Out" button
@@ -168,7 +167,6 @@ function showTimeEntries(entries) {
   }
 
   entries.forEach((item) => {
-    const entry = moment(item.entry).format("h:mm:ss A");
     timeHtml += `
       <tr>
         <td>
@@ -177,7 +175,7 @@ function showTimeEntries(entries) {
           </span>
         </td>
         <td class="text-right">
-          ${entry}
+          ${item.entry}
         </td>
       </tr>
     `;
