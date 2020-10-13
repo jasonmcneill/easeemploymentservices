@@ -36,8 +36,6 @@ exports.POST = (req, res) => {
         .send({ msg: "no time entries found for today", msgType: "info" });
     }
 
-    console.log(require("util").inspect(result, true, 7, true));
-
     const entries = result.map((item) => {
       const changedItem = {
         type: item.type,
