@@ -30,7 +30,7 @@ exports.POST = (req, res) => {
 
     const sql = `
       SELECT
-        DATE_FORMAT(CONVERT_TZ(entry, "+00:00", ?), "%h:%i:%s %p") AS entry,
+        CONVERT_TZ(entry, "+00:00", ?) AS entry,
         type
       FROM
         employees__timelogs
