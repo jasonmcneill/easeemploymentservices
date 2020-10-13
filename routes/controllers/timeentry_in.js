@@ -55,7 +55,7 @@ exports.POST = (req, res) => {
       const entries = result2.map((item) => {
         const changedItem = {
           type: item.type,
-          entry: item.entry,
+          entry: moment(item.entry).format("h:mm:ss A"),
         };
         return changedItem;
       });
