@@ -4,6 +4,7 @@ const db = require("../../database");
 exports.POST = (req, res) => {
   const employeeid = req.body.employeeid || "";
   const timeZone = req.body.timeZone;
+  const timeZoneOffset = moment.tz(timeZone).format("Z:00").slice(0, -3);
 
   // Set "from" date
   let fromdate;
@@ -84,74 +85,78 @@ exports.POST = (req, res) => {
     const sql = `
       SELECT
         timelogid,
-        entry,
+        CONVERT_TZ(entry, "+00:00", ?) AS entry,
         type
       FROM
         employees__timelogs
       WHERE
         employeeid = ?
       AND
-      entry BETWEEN ? AND ?
+        entry BETWEEN ? AND ?
       ORDER BY
-      entry
+        entry
       ;
     `;
 
-    db.query(sql, [employeeid, fromdate, todate], (err, result) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).send({
-          msg: "unable to query for time entries",
-          msgType: "error",
+    db.query(
+      sql,
+      [timeZoneOffset, employeeid, fromdate, todate],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).send({
+            msg: "unable to query for time entries",
+            msgType: "error",
+            firstname: firstname,
+            lastname: lastname,
+            type: type,
+            status: status,
+            fromdate: fromdate,
+            todate: todate,
+          });
+        }
+
+        if (!result.length) {
+          return res.status(404).send({
+            msg: "no time entries found",
+            msgType: "error",
+            firstname: firstname,
+            lastname: lastname,
+            type: type,
+            status: status,
+            fromdate: fromdate,
+            todate: todate,
+          });
+        }
+
+        const entries = result.map((item) => {
+          const time = moment(item.entry).format("h:mm:ss A");
+          const date = moment(item.entry).format("MMM. D");
+          const fulldate = moment(item.entry).format("YYYY-MM-DD");
+          const weekday = moment(item.entry).format("ddd");
+          const changedItem = {
+            id: item.timelogid,
+            type: item.type,
+            time: time,
+            date: date,
+            fulldate: fulldate,
+            weekday: weekday,
+          };
+          return changedItem;
+        });
+
+        return res.status(200).send({
+          msg: "time entries found",
+          msgType: "success",
           firstname: firstname,
           lastname: lastname,
           type: type,
           status: status,
+          entries: entries,
           fromdate: fromdate,
           todate: todate,
         });
       }
-
-      if (!result.length) {
-        return res.status(404).send({
-          msg: "no time entries found",
-          msgType: "error",
-          firstname: firstname,
-          lastname: lastname,
-          type: type,
-          status: status,
-          fromdate: fromdate,
-          todate: todate,
-        });
-      }
-
-      const entries = result.map((item) => {
-        const time = moment(item.entry).format("h:mm:ss A");
-        const date = moment(item.entry).format("MMM. D");
-        const fulldate = moment(item.entry).format("YYYY-MM-DD");
-        const weekday = moment(item.entry).format("ddd");
-        const changedItem = {
-          id: item.timelogid,
-          type: item.type,
-          time: time,
-          date: date,
-          fulldate: fulldate,
-          weekday: weekday,
-        };
-        return changedItem;
-      });
-
-      return res.status(200).send({
-        msg: "time entries found",
-        msgType: "success",
-        firstname: firstname,
-        lastname: lastname,
-        type: type,
-        status: status,
-        entries: entries,
-        fromdate: fromdate,
-        todate: todate,
-      });
-    });
+    );
   });
 };
