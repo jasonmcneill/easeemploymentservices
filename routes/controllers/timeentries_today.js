@@ -4,10 +4,11 @@ const db = require("../../database");
 exports.POST = (req, res) => {
   const employeeid = req.user.employeeid;
   const timeZone = req.body.timeZone;
+  const timeZoneOffset = moment.tz(timeZone).format("Z:00").slice(0, -3);
 
   const sql = `
     SELECT
-      DATE_FORMAT(entry, "%Y-%m-%d %H:%i:%s") AS entry,
+      DATE_FORMAT(CONVERT_TZ(entry, "+00:00", ?), "%h:%i:%s %p") AS entry,
       type
     FROM
       employees__timelogs
@@ -20,7 +21,7 @@ exports.POST = (req, res) => {
     ORDER BY
       entry ASC;`;
 
-  db.query(sql, [employeeid], (err, result) => {
+  db.query(sql, [timeZoneOffset, employeeid], (err, result) => {
     if (err) {
       console.log(err);
       return res.status(500).send({
@@ -34,6 +35,8 @@ exports.POST = (req, res) => {
         .status(404)
         .send({ msg: "no time entries found for today", msgType: "info" });
     }
+
+    console.log(require("util").inspect(result, true, 7, true));
 
     const entries = result.map((item) => {
       const changedItem = {

@@ -4,6 +4,7 @@ const db = require("../../database");
 exports.POST = (req, res) => {
   const employeeid = req.user.employeeid;
   const timeZone = req.body.timeZone;
+  const timeZoneOffset = moment.tz(timeZone).format("Z:00").slice(0, -3);
 
   const sql = `
     INSERT INTO employees__timelogs (
@@ -13,9 +14,9 @@ exports.POST = (req, res) => {
       createdAt
     ) VALUES (
       ?,
-      now(),
+      UTC_TIMESTAMP(),
       'in',
-      now()
+      UTC_TIMESTAMP()
     )
   ;`;
 
@@ -29,7 +30,7 @@ exports.POST = (req, res) => {
 
     const sql = `
       SELECT
-        DATE_FORMAT(entry, "%Y-%m-%d %H:%i:%s") AS entry,
+        DATE_FORMAT(CONVERT_TZ(entry, "+00:00", ?), "%h:%i:%s %p") AS entry,
         type
       FROM
         employees__timelogs
@@ -42,7 +43,7 @@ exports.POST = (req, res) => {
       ORDER BY
         entry ASC;`;
 
-    db.query(sql, [employeeid], (err, result2) => {
+    db.query(sql, [timeZoneOffset, employeeid], (err, result2) => {
       if (err) {
         console.log(err);
         return res.status(500).send({
@@ -55,7 +56,6 @@ exports.POST = (req, res) => {
         const changedItem = {
           type: item.type,
           entry: item.entry,
-          fulldate: item.fulldate,
         };
         return changedItem;
       });
