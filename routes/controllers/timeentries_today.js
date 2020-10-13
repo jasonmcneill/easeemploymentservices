@@ -8,7 +8,7 @@ exports.POST = (req, res) => {
 
   const sql = `
     SELECT
-      DATE_FORMAT(CONVERT_TZ(entry, "+00:00", ?), "%h:%i:%s %p") AS entry,
+      CONVERT_TZ(entry, "+00:00", ?) AS entry,
       type
     FROM
       employees__timelogs
@@ -39,7 +39,7 @@ exports.POST = (req, res) => {
     const entries = result.map((item) => {
       const changedItem = {
         type: item.type,
-        entry: item.entry,
+        entry: moment(item.entry).format("h:mm:ss A"),
       };
       return changedItem;
     });
