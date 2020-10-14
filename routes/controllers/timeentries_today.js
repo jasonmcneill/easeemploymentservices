@@ -7,47 +7,52 @@ exports.POST = (req, res) => {
   const timeZoneOffset = moment.tz(timeZone).format("Z:00").slice(0, -3);
 
   const sql = `
-    SELECT
-      CONVERT_TZ(entry, "+00:00", ?) AS entry,
-      type
-    FROM
-      employees__timelogs
-    WHERE
-      entry >= CURDATE()
-    AND
-      entry < CURRENT_DATE() + INTERVAL 1 DAY
-    AND
-      employeeid = ?
-    ORDER BY
-      entry ASC;`;
+  SELECT
+    CONVERT_TZ(entry, '+00:00', ?) AS entry,
+    type
+  FROM
+    employees__timelogs
+  WHERE
+    entry
+  BETWEEN
+    CONVERT_TZ(current_date, ?, '+00:00')
+  AND
+    CONVERT_TZ(current_date + INTERVAL 1 DAY, ?, '+00:00')
+  AND
+    employeeid = ?
+  ;`;
 
-  db.query(sql, [timeZoneOffset, employeeid], (err, result) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).send({
-        msg: "unable to query for time entries for today",
-        msgType: "error",
+  db.query(
+    sql,
+    [timeZoneOffset, timeZoneOffset, timeZoneOffset, employeeid],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({
+          msg: "unable to query for time entries for today",
+          msgType: "error",
+        });
+      }
+
+      if (!result.length) {
+        return res
+          .status(404)
+          .send({ msg: "no time entries found for today", msgType: "info" });
+      }
+
+      const entries = result.map((item) => {
+        const changedItem = {
+          type: item.type,
+          entry: moment(item.entry).format("h:mm:ss A"),
+        };
+        return changedItem;
+      });
+
+      return res.status(200).send({
+        msg: "time entries found for today",
+        msgType: "success",
+        entries: entries,
       });
     }
-
-    if (!result.length) {
-      return res
-        .status(404)
-        .send({ msg: "no time entries found for today", msgType: "info" });
-    }
-
-    const entries = result.map((item) => {
-      const changedItem = {
-        type: item.type,
-        entry: moment(item.entry).format("h:mm:ss A"),
-      };
-      return changedItem;
-    });
-
-    return res.status(200).send({
-      msg: "time entries found for today",
-      msgType: "success",
-      entries: entries,
-    });
-  });
+  );
 };

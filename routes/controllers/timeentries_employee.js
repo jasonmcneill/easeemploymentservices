@@ -83,24 +83,32 @@ exports.POST = (req, res) => {
     const status = result[0].status;
 
     const sql = `
-      SELECT
-        timelogid,
-        CONVERT_TZ(entry, "+00:00", ?) AS entry,
-        type
-      FROM
-        employees__timelogs
-      WHERE
-        employeeid = ?
-      AND
-        entry BETWEEN ? AND ?
-      ORDER BY
-        entry
-      ;
-    `;
+    SELECT
+      timelogid,
+      type,
+      CONVERT_TZ(entry, '+00:00', ?) AS entry
+    FROM
+      employees__timelogs
+    WHERE
+      entry
+    BETWEEN
+      CONVERT_TZ(?, ?, '+00:00')
+    AND
+      CONVERT_TZ(? + INTERVAL 1 DAY, ?, '+00:00')
+    AND
+      employeeid = ?
+    ;`;
 
     db.query(
       sql,
-      [timeZoneOffset, employeeid, fromdate, todate],
+      [
+        timeZoneOffset,
+        fromdate,
+        timeZoneOffset,
+        todate,
+        timeZoneOffset,
+        employeeid,
+      ],
       (err, result) => {
         if (err) {
           console.log(err);

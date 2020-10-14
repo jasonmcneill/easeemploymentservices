@@ -29,42 +29,47 @@ exports.POST = (req, res) => {
     }
 
     const sql = `
-      SELECT
-        CONVERT_TZ(entry, "+00:00", ?) AS entry,
-        type
-      FROM
-        employees__timelogs
-      WHERE
-        entry >= CURDATE()
-      AND
-        entry < CURRENT_DATE() + INTERVAL 1 DAY
-      AND
-        employeeid = ?
-      ORDER BY
-        entry ASC;`;
+    SELECT
+      CONVERT_TZ(entry, '+00:00', ?) AS entry,
+      type
+    FROM
+      employees__timelogs
+    WHERE
+      entry
+    BETWEEN
+      CONVERT_TZ(current_date, ?, '+00:00')
+    AND
+      CONVERT_TZ(current_date + INTERVAL 1 DAY, ?, '+00:00')
+    AND
+      employeeid = ?
+    ;`;
 
-    db.query(sql, [timeZoneOffset, employeeid], (err, result2) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).send({
-          msg: "unable to query for time entries",
-          msgType: "error",
+    db.query(
+      sql,
+      [timeZoneOffset, timeZoneOffset, timeZoneOffset, employeeid],
+      (err, result2) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).send({
+            msg: "unable to query for time entries",
+            msgType: "error",
+          });
+        }
+
+        const entries = result2.map((item) => {
+          const changedItem = {
+            type: item.type,
+            entry: moment(item.entry).format("h:mm:ss A"),
+          };
+          return changedItem;
+        });
+
+        return res.status(200).send({
+          msg: "clock-in succeeded",
+          msgType: "success",
+          entries: entries,
         });
       }
-
-      const entries = result2.map((item) => {
-        const changedItem = {
-          type: item.type,
-          entry: moment(item.entry).format("h:mm:ss A"),
-        };
-        return changedItem;
-      });
-
-      return res.status(200).send({
-        msg: "clock-in succeeded",
-        msgType: "success",
-        entries: entries,
-      });
-    });
+    );
   });
 };
