@@ -140,38 +140,39 @@
       aria-labelledby="modalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalLabel">
-              Change Time Entry
-              <p class="lead mt-2 mb-0" data-changeEntryEmployeeName></p>
-            </h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p><strong>Current:</strong></p>
-            <p>
-              <span data-changeEntryCurrentDate></span>
-              <span
-                class="ml-2 text-muted"
-                data-changeEntryCurrentWeekday
-              ></span>
-              <span class="mx-4" data-changeEntryCurrentTime></span>
-              <strong class="text-success" data-changeEntryInOut></strong>
-            </p>
+      <form id="formUpdateTimeEntry" novalidate>
+        <input type="hidden" name="timeentryid" id="timeentryid" value="" />
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalLabel">
+                Change Time Entry
+                <p class="lead mt-2 mb-0" data-changeEntryEmployeeName></p>
+              </h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p><strong>Current:</strong></p>
+              <p>
+                <span data-changeEntryCurrentDate></span>
+                <span
+                  class="ml-2 text-muted"
+                  data-changeEntryCurrentWeekday
+                ></span>
+                <span class="mx-4" data-changeEntryCurrentTime></span>
+                <strong class="text-success" data-changeEntryInOut></strong>
+              </p>
 
-            <p class="mt-5 mb-0"><strong>Revised:</strong></p>
-            <table class="table">
-              <tbody>
-                <form>
+              <p class="mt-5 mb-0"><strong>Revised:</strong></p>
+              <table class="table">
+                <tbody>
                   <tr>
                     <td class="border-0">
                       <label for="reviseddate" class="my-1">Date:</label>
@@ -196,7 +197,7 @@
                           id="revisedtime"
                           class="form-control"
                           value=""
-                          pattern="[0-9]{2}:[0-9]{2}"
+                          pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}"
                         />
                       </div>
                       <div class="time-input-unsupported d-none">
@@ -208,7 +209,7 @@
                                 id="revisedtime_alt"
                                 class="form-control"
                                 value=""
-                                pattern="[0-9]{2}:[0-9]{2}"
+                                pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}"
                               />
                             </div>
                           </div>
@@ -259,37 +260,37 @@
                       </div>
                     </td>
                   </tr>
-                </form>
-              </tbody>
-            </table>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Cancel
-            </button>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Cancel
+              </button>
 
-            <button
-              type="button"
-              class="btn btn-danger mx-3"
-              id="btnDeleteTimeEntry"
-            >
-              Delete
-            </button>
+              <button
+                type="button"
+                class="btn btn-danger mx-3"
+                id="btnDeleteTimeEntry"
+              >
+                Delete
+              </button>
 
-            <button
-              type="button"
-              class="btn btn-primary"
-              id="btnUpdateTimeEntry"
-            >
-              Update
-            </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                id="btnUpdateTimeEntry"
+              >
+                Update
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </form>
     </div>
 
     <script src="../../_assets/js/jquery-3.5.1.slim.min.js"></script>

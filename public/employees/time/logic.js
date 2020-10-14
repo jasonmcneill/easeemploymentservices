@@ -191,6 +191,7 @@ function onTimeEntryClick(e) {
 
   document.querySelector("#btnDeleteTimeEntry").setAttribute("data-id", id);
   document.querySelector("#btnUpdateTimeEntry").setAttribute("data-id", id);
+  document.querySelector("#timeentryid").value = id;
 
   $("#modalChangeTimeEntry").modal();
 
@@ -266,16 +267,23 @@ async function onDeleteTimeEntry(e) {
 
 async function onUpdateTimeEntry(e) {
   e.preventDefault();
-  const entryid = e.target.getAttribute("data-id");
+  const entryid = document.querySelector("#timeentryid").value;
   const revisedDate = document.querySelector("#reviseddate").value;
   const revisedTime = document.querySelector("#revisedtime").value;
-  const revisedType = document.querySelector("input[name=revisedtype]:checked")
-    .value;
+  const revisedType = document.querySelector(
+    "input[name='revisedType']:checked"
+  ).value;
   const revisedTimeAlt = document.querySelector("#revisedtime_alt").value;
   const revisedTimeAltAmPm = document.querySelector("#revisedtime_alt_ampm")
     .value;
-  let date = moment(revisedDate).trim().format("YYYY-MM_DD");
-  let time = moment(revisedTime.trim()).format("HH:mm:ss");
+  let date = revisedDate;
+  let time = revisedTime;
+  if (revisedTimeAlt.length) {
+    time = `${revisedTimeAlt} ${revisedTimeAltAmPm}`;
+  }
+
+  const datetime =
+    moment(`${date} ${time}`).format("YYYY-MM-DD HH:mm:ss") || "";
 
   const endpoint = "/api/timeentry-update";
   const accessToken = await getAccessToken();
@@ -288,9 +296,9 @@ async function onUpdateTimeEntry(e) {
     method: "POST",
     body: JSON.stringify({
       id: entryid,
-      date: date,
-      time: time,
+      datetime: datetime,
       inout: revisedType,
+      timeZone: moment.tz.guess(),
     }),
     headers: new Headers({
       "Content-Type": "application/json",
@@ -311,12 +319,6 @@ async function onUpdateTimeEntry(e) {
             "danger"
           );
           $("#modalChangeTimeEntry").modal("hide");
-          break;
-        case "missing date":
-          showToast("Please input the date.", "Date is missing", "danger");
-          break;
-        case "missing time":
-          showToast("Please input the time.", "Time is missing", "danger");
           break;
         case "missing inout":
           showToast(
@@ -340,13 +342,13 @@ async function onUpdateTimeEntry(e) {
           );
           break;
         case "no record of id":
+          $("#modalChangeTimeEntry").modal("hide");
           showToast(
             "There is no longer a record of that time entry.",
             "Time entry no longer exists",
             "danger"
           );
           populateContent();
-          $("#modalChangeTimeEntry").modal("hide");
           break;
         case "unable to query for updating":
           showToast(
@@ -356,13 +358,13 @@ async function onUpdateTimeEntry(e) {
           );
           break;
         case "time entry updated":
+          $("#modalChangeTimeEntry").modal("hide");
           showToast(
             "The time entry was updated successfully.",
             "Time Entry Updated",
             "success"
           );
           populateContent();
-          $("#modalChangeTimeEntry").modal("hide");
           break;
       }
     })
@@ -370,23 +372,6 @@ async function onUpdateTimeEntry(e) {
       console.error(err);
       hideSpinner(content, spinner);
     });
-}
-
-function supportsTimeInputType() {
-  let result = false;
-  const test = document.createElement("input");
-
-  try {
-    test.type = "time";
-  } catch (e) {
-    console.log(e.description);
-  }
-
-  if (test.type === "text") {
-    result = true;
-  }
-
-  return result;
 }
 
 function attachListeners() {
@@ -399,8 +384,46 @@ function attachListeners() {
     .addEventListener("click", onDeleteTimeEntry);
 
   document
-    .querySelector("#btnUpdateTimeEntry")
-    .addEventListener("click", onUpdateTimeEntry);
+    .querySelector("#formUpdateTimeEntry")
+    .addEventListener("submit", onUpdateTimeEntry);
+
+  document.querySelector("#revisedtime_alt").addEventListener("change", (e) => {
+    const date = document.querySelector("#reviseddate").value;
+    const time = e.target.value;
+    const ampm = document.querySelector("#revisedtime_alt_ampm").value;
+    const datetime = moment(`${date} ${time} ${ampm}`).format(
+      "YYYY-MM-DD HH:mm:ss"
+    );
+    const revisedtime = document.querySelector("#revisedtime");
+
+    revisedtime.value = datetime;
+  });
+
+  document
+    .querySelector("#revisedtime_alt_ampm")
+    .addEventListener("change", (e) => {
+      const date = document.querySelector("#reviseddate").value;
+      const time = document.querySelector("##revisedtime_alt").value;
+      const ampm = e.target.value;
+      const datetime = moment(`${date} ${time} ${ampm}`).format(
+        "YYYY-MM-DD HH:mm:ss"
+      );
+      const revisedtime = document.querySelector("#revisedtime");
+
+      revisedtime.value = datetime;
+    });
+
+  document.querySelector("#revisedtime").addEventListener("change", (e) => {
+    const date = document.querySelector("#reviseddate").value;
+    const time = e.target.value;
+    const alttime = document.querySelector("#revisedtime_alt");
+    const altampm = document.querySelector("#revisedtime_alt_ampm");
+
+    const datetime = moment(`${date} ${time}`).format("YYYY-MM-DD HH:mm:ss");
+
+    alttime.value = moment(datetime).format("h:mm:ss");
+    altampm.value = moment(datetime).format("A");
+  });
 }
 
 function init() {

@@ -1,10 +1,14 @@
 const db = require("../../database");
+const moment = require("moment");
 
 exports.POST = (req, res) => {
   const id = req.body.id || "";
-  const date = req.body.date || "";
-  const time = req.body.time || "";
-  const inout = req.body.type || "";
+  const datetime = req.body.datetime || "";
+  const inout = req.body.inout || "";
+  const timeZone = req.body.timeZone || "";
+  const timeZoneOffset = moment.tz(timeZone).format("Z:00").slice(0, -3);
+
+  console.log(require("util").inspect(req.body, true, 7, true));
 
   // Enforce authorization
   const usertype = req.user.type;
@@ -24,22 +28,13 @@ exports.POST = (req, res) => {
       .status(400)
       .send({ msg: "missing time entry id", msgType: "error" });
 
-  if (!date.length)
-    return res.status(400).send({ msg: "missing date", msgType: "error" });
-
-  if (!time.length)
-    return res.status(400).send({ msg: "missing time", msgType: "error" });
-
   if (!["in", "out"].includes(inout))
     return res.status(400).send({ msg: "missing inout" });
 
-  let datetime = "";
   let validDateTime = false;
   try {
-    const d = moment(date).format("YYYY-MM-DD");
-    const t = moment(time).format("HH:mm:ss");
-    datetime = moment(`${d} ${t}`).format("YYYY-MM-DD HH:mm:ss");
-    validDateTime = true;
+    const dt = moment(datetime).format("YYYY-MM-DD HH:mm:ss");
+    validDateTime = dt === "Invalid date" ? false : true;
   } catch (err) {
     console.log(err);
   }
@@ -61,9 +56,16 @@ exports.POST = (req, res) => {
       return res.status(404).send({ msg: "no record of id", msgType: "error" });
     }
 
-    const sql =
-      "UPDATE employees__timelogs SET entry = ?, type = ? WHERE timelogid = ?;";
-    db.query(sql, [datetime, inout, id], (err, result) => {
+    const sql = `
+      UPDATE
+        employees__timelogs
+      SET
+        entry = convert_tz(?, ?, '+00:00'),
+        type = ?
+      WHERE
+        timelogid = ?
+      ;`;
+    db.query(sql, [datetime, timeZoneOffset, inout, id], (err, result) => {
       if (err) {
         console.log(err);
         return res.status(500).send({ msg: "unable to query for updating" });
