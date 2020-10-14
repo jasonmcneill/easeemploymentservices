@@ -1,17 +1,3 @@
-function supportsTimeInputType() {
-  let result = false;
-  var test = document.createElement("input");
-
-  try {
-    test.type = "time";
-    result = true;
-  } catch (e) {
-    console.log(e.description);
-  }
-
-  return result;
-}
-
 async function populateContent(scrollAfterFetch = false) {
   const employeeid = parseInt(document.location.hash.split("#")[1]) || "";
   const content = document.querySelector("#content");
@@ -124,13 +110,6 @@ async function populateContent(scrollAfterFetch = false) {
       timerange.classList.remove("d-none");
 
       // Make time entry editable in a modal
-      const timeInputSupported = supportsTimeInputType() || false;
-      if (!timeInputSupported) {
-        document.querySelector(".time-input-supported").classList.add("d-none");
-        document
-          .querySelector(".time-input-unsupported")
-          .classList.remove("d-none");
-      }
       document.querySelectorAll("[data-entry-id]").forEach((item) => {
         item.addEventListener("click", onTimeEntryClick);
       });
@@ -214,6 +193,21 @@ function onTimeEntryClick(e) {
   document.querySelector("#btnUpdateTimeEntry").setAttribute("data-id", id);
 
   $("#modalChangeTimeEntry").modal();
+
+  const test = document.createElement("input");
+
+  // Hide or show alternatives for input[type=time]
+  try {
+    test.type = "time";
+    console.log("input[type=time] is supported");
+  } catch (e) {
+    document.querySelectorAll(".time-input-unsupported").forEach((item) => {
+      item.classList.remove("d-none");
+    });
+    document.querySelectorAll(".time-input-supported").forEach((item) => {
+      item.classList.add("d-none");
+    });
+  }
 }
 
 async function onDeleteTimeEntry(e) {
@@ -270,9 +264,129 @@ async function onDeleteTimeEntry(e) {
     });
 }
 
-function onUpdateTimeEntry(e) {
+async function onUpdateTimeEntry(e) {
   e.preventDefault();
-  console.log("onUpdateTimeEntry()");
+  const entryid = e.target.getAttribute("data-id");
+  const revisedDate = document.querySelector("#reviseddate").value;
+  const revisedTime = document.querySelector("#revisedtime").value;
+  const revisedType = document.querySelector("input[name=revisedtype]:checked")
+    .value;
+  const revisedTimeAlt = document.querySelector("#revisedtime_alt").value;
+  const revisedTimeAltAmPm = document.querySelector("#revisedtime_alt_ampm")
+    .value;
+  let date = moment(revisedDate).trim().format("YYYY-MM_DD");
+  let time = moment(revisedTime.trim()).format("HH:mm:ss");
+
+  const endpoint = "/api/timeentry-update";
+  const accessToken = await getAccessToken();
+  const content = document.querySelector("#content");
+  const spinner = document.querySelector("#spinner");
+
+  showSpinner(content, spinner);
+  fetch(endpoint, {
+    mode: "cors",
+    method: "POST",
+    body: JSON.stringify({
+      id: entryid,
+      date: date,
+      time: time,
+      inout: revisedType,
+    }),
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      hideSpinner(content, spinner);
+      switch (data.msg) {
+        case "user is not authorized for this action":
+          window.location.href = "/logout/";
+          break;
+        case "missing time entry id":
+          showToast(
+            "The ID of the time entry was missing in the request.",
+            "Couldn't Delete",
+            "danger"
+          );
+          $("#modalChangeTimeEntry").modal("hide");
+          break;
+        case "missing date":
+          showToast("Please input the date.", "Date is missing", "danger");
+          break;
+        case "missing time":
+          showToast("Please input the time.", "Time is missing", "danger");
+          break;
+        case "missing inout":
+          showToast(
+            `Please select either "IN" or "OUT."`,
+            "Missing In/Out",
+            "danger"
+          );
+          break;
+        case "invalid date/time":
+          showToast(
+            "Please check the date and time for accuracy and proper formatting.",
+            "Invalid date/time",
+            "danger"
+          );
+          break;
+        case "unable to query for time log id":
+          showToast(
+            "The update failed. Please wait a moment and try again.",
+            "Database is down",
+            "danger"
+          );
+          break;
+        case "no record of id":
+          showToast(
+            "There is no longer a record of that time entry.",
+            "Time entry no longer exists",
+            "danger"
+          );
+          populateContent();
+          $("#modalChangeTimeEntry").modal("hide");
+          break;
+        case "unable to query for updating":
+          showToast(
+            "The update failed. Please wait a moment and try again.",
+            "Database is down",
+            "danger"
+          );
+          break;
+        case "time entry updated":
+          showToast(
+            "The time entry was updated successfully.",
+            "Time Entry Updated",
+            "success"
+          );
+          populateContent();
+          $("#modalChangeTimeEntry").modal("hide");
+          break;
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      hideSpinner(content, spinner);
+    });
+}
+
+function supportsTimeInputType() {
+  let result = false;
+  const test = document.createElement("input");
+
+  try {
+    test.type = "time";
+  } catch (e) {
+    console.log(e.description);
+  }
+
+  if (test.type === "text") {
+    result = true;
+  }
+
+  return result;
 }
 
 function attachListeners() {
