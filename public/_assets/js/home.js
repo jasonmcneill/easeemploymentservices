@@ -155,6 +155,10 @@ function showTimeEntries(entries) {
   const btnClockOut = document.querySelector("#btnClockOut");
   let timeHtml = ``;
 
+  // Return if no entries received
+  if (!Array.isArray(entries)) return;
+  if (!entries.length) return;
+
   // Decide whether to show "Clock In" or "Clock Out" button
   if (entries[entries.length - 1].type === "in") {
     // Show "Clock Out"
