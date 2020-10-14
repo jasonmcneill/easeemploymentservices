@@ -109,6 +109,7 @@ exports.POST = (req, res) => {
             return res.status(500).send({
               msg: "password reset e-mail could not be sent",
               msgType: "error",
+              error: error,
             });
           });
       }
