@@ -70,4 +70,7 @@ router.post("/api/timeentry-out", authenticateToken, timeentry_out.POST);
 const timeentry_delete = require("./controllers/timeentry_delete");
 router.post("/api/timeentry-delete", authenticateToken, timeentry_delete.POST);
 
+const timeentry_update = require("./controllers/timeentry_update");
+router.post("/api/timeentry-update", authenticateToken, timeentry_update.POST);
+
 module.exports = router;
