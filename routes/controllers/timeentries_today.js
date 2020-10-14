@@ -5,26 +5,31 @@ exports.POST = (req, res) => {
   const employeeid = req.user.employeeid;
   const timeZone = req.body.timeZone;
   const timeZoneOffset = moment.tz(timeZone).format("Z:00").slice(0, -3);
-
   const sql = `
-  SELECT
-    CONVERT_TZ(entry, '+00:00', ?) AS entry,
-    type
-  FROM
-    employees__timelogs
-  WHERE
-    entry
-  BETWEEN
-    CONVERT_TZ(current_date, ?, '+00:00')
-  AND
-    CONVERT_TZ(current_date + INTERVAL 1 DAY, ?, '+00:00')
-  AND
-    employeeid = ?
-  ;`;
+    SELECT
+      convert_tz(entry, '+00:00', ?) AS entry,
+      type
+    FROM
+      employees__timelogs
+    WHERE
+      entry >= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), "%Y-%m-%d 00:00:00"), ?, '+00:00')
+    AND
+      entry <= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), '%Y-%m-%d 23:59:59'), ?, '+00:00')
+    AND
+      employeeid = ?
+    ;
+  `;
 
   db.query(
     sql,
-    [timeZoneOffset, timeZoneOffset, timeZoneOffset, employeeid],
+    [
+      timeZoneOffset,
+      timeZoneOffset,
+      timeZoneOffset,
+      timeZoneOffset,
+      timeZoneOffset,
+      employeeid,
+    ],
     (err, result) => {
       if (err) {
         console.log(err);
