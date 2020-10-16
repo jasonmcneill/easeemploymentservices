@@ -115,7 +115,7 @@ function onSubmit(e) {
           showSuccess(
             `
               <p class='text-center'>
-                You will now be redirected to <a href='/login/' class='alert-link'><u>Sign In</u></a>.
+                You will now be redirected to <a href='/logout/' class='alert-link'><u>Sign In</u></a>.
               </p>
               <div class='text-center my-2'>
                 <div class="spinner-border" role="status">
@@ -126,7 +126,7 @@ function onSubmit(e) {
             "Password Reset Successfully"
           );
           setTimeout(() => {
-            window.location.href = "/login/";
+            window.location.href = "/logout/";
           }, 5000);
           break;
         default:

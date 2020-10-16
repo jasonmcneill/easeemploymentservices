@@ -69,7 +69,7 @@ function verifyRegistrationToken() {
             "Registration Complete"
           );
           setTimeout(() => {
-            window.location.href = "/login/";
+            window.location.href = "/logout/";
           }, 5000);
           break;
       }
