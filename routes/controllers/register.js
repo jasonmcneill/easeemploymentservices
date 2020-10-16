@@ -63,7 +63,6 @@ exports.POST = (req, res) => {
         if (user.email == email) isEligibleToRegister = true;
       });
 
-      console.log(`user: ${user}`);
       console.log(`isEligibleToRegister: ${isEligibleToRegister}`);
       console.log(
         "sysadmins:",
