@@ -11,7 +11,7 @@
     <!-- Redirect to login if refreshToken not detected -->
     <script type="text/javascript">
       const refreshToken = localStorage.getItem("refreshToken") || "";
-      if (!refreshToken.length) window.location.href = "/login/";
+      if (!refreshToken.length) window.location.href = "../login/";
     </script>
 
     <!-- Bootstrap CSS -->
@@ -21,7 +21,7 @@
     />
 
     <link rel="stylesheet" href="../_assets/css/global.css" />
-    <title>Password Must Change</title>
+    <title>Participants</title>
   </head>
   <body>
     <!-- TOP NAVBAR -->
@@ -41,13 +41,14 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" href="../"> Home </a>
+            <a class="nav-link" href="../">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="../employees/">Employees</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="../participants/">Participants</a>
+            <span class="sr-only">(current)</span>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="../logout/">Sign Out</a>
@@ -60,9 +61,7 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">
-          Change Password
-        </li>
+        <li class="breadcrumb-item active" aria-current="page">Participants</li>
       </ol>
     </nav>
 
@@ -70,22 +69,24 @@
     <div id="toasts"></div>
 
     <!-- Spinner -->
-    <div class="spinner text-center d-none" id="spinner"></div>
+    <div class="my-2 text-center d-none" id="spinner">
+      <div class="spinner-border text-light" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
 
     <!-- Content -->
     <div class="container-fluid fade-in" id="content">
       <div class="row">
         <div class="col col-md-12">
-          <h1 class="h3 my-2 text-center font-weight-normal">
-            Password Must Change
-          </h1>
+          <h1 class="h3 my-2 text-center font-weight-normal">Participants</h1>
         </div>
       </div>
 
       <!-- Alert -->
       <div class="row">
         <div class="col col-md-12">
-          <div id="alertMessage" class="col col-md-4 offset-md-4 d-none">
+          <div id="alertMessage" class="col col-md-6 offset-md-3 d-none">
             <div
               data-alert-content
               class="alert alert-danger"
@@ -94,47 +95,53 @@
           </div>
         </div>
       </div>
-
-      <!-- Form -->
-      <form
-        novalidate
-        autocomplete="off"
-        id="formChangePassword"
-        novalidate
-        autocomplete="off"
-      >
-        <div class="row">
-          <div class="col col-md-4 offset-md-4">
-            For security purposes, you are now required to change your password.
-            Please input your new password below.
-          </div>
+      <div class="row mt-3">
+        <div class="col col-md-4 offset-md-4 text-light">
+          <form id="formSearch">
+            <div class="input-group mb-3">
+              <input
+                type="search"
+                class="form-control"
+                placeholder="Participant's name"
+                aria-label="Recipient's username"
+                aria-describedby="searchByName"
+                value="oe"
+              />
+              <div class="input-group-append">
+                <button
+                  class="btn btn-outline-primary"
+                  type="button"
+                  id="searchByName"
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+            <div id="formSearchResults">
+              <div id="formSearchSummary" class="text-dark mt-4 mb-2">
+                <strong>Found 3 results:</strong>
+              </div>
+              <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action">
+                  John D<strong>oe</strong>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                  Jane D<strong>oe</strong>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                  Joe Schm<strong>oe</strong>
+                </a>
+              </div>
+            </div>
+          </form>
         </div>
-        <div class="form-row my-3">
-          <div class="form-group col col-md-4 offset-md-4">
-            <label for="newpassword"><strong>New password:</strong></label>
-            <input
-              type="password"
-              class="form-control"
-              id="newpassword"
-              autocomplete="new-password"
-              autofocus
-            />
-          </div>
-        </div>
-        <div class="form-row my-3">
-          <div class="form-group col col-md-4 offset-md-4">
-            <button type="submit" class="btn btn-primary btn-block">
-              Change password
-            </button>
-          </div>
-        </div>
-      </form>
+      </div>
     </div>
 
     <script src="../_assets/js/jquery-3.5.1.slim.min.js"></script>
-    <script src="../_assets/js/popper.min.js.map"></script>
+    <script src="../_assets/js/popper.min.js"></script>
     <script src="../_assets/bootstrap-4.5.2-dist/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript" src="../_assets/js/global.js"></script>
-    <script type="text/javascript" src="./logic.js"></script>
+    <script src="../_assets/js/global.js"></script>
+    <script src="./logic.js"></script>
   </body>
 </html>
