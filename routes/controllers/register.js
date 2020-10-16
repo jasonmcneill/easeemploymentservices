@@ -63,13 +63,6 @@ exports.POST = (req, res) => {
         if (user.email == email) isEligibleToRegister = true;
       });
 
-      console.log(`isEligibleToRegister: ${isEligibleToRegister}`);
-      console.log(
-        "sysadmins:",
-        require("util").inspect(defaultUsers.users.sysadmins, true, 7, true)
-      );
-      return;
-
       // No records in default users, so return.
       if (!isEligibleToRegister) {
         return res
