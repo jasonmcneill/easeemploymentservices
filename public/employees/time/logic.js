@@ -200,7 +200,6 @@ function onTimeEntryClick(e) {
   // Hide or show alternatives for input[type=time]
   try {
     test.type = "time";
-    console.log("input[type=time] is supported");
   } catch (e) {
     document.querySelectorAll(".time-input-unsupported").forEach((item) => {
       item.classList.remove("d-none");
