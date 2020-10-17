@@ -95,45 +95,52 @@
           </div>
         </div>
       </div>
+
+      <!-- Search -->
       <div class="row mt-3">
-        <div class="col col-md-4 offset-md-4 text-light">
-          <form id="formSearch">
-            <div class="input-group mb-3">
-              <input
-                type="search"
-                class="form-control"
-                placeholder="Participant's name"
-                aria-label="Recipient's username"
-                aria-describedby="searchByName"
-                value="oe"
-              />
-              <div class="input-group-append">
+        <div class="col col-md-4 offset-md-4">
+          <form id="formSearch" autocomplete="off" novalidate>
+            <div class="form-row align-items-center">
+              <div class="col">
+                <label class="sr-only" for="participantsearch"
+                  >Participant's name</label
+                >
+                <input
+                  id="participantsearch"
+                  type="search"
+                  class="form-control"
+                  placeholder="Participant's name"
+                  aria-label="Participant's name"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  autofocus
+                />
+              </div>
+              <div class="col-auto">
                 <button
                   class="btn btn-outline-primary"
-                  type="button"
+                  type="submit"
                   id="searchByName"
                 >
                   Search
                 </button>
               </div>
             </div>
-            <div id="formSearchResults">
-              <div id="formSearchSummary" class="text-dark mt-4 mb-2">
-                <strong>Found 3 results:</strong>
-              </div>
-              <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action">
-                  John D<strong>oe</strong>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">
-                  Jane D<strong>oe</strong>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">
-                  Joe Schm<strong>oe</strong>
-                </a>
+          </form>
+
+          <div id="formSearchResults_spinner" class="d-none">
+            <div class="my-2 text-center">
+              <div class="spinner-border text-dark" role="status">
+                <span class="sr-only">Loading...</span>
               </div>
             </div>
-          </form>
+          </div>
+
+          <div id="formSearchResults" class="mt-4"></div>
+
+          <div class="mt-4">
+            <a href="add/" class="btn btn-primary"> Add a participant </a>
+          </div>
         </div>
       </div>
     </div>
