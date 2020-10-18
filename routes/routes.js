@@ -73,6 +73,13 @@ router.post("/api/timeentry-delete", authenticateToken, timeentry_delete.POST);
 const timeentry_update = require("./controllers/timeentry_update");
 router.post("/api/timeentry-update", authenticateToken, timeentry_update.POST);
 
+const participants_overview = require("./controllers/participants_overview");
+router.get(
+  "/api/participants-overview",
+  authenticateToken,
+  participants_overview.GET
+);
+
 const participant_search = require("./controllers/participant_search");
 router.post(
   "/api/participant-search",

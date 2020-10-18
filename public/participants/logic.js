@@ -84,6 +84,51 @@ async function onSearchSubmitted(e) {
     });
 }
 
+async function getOverview() {
+  const accessToken = await getAccessToken();
+  const endpoint = "/api/participants-overview";
+
+  fetch(endpoint, {
+    mode: "cors",
+    method: "GET",
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      const summary = document.querySelector("#summary");
+      const participantsUnassignedEl = document.querySelector(
+        "#participants_unassigned"
+      );
+      const participantsTotalEl = document.querySelector("#participants_total");
+      const employeesUnassignedEl = document.querySelector(
+        "#employees_unassigned"
+      );
+      const employeesTotalEl = document.querySelector("#employees_total");
+
+      switch (data.msg) {
+        case "unable to query for summary":
+          console.error(data.msg);
+          summary.classList.add("d-none");
+          break;
+        case "summary retrieved":
+          const {
+            numParticipants,
+            numParticipantsUnassigned,
+            numEmployees,
+            numEmployeesUnassigned,
+          } = data.summary;
+          participantsUnassignedEl.innerHTML = numParticipantsUnassigned;
+          participantsTotalEl.innerHTML = numParticipants;
+          employeesUnassignedEl.innerHTML = numEmployeesUnassigned;
+          employeesTotalEl.innerHTML = numEmployees;
+          break;
+      }
+    });
+}
+
 function attachListeners() {
   document
     .querySelector("#formSearch")
@@ -91,6 +136,7 @@ function attachListeners() {
 }
 
 function init() {
+  getOverview();
   attachListeners();
 }
 
