@@ -127,7 +127,7 @@ async function getOverview() {
 
 async function showList() {
   const content = document.querySelector("#content");
-  const spinner = document.querySelector("#spinner");
+  const spinner = document.querySelector("#participantList_spinner");
   const accessToken = await getAccessToken();
   const endpoint = "/api/participants-list";
   const participantList = document.querySelector("#participantList");
