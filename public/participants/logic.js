@@ -13,17 +13,12 @@ function showSummary(searchterm, data) {
     return;
   }
 
-  console.log(data);
-
   let htmlItems = "";
   data.forEach((item) => {
-    const decoratedName = item.replace(
-      /searchterm/g,
-      `<strong>${searchterm}</strong>`
-    );
+    const name = `${item.firstname} ${item.lastname}`;
     htmlItems += `
       <a href="profile/#${item.participantid}" class="list-group-item list-group-item-action">
-        ${decoratedName}
+        ${name}
       </a>
     `;
   });
