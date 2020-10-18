@@ -8,12 +8,9 @@ async function onSubmit(e) {
   const state = e.target[(id = "state")].value;
   const zip = e.target[(id = "zip")].value.trim();
   const employeeid = e.target[(id = "employeeid")].value;
-  const spinner = document.querySelector("#spinner");
-  const content = document.querySelector("#content");
   const endpoint = "/api/participant-add";
   const accessToken = await getAccessToken();
 
-  showSpinner(content, spinner);
   hideAlertMessage();
 
   fetch(endpoint, {
@@ -36,7 +33,6 @@ async function onSubmit(e) {
   })
     .then((res) => res.json())
     .then((data) => {
-      hideSpinner(content, spinner);
       switch (data.msg) {
         case "missing first name":
           showError("Please input the first name.", "Form Incomplete");
@@ -130,7 +126,6 @@ async function onSubmit(e) {
     })
     .catch((err) => {
       console.error(err);
-      hideSpinner(content, spinner);
     });
 }
 
