@@ -25,7 +25,10 @@ function showSummary(searchterm, data) {
 
   const htmlResults = `
     <div id="formSearchSummary" class="text-dark mt-4 mb-2">
-      <strong>Found ${data.length} results:</strong>
+      <strong>
+        Found ${data.length} 
+        ${data.length === 1 ? "result" : "results"}:
+      </strong>
     </div>
     <div class="list-group">
       ${htmlItems}
