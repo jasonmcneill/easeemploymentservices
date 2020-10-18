@@ -3,6 +3,7 @@ async function onSubmit(e) {
   const firstname = e.target[(id = "firstname")].value.trim();
   const lastname = e.target[(id = "lastname")].value.trim();
   const phone = e.target[(id = "phone")].value.trim();
+  const phonecountry = e.target[(id = "phonecountry")].value;
   const address = e.target[(id = "address")].value.trim();
   const city = e.target[(id = "city")].value.trim();
   const state = e.target[(id = "state")].value;
@@ -20,6 +21,7 @@ async function onSubmit(e) {
       firstname: firstname,
       lastname: lastname,
       phone: phone,
+      phonecountry: phonecountry,
       address: address,
       city: city,
       state: state,
