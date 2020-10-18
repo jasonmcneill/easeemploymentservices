@@ -1,8 +1,8 @@
-function showSummary(searchterm, data) {
+function showSearchResults(searchterm, data) {
   const resultsEl = document.querySelector("#formSearchResults");
 
   if (!Array.isArray(data))
-    return console.error("showSummary(data): data is not of type array");
+    return console.error("showSearchResults(data): data is not of type array");
 
   if (!data.length) {
     resultsEl.innerHTML = `
@@ -41,11 +41,14 @@ function showSummary(searchterm, data) {
 async function onSearchSubmitted(e) {
   e.preventDefault();
   const resultsEl = document.querySelector("#formSearchResults");
+  const listEl = document.querySelector("#participantList");
   const searchterm = e.target[(id = "participantsearch")].value.trim();
   const content = document.querySelector("#formSearchResults");
   const spinner = document.querySelector("#formSearchResults_spinner");
   const accessToken = await getAccessToken();
   const endpoint = "/api/participant-search";
+
+  listEl.classList.add("d-none");
 
   resultsEl.innerHTML = "";
 
@@ -71,10 +74,10 @@ async function onSearchSubmitted(e) {
           console.error("unable to query for search term");
           break;
         case "no results found for search term":
-          showSummary(searchterm, []);
+          showSearchResults(searchterm, []);
           break;
         case "results found for search term":
-          showSummary(searchterm, data.results);
+          showSearchResults(searchterm, data.results);
           break;
       }
     })
@@ -98,16 +101,6 @@ async function getOverview() {
   })
     .then((res) => res.json())
     .then((data) => {
-      const summary = document.querySelector("#summary");
-      const participantsUnassignedEl = document.querySelector(
-        "#participants_unassigned"
-      );
-      const participantsTotalEl = document.querySelector("#participants_total");
-      const employeesUnassignedEl = document.querySelector(
-        "#employees_unassigned"
-      );
-      const employeesTotalEl = document.querySelector("#employees_total");
-
       switch (data.msg) {
         case "unable to query for summary":
           console.error(data.msg);
@@ -120,12 +113,81 @@ async function getOverview() {
             numEmployees,
             numEmployeesUnassigned,
           } = data.summary;
-          participantsUnassignedEl.innerHTML = numParticipantsUnassigned;
-          participantsTotalEl.innerHTML = numParticipants;
-          employeesUnassignedEl.innerHTML = numEmployeesUnassigned;
-          employeesTotalEl.innerHTML = numEmployees;
+          participantList_showall.innerHTML = `
+            ${
+              numParticipants === 1
+                ? "Show 1 participant"
+                : "Show all " + numParticipants + " participants"
+            }
+          `;
           break;
       }
+    });
+}
+
+async function showList() {
+  const content = document.querySelector("#content");
+  const spinner = document.querySelector("#spinner");
+  const accessToken = await getAccessToken();
+  const endpoint = "/api/participants-list";
+  const participantList = document.querySelector("#participantList");
+  const searchResults = document.querySelector("#formSearchResults");
+
+  searchResults.classList.add("d-none");
+
+  function renderList(data) {
+    let html = ``;
+    data.forEach((item) => {
+      const { participantid, firstname, lastname } = item;
+      html += `<a href="profile/#${participantid}" class="list-group-item list-group-item-action">${firstname} ${lastname}</a>`;
+    });
+    html = `
+      <p>
+        <strong>${data.length} ${
+      data.length === 1 ? "participant" : "participants"
+    }:</strong>
+      </p>
+      <div class="list-group">${html}</div>
+    `;
+    participantList.innerHTML = html;
+  }
+
+  showSpinner(content, spinner);
+  fetch(endpoint, {
+    mode: "cors",
+    method: "GET",
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      hideSpinner(content, spinner);
+      switch (data.msg) {
+        case "user is not authorized for this action":
+          window.location.href = "../logout/";
+          break;
+        case "unable to query for participant list":
+          showError(
+            "There was a technical glitch that prevented the participants from being displayed. Please wait a moment then reload the page.",
+            "Database is Down"
+          );
+          break;
+        case "no particpants found":
+          participantList.innerHTML = `
+          <p>
+            <strong>There are currently no participants in the system.</strong>
+          </p>
+        `;
+          break;
+        case "participant list retrieved":
+          renderList(data.data);
+          break;
+      }
+    })
+    .catch((err) => {
+      console.error(err);
     });
 }
 
@@ -133,6 +195,10 @@ function attachListeners() {
   document
     .querySelector("#formSearch")
     .addEventListener("submit", onSearchSubmitted);
+
+  document
+    .querySelector("#participantList_showall")
+    .addEventListener("click", showList);
 }
 
 function init() {

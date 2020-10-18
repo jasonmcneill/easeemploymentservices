@@ -3,6 +3,8 @@ const router = express.Router();
 const utils = require("./utils");
 const authenticateToken = utils.authenticateToken;
 
+// SECURITY
+
 const login = require("./controllers/login");
 router.post("/login", login.POST);
 
@@ -19,14 +21,18 @@ router.post(
   passwordMustChange.POST
 );
 
+const refreshToken = require("./controllers/refresh-token");
+router.post("/api/refresh-token", refreshToken.POST);
+
+// REGISTRATION
+
 const register = require("./controllers/register");
 router.post("/register", register.POST);
 
 const registerConfirm = require("./controllers/register-confirm");
 router.post("/register-confirm", registerConfirm.POST);
 
-const refreshToken = require("./controllers/refresh-token");
-router.post("/api/refresh-token", refreshToken.POST);
+// EMPLOYEES
 
 const employees_list = require("./controllers/employees_list");
 router.get(
@@ -46,6 +52,8 @@ router.post("/api/employee/add/", authenticateToken, employee_add.POST);
 
 const employee_delete = require("./controllers/employee_delete");
 router.post("/api/employee/delete", authenticateToken, employee_delete.POST);
+
+// TIME ENTRIES
 
 const timeentries_employee = require("./controllers/timeentries_employee");
 router.post(
@@ -72,6 +80,11 @@ router.post("/api/timeentry-delete", authenticateToken, timeentry_delete.POST);
 
 const timeentry_update = require("./controllers/timeentry_update");
 router.post("/api/timeentry-update", authenticateToken, timeentry_update.POST);
+
+// PARTICIPANTS
+
+const participants_list = require("./controllers/participants_list");
+router.get("/api/participants-list", authenticateToken, participants_list.GET);
 
 const participants_overview = require("./controllers/participants_overview");
 router.get(

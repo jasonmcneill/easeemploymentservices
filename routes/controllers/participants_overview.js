@@ -1,6 +1,17 @@
 const db = require("../../database");
 
 exports.GET = (req, res) => {
+  // Enforce authorization
+  const usertype = req.user.type;
+  const allowedUsertypes = ["sysadmin", "director"];
+  if (!allowedUsertypes.includes(usertype)) {
+    console.log(`User (employeeid ${req.user.employeeid} is not authorized.`);
+    return res.status(401).send({
+      msg: "user is not authorized for this action",
+      msgType: "error",
+    });
+  }
+
   const sql = `
     SELECT
       COUNT(participantid) AS numParticipants,
