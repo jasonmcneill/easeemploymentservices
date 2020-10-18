@@ -80,4 +80,7 @@ router.post(
   participant_search.POST
 );
 
+const participant_add = require("./controllers/participant_add");
+router.post("/api/participant-add", authenticateToken, participant_add.POST);
+
 module.exports = router;
