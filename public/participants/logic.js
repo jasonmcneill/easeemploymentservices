@@ -1,3 +1,56 @@
+async function getOverview() {
+  const accessToken = await getAccessToken();
+  const endpoint = "/api/participants-overview";
+  const formSearch = document.querySelector("#formSearch");
+  const formSearchResults = document.querySelector("#formSearchResults");
+  const participantList = document.querySelector("#participantList");
+
+  fetch(endpoint, {
+    mode: "cors",
+    method: "GET",
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      switch (data.msg) {
+        case "unable to query for summary":
+          console.error(data.msg);
+          summary.classList.add("d-none");
+          break;
+        case "summary retrieved":
+          const {
+            numParticipants,
+            numParticipantsUnassigned,
+            numEmployees,
+            numEmployeesUnassigned,
+          } = data.summary;
+
+          if (numParticipants === 0) {
+            formSearchResults.innerHTML = `
+              <p class="text-center">
+                There are no participants in the system.
+              </p>
+            `;
+          } else {
+            formSearch.classList.remove("d-none");
+            participantList.classList.remove("d-none");
+          }
+
+          participantList_showall.innerHTML = `
+            ${
+              numParticipants === 1
+                ? "Show 1 participant"
+                : "List all " + numParticipants + " participants"
+            }
+          `;
+          break;
+      }
+    });
+}
+
 function showSearchResults(searchterm, data) {
   const resultsEl = document.querySelector("#formSearchResults");
 
@@ -87,53 +140,14 @@ async function onSearchSubmitted(e) {
     });
 }
 
-async function getOverview() {
-  const accessToken = await getAccessToken();
-  const endpoint = "/api/participants-overview";
-
-  fetch(endpoint, {
-    mode: "cors",
-    method: "GET",
-    headers: new Headers({
-      "Content-Type": "application/json",
-      authorization: `Bearer ${accessToken}`,
-    }),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      switch (data.msg) {
-        case "unable to query for summary":
-          console.error(data.msg);
-          summary.classList.add("d-none");
-          break;
-        case "summary retrieved":
-          const {
-            numParticipants,
-            numParticipantsUnassigned,
-            numEmployees,
-            numEmployeesUnassigned,
-          } = data.summary;
-          participantList_showall.innerHTML = `
-            ${
-              numParticipants === 1
-                ? "Show 1 participant"
-                : "Show all " + numParticipants + " participants"
-            }
-          `;
-          break;
-      }
-    });
-}
-
 async function showList() {
   const content = document.querySelector("#content");
   const spinner = document.querySelector("#participantList_spinner");
   const accessToken = await getAccessToken();
   const endpoint = "/api/participants-list";
   const participantList = document.querySelector("#participantList");
-  const searchResults = document.querySelector("#formSearchResults");
-
-  searchResults.classList.add("d-none");
+  const formSearch = document.querySelector("#formSearch");
+  const formSearchResults = document.querySelector("#formSearchResults");
 
   function renderList(data) {
     let html = ``;
@@ -175,13 +189,16 @@ async function showList() {
           );
           break;
         case "no particpants found":
-          participantList.innerHTML = `
-          <p>
-            <strong>There are currently no participants in the system.</strong>
-          </p>
-        `;
+          formSearchResults.innerHTML = `
+            <p class="text-center">
+              <strong>There are no participants in the system.</strong>
+            </p>
+          `;
+          formSearchResults.classList.remove("d-none");
           break;
         case "participant list retrieved":
+          formSearch.classList.remove("d-none");
+          participantList.classList.remove("d-none");
           renderList(data.data);
           break;
       }
@@ -204,6 +221,7 @@ function attachListeners() {
 function init() {
   getOverview();
   attachListeners();
+  showToasts();
 }
 
 init();
