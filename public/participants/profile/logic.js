@@ -30,7 +30,7 @@ function renderData(data) {
         <th>Phone:</th>
         <td>
           ${phone}
-          <p class="mt-2">
+          <p class="mt-2 mb-0">
             <a href="tel:${phoneDigitsOnly}">Call</a>
             <span class="mx-3">|</span>
             <a href="sms:${phoneDigitsOnly}">Text</a>
