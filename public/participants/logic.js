@@ -180,7 +180,12 @@ async function showList() {
       hideSpinner(content, spinner);
       switch (data.msg) {
         case "user is not authorized for this action":
-          window.location.href = "../logout/";
+          addToast(
+            "Your account does not have sufficient permissions to perform that action.",
+            "Not Authorized",
+            "danger"
+          );
+          window.location.href = "/";
           break;
         case "unable to query for participant list":
           showError(

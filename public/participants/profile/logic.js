@@ -100,6 +100,14 @@ async function getProfileData() {
     .then((data) => {
       spinner.classList.add("d-none");
       switch (data.msg) {
+        case "user is not authorized for this action":
+          addToast(
+            "Your account does not have sufficient permissions to perform that action.",
+            "Not Authorized",
+            "danger"
+          );
+          window.location.href = "/";
+          break;
         case "unable to query for participant":
           showError(
             "There was a technical glitch preventing the participant from being displayed. Please wait a moment then reload the page.",

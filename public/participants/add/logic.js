@@ -36,6 +36,14 @@ async function onSubmit(e) {
     .then((res) => res.json())
     .then((data) => {
       switch (data.msg) {
+        case "user is not authorized for this action":
+          addToast(
+            "Your account does not have sufficient permissions to perform that action.",
+            "Not Authorized",
+            "danger"
+          );
+          window.location.href = "/";
+          break;
         case "missing first name":
           showError("Please input the first name.", "Form Incomplete");
           break;
