@@ -62,6 +62,7 @@ exports.sendEmail = (recipient, sender, subject, body) => {
         resolve(result);
       })
       .catch((error) => {
+        console.log(require("util").inspect(error, true, 7, true));
         reject(error);
       });
   });
