@@ -113,4 +113,7 @@ router.post(
   participant_delete.POST
 );
 
+const participant_edit = require("./controllers/participants_edit");
+router.post("/api/participant-edit", authenticateToken, participant_edit.POST);
+
 module.exports = router;
