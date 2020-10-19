@@ -48,7 +48,11 @@ exports.POST = (req, res) => {
       console.log(err);
       return res
         .status(500)
-        .send({ msg: "unable to query for eligibility", msgType: "error" });
+        .send({
+          msg: "unable to query for eligibility",
+          msgType: "error",
+          error: err,
+        });
     }
 
     if (!result.length) {
@@ -82,6 +86,7 @@ exports.POST = (req, res) => {
         return res.status(500).send({
           msg: "unable to query for duplicate e-mail",
           msgType: "error",
+          error: err,
         });
       }
 
@@ -120,9 +125,11 @@ exports.POST = (req, res) => {
       db.query(sql, [username], (err, result) => {
         if (err) {
           console.log(err);
-          return res
-            .status(500)
-            .send({ msg: "unable to query for username", msgType: "error" });
+          return res.status(500).send({
+            msg: "unable to query for username",
+            msgType: "error",
+            error: err,
+          });
         }
         if (result.length === 1)
           return res
@@ -145,9 +152,11 @@ exports.POST = (req, res) => {
         db.query(sql, [smsphone, employeeid], (err, result) => {
           if (err) {
             console.log(err);
-            return res
-              .status(500)
-              .send({ msg: "unable to query for sms phone", msgType: "error" });
+            return res.status(500).send({
+              msg: "unable to query for sms phone",
+              msgType: "error",
+              error: err,
+            });
           }
           if (result.length === 1)
             return res
@@ -180,6 +189,7 @@ exports.POST = (req, res) => {
               return res.status(500).send({
                 msg: "unable to generate password salt",
                 msgType: "error",
+                error: err,
               });
             }
             bcrypt.hash(password, salt, (err, hash) => {
@@ -188,6 +198,7 @@ exports.POST = (req, res) => {
                 return res.status(500).send({
                   msg: "unable to generate password hash",
                   msgType: "error",
+                  error: err,
                 });
               }
 
@@ -258,6 +269,7 @@ exports.POST = (req, res) => {
                   return res.status(500).send({
                     msg: "unable to insert new user",
                     msgType: "error",
+                    error: err,
                   });
                 }
 
@@ -294,6 +306,7 @@ exports.POST = (req, res) => {
                       return res.status(500).send({
                         msg: "unable to insert registration token",
                         msgType: "error",
+                        error: err,
                       });
                     }
 
