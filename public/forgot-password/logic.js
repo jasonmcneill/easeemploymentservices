@@ -67,6 +67,7 @@ function attachEventListeners() {
 function init() {
   checkIfOffline();
   attachEventListeners();
+  showToasts();
 }
 
 init();

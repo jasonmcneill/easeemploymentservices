@@ -112,6 +112,7 @@ function init() {
   clearLoginTokens();
   checkIfOffline();
   attachEventListeners();
+  showToasts();
 }
 
 init();

@@ -428,6 +428,7 @@ function attachListeners() {
 function init() {
   attachListeners();
   populateContent(false);
+  showToasts();
 }
 
 init();
