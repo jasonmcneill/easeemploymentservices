@@ -9,6 +9,7 @@ exports.POST = (req, res) => {
       return res.status(500).send({
         msg: "unable to query for registration token",
         msgType: "error",
+        error: err,
       });
     }
 
@@ -31,6 +32,7 @@ exports.POST = (req, res) => {
           return res.status(500).send({
             msg: "unable to remove employee tokens",
             msgType: "error",
+            error: err,
           });
         }
 
@@ -41,6 +43,7 @@ exports.POST = (req, res) => {
             return res.status(500).send({
               msg: "unable to remove employee",
               msgType: "error",
+              error: err,
             });
           }
 
@@ -59,6 +62,7 @@ exports.POST = (req, res) => {
           return res.status(500).send({
             msg: "unable to query to set employee status",
             msgType: "error",
+            error: err,
           });
         }
 
@@ -67,12 +71,11 @@ exports.POST = (req, res) => {
         db.query(sql, [token], (err, result) => {
           if (err) {
             console.log(err);
-            return res
-              .status(500)
-              .send({
-                msg: "unable to designate registration token as claimed",
-                msgType: "error",
-              });
+            return res.status(500).send({
+              msg: "unable to designate registration token as claimed",
+              msgType: "error",
+              error: err,
+            });
           }
 
           return res
