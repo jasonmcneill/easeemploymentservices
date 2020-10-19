@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node app.js",
     "start:dev": "nodemon app.js",
+    "ssh": "ssh root@grindstonewebdev.com -i  ../../../.ssh/grindstone/id_rsa",
     "staging": "ssh root@grindstonewebdev.com -i  ../../../.ssh/grindstone/id_rsa \"cd /var/www/staging-access.easeemploymentservices.com; ./pull.sh\""
   },
   "dependencies": {
