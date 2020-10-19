@@ -1,7 +1,8 @@
 function pollForOffline() {
   setInterval(() => {
     if (navigator.onLine) {
-      const urlBeforeRedirection = sessionStorage.getItem("redirectWhenOnline") || "";
+      const urlBeforeRedirection =
+        sessionStorage.getItem("redirectWhenOnline") || "";
 
       if (urlBeforeRedirection.length) {
         console.warn("Now online.  Redirecting to former URL...");
@@ -16,7 +17,10 @@ function pollForOffline() {
 }
 
 function showAlert() {
-  showError("<div class='text-center'>You appear to be offline.  Please connect to the internet.</div>", "Can't Connect");
+  showError(
+    "<div class='text-center'>You appear to be offline.  Please connect to the internet.</div>",
+    "Can't Connect"
+  );
 }
 
 function init() {
