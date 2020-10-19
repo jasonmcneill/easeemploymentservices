@@ -22,6 +22,8 @@ function clearAlertMessageContent() {
     "alert-info",
     "alert-light",
     "alert-dark",
+    "border-danger",
+    "border-success",
   ];
   classesToRemove.forEach((item) => messageContent.classList.remove(item));
   messageContent.innerText = "";
@@ -44,6 +46,7 @@ function showError(message, headline) {
 
   clearAlertMessageContent(messageElement);
   messageContent.classList.add("alert-danger");
+  messageContent.classList.add("border-danger");
   messageContent.innerHTML = headline
     ? `<h5 class="alert-heading text-center">${headline}</h5><p>${message}</p>`
     : `${message}`;
@@ -57,6 +60,7 @@ function showSuccess(message, headline) {
 
   clearAlertMessageContent(messageElement);
   messageContent.classList.add("alert-success");
+  messageContent.classList.add("border-success");
   messageContent.innerHTML = headline
     ? `<h5 class="alert-heading text-center">${headline}</h5><p>${message}</p>`
     : `${message}`;
