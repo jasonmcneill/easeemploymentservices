@@ -269,6 +269,9 @@ async function getParticipantsOfEmployee() {
             "danger"
           );
           break;
+        case "no participants of employee":
+          sessionStorage.removeItem("participants_of_employee");
+          break;
         case "participants of employee retrieved":
           sessionStorage.setItem(
             "participants_of_employee",
