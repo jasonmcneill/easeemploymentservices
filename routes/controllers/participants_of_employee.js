@@ -43,11 +43,6 @@ exports.GET = (req, res) => {
       });
     }
 
-    if (!result.length)
-      return res
-        .status(404)
-        .send({ msg: "no participants of employee", msgType: "error" });
-
     return res.status(200).send({
       msg: "participants of employee retrieved",
       msgType: "success",

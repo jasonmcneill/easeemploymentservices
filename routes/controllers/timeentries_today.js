@@ -39,12 +39,6 @@ exports.POST = (req, res) => {
         });
       }
 
-      if (!result.length) {
-        return res
-          .status(404)
-          .send({ msg: "no time entries found for today", msgType: "info" });
-      }
-
       const entries = result.map((item) => {
         const changedItem = {
           type: item.type,
@@ -54,7 +48,7 @@ exports.POST = (req, res) => {
       });
 
       return res.status(200).send({
-        msg: "time entries found for today",
+        msg: "time entries for today retrieved",
         msgType: "success",
         entries: entries,
       });

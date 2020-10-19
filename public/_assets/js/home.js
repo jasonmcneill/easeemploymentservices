@@ -227,13 +227,14 @@ async function getTimeEntriesForToday() {
             "danger"
           );
           break;
-        case "no time entries found for today":
-          timeEntries.innerHTML = "";
-          btnClockIn.classList.remove("d-none");
-          btnClockOut.classList.add("d-none");
-          break;
-        case "time entries found for today":
-          showTimeEntries(data.entries);
+        case "time entries for today retrieved":
+          if (!data.entries.length) {
+            timeEntries.innerHTML = "";
+            btnClockIn.classList.remove("d-none");
+            btnClockOut.classList.add("d-none");
+          } else {
+            showTimeEntries(data.entries);
+          }
           break;
       }
     })
@@ -269,14 +270,15 @@ async function getParticipantsOfEmployee() {
             "danger"
           );
           break;
-        case "no participants of employee":
-          sessionStorage.removeItem("participants_of_employee");
-          break;
         case "participants of employee retrieved":
-          sessionStorage.setItem(
-            "participants_of_employee",
-            JSON.stringify(data.participants)
-          );
+          if (!data.participants.length) {
+            sessionStorage.removeItem("participants_of_employee");
+          } else {
+            sessionStorage.setItem(
+              "participants_of_employee",
+              JSON.stringify(data.participants)
+            );
+          }
           break;
       }
     })
