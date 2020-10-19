@@ -270,7 +270,10 @@ async function getParticipantsOfEmployee() {
           );
           break;
         case "participants of employee retrieved":
-          sessionStorage.setItem("participants_of_employee", data.participants);
+          sessionStorage.setItem(
+            "participants_of_employee",
+            JSON.stringify(data.participants)
+          );
           break;
       }
     })
