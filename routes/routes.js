@@ -116,4 +116,11 @@ router.post(
 const participant_edit = require("./controllers/participants_edit");
 router.post("/api/participant-edit", authenticateToken, participant_edit.POST);
 
+const participants_of_employee = require("./controllers/participants_of_employee");
+router.get(
+  "/api/participants-of-employee",
+  authenticateToken,
+  participants_of_employee.GET
+);
+
 module.exports = router;

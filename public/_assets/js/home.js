@@ -243,6 +243,42 @@ async function getTimeEntriesForToday() {
     });
 }
 
+async function getParticipantsOfEmployee() {
+  const accessToken = await getAccessToken();
+  const endpoint = "/api/participants-of-employee";
+
+  fetch(endpoint, {
+    mode: "cors",
+    method: "GET",
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      switch (data.msg) {
+        case "user is not authorized for this action":
+          window.location.href = "/logout/";
+          break;
+        case "unable to query for participants of employee":
+          showToast(
+            "Participants of employee could not be retrieved",
+            "Database is Down",
+            "danger"
+          );
+          break;
+        case "participants of employee retrieved":
+          sessionStorage.setItem("participants_of_employee", data.participants);
+          break;
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
 function attachListeners() {
   document
     .querySelector("#btnClockIn")
@@ -261,6 +297,7 @@ function init() {
   checkIfOffline();
   attachListeners();
   populateClockTime();
+  getParticipantsOfEmployee();
   getTimeEntriesForToday();
   showToasts();
 }
