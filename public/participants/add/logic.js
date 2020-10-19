@@ -122,7 +122,7 @@ async function onSubmit(e) {
             3000,
             false
           );
-          window.location.href = `../profile/#${data.participantid}`;
+          window.location.href = `../`;
           break;
       }
     })
@@ -231,6 +231,7 @@ function init() {
   populateCountries();
   populateEmployees();
   attachListeners();
+  showToasts();
 }
 
 init();
