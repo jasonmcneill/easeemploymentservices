@@ -83,6 +83,9 @@ router.post("/api/timeentry-update", authenticateToken, timeentry_update.POST);
 
 // PARTICIPANTS
 
+const participant_view = require("./controllers/participant_view");
+router.post("/api/participant-view", authenticateToken, participant_view.POST);
+
 const participants_list = require("./controllers/participants_list");
 router.get("/api/participants-list", authenticateToken, participants_list.GET);
 
@@ -102,5 +105,12 @@ router.post(
 
 const participant_add = require("./controllers/participant_add");
 router.post("/api/participant-add", authenticateToken, participant_add.POST);
+
+const participant_delete = require("./controllers/participant_delete");
+router.post(
+  "/api/participant-delete",
+  authenticateToken,
+  participant_delete.POST
+);
 
 module.exports = router;
