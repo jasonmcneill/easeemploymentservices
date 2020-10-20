@@ -282,14 +282,7 @@ function showToast(
 function registerSW() {
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("/sw.js").then((registration) => {
-        document.querySelector("#btnRefreshSw").onclick = (e) => {
-          e.preventDefault();
-          registration.update();
-          console.log("Service worker refreshed");
-          window.location.reload();
-        };
-      });
+      navigator.serviceWorker.register("/sw.js");
     });
   }
 }
