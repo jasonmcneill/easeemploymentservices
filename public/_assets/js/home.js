@@ -258,7 +258,6 @@ async function getParticipantsOfEmployee() {
   })
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
       switch (data.msg) {
         case "user is not authorized for this action":
           window.location.href = "/logout/";
