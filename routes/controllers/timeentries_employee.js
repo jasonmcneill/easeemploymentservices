@@ -141,23 +141,28 @@ exports.POST = (req, res) => {
         }
 
         const entries = result.map((item) => {
-          const time = moment(item.entry).format("h:mm:ss A");
-          const date = moment(item.entry).format("MMM. D");
-          const fulldate = moment(item.entry).format("YYYY-MM-DD");
-          const weekday = moment(item.entry).format("ddd");
+          const {
+            timelogid,
+            entry,
+            type,
+            participantid,
+            firstname,
+            lastname,
+          } = item;
+          const time = moment(entry).format("h:mm:ss A");
+          const date = moment(entry).format("MMM. D");
+          const fulldate = moment(entry).format("YYYY-MM-DD");
+          const weekday = moment(entry).format("ddd");
           const changedItem = {
-            id: item.timelogid,
-            type: item.type,
+            id: timelogid,
+            type: type,
             time: time,
             date: date,
             fulldate: fulldate,
             weekday: weekday,
             participant: {
-              id: item.participantid,
-              name:
-                item.participantid === 0
-                  ? "EASE"
-                  : `${item.firstname} ${item.lastname}`,
+              id: participantid,
+              name: participantid === 0 ? "EASE" : `${firstname} ${lastname}`,
             },
           };
           return changedItem;
