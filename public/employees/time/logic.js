@@ -101,7 +101,7 @@ async function populateContent(scrollAfterFetch = false) {
       });
 
       html = `
-        <table class="table">
+        <table class="table table-responsive">
           <tr>
             <th>Date</th>
             <th>Time</th>
