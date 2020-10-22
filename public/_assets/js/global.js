@@ -161,6 +161,8 @@ function showToasts(samePageToasts) {
   const toastContainer = document.querySelector("#toasts");
   let toasts = [];
 
+  if (!toastContainer) return;
+
   toastContainer.innerHTML = "";
 
   if (!samePageToasts) {
@@ -283,6 +285,7 @@ function registerSW() {
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
       navigator.serviceWorker.register("/sw.js");
+      });
     });
   }
 }
