@@ -84,6 +84,7 @@ exports.POST = (req, res) => {
 
     const sql = `
     SELECT
+      t.timelogid,
       convert_tz(t.entry, '+00:00', ?) AS entry,
       t.type,
       t.participantid,
