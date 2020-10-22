@@ -84,20 +84,22 @@ exports.POST = (req, res) => {
 
     const sql = `
     SELECT
-      timelogid,
-      type,
-      CONVERT_TZ(entry, '+00:00', ?) AS entry
+      convert_tz(t.entry, '+00:00', ?) AS entry,
+      t.type,
+      t.participantid,
+      p.firstname,
+      p.lastname
     FROM
-      employees__timelogs
+      employees__timelogs t
+    LEFT OUTER JOIN participants p ON t.participantid = p.participantid
     WHERE
-      entry
-    BETWEEN
-      CONVERT_TZ(?, ?, '+00:00')
+      entry >= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), "%Y-%m-%d 00:00:00"), ?, '+00:00')
     AND
-      CONVERT_TZ(? + INTERVAL 1 DAY, ?, '+00:00')
+      entry <= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), '%Y-%m-%d 23:59:59'), ?, '+00:00')
     AND
       employeeid = ?
-    ;`;
+    ;
+  `;
 
     db.query(
       sql,
@@ -149,6 +151,13 @@ exports.POST = (req, res) => {
             date: date,
             fulldate: fulldate,
             weekday: weekday,
+            participant: {
+              id: item.participantid,
+              name:
+                item.participantid === 0
+                  ? "EASE"
+                  : `${item.firstname} ${item.lastname}`,
+            },
           };
           return changedItem;
         });
