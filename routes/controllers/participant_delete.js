@@ -59,20 +59,32 @@ exports.POST = (req, res) => {
           });
         }
 
-        // Query: Delete participant
-        const sql = "DELETE FROM participants WHERE participantid = ?;";
+        // Query:  Delete participant from time entries
+        const sql = "DELETE FROM employees__timelogs WHERE participantid = ?;";
         db.query(sql, [participantid], (err, result) => {
           if (err) {
             console.log(err);
             return res.status(500).send({
-              msg: "unable to query to delete participant",
+              msg: "unable to query to delete participant from time logs",
               msgType: "error",
             });
           }
 
-          return res
-            .status(200)
-            .send({ msg: "participant deleted", msgType: "error" });
+          // Query: Delete participant
+          const sql = "DELETE FROM participants WHERE participantid = ?;";
+          db.query(sql, [participantid], (err, result) => {
+            if (err) {
+              console.log(err);
+              return res.status(500).send({
+                msg: "unable to query to delete participant",
+                msgType: "error",
+              });
+            }
+
+            return res
+              .status(200)
+              .send({ msg: "participant deleted", msgType: "error" });
+          });
         });
       });
     });
