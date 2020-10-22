@@ -106,9 +106,9 @@ exports.POST = (req, res) => {
       sql,
       [
         timeZoneOffset,
-        fromdate,
         timeZoneOffset,
-        todate,
+        timeZoneOffset,
+        timeZoneOffset,
         timeZoneOffset,
         employeeid,
       ],
