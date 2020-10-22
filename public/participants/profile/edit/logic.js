@@ -165,7 +165,7 @@ async function getParticipant() {
       zipEl.value = zip;
 
       const employeeidEl = document.querySelector("#employeeid");
-      employeeidEl.value = employeeid === "" ? "" : employeeid;
+      employeeidEl.value = employeeid;
     })
     .catch((err) => {
       console.error(err);
