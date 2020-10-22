@@ -75,6 +75,10 @@ async function populateContent(scrollAfterFetch = false) {
             : "";
 
         const fulldate = item.fulldate;
+        let nameHTML =
+          item.participantid === 0
+            ? `EASE`
+            : `<a href="../../participants/profile/#${item.participant.id}">${item.participant.name}</a>`;
 
         html += `
           <tr>
@@ -90,9 +94,7 @@ async function populateContent(scrollAfterFetch = false) {
                 data-fulldate="${item.fulldate}"
                 data-weekday="${item.weekday}"
               >${item.time}</a></td>
-            <td><a href="../../participants/profile/#${item.participant.id}">${
-          item.participant.name
-        }</a></td>
+            <td>${nameHTML}</td>
             <td>${item.type.toUpperCase()}</td>
           </tr>`;
         lastDate = item.date;
