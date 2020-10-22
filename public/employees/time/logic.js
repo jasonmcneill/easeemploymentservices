@@ -76,7 +76,7 @@ async function populateContent(scrollAfterFetch = false) {
 
         const fulldate = item.fulldate;
         let nameHTML =
-          item.name === "EASE"
+          item.participant.id == 0
             ? `EASE`
             : `<a href="../../participants/profile/#${item.participant.id}">${item.participant.name}</a>`;
 
