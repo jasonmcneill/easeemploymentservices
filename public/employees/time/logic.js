@@ -90,6 +90,9 @@ async function populateContent(scrollAfterFetch = false) {
                 data-fulldate="${item.fulldate}"
                 data-weekday="${item.weekday}"
               >${item.time}</a></td>
+            <td><a href="../../participants/profile/#${item.participant.id}">${
+          item.participant.name
+        }</a></td>
             <td>${item.type.toUpperCase()}</td>
           </tr>`;
         lastDate = item.date;
@@ -100,6 +103,7 @@ async function populateContent(scrollAfterFetch = false) {
           <tr>
             <th>Date</th>
             <th>Time</th>
+            <th>For</th>
             <th>In/Out</th>
           </tr>
           ${html}
