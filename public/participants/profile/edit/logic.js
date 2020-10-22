@@ -294,10 +294,10 @@ function attachListeners() {
 }
 
 function init() {
-  getParticipant();
   populateStates();
   populateCountries();
   populateEmployees();
+  getParticipant();
   attachListeners();
   showToasts();
 }
