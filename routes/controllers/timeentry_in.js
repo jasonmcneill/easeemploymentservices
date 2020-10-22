@@ -3,16 +3,19 @@ const db = require("../../database");
 
 exports.POST = (req, res) => {
   const employeeid = req.user.employeeid;
+  const participantid = req.body.participantid;
   const timeZone = req.body.timeZone;
   const timeZoneOffset = moment.tz(timeZone).format("Z:00").slice(0, -3);
 
   const sql = `
     INSERT INTO employees__timelogs (
       employeeid,
+      participantid,
       entry,
       type,
       createdAt
     ) VALUES (
+      ?,
       ?,
       UTC_TIMESTAMP(),
       'in',
@@ -20,7 +23,7 @@ exports.POST = (req, res) => {
     )
   ;`;
 
-  db.query(sql, [employeeid], (err, result1) => {
+  db.query(sql, [employeeid, participantid], (err, result1) => {
     if (err) {
       console.log(err);
       return res
@@ -30,12 +33,16 @@ exports.POST = (req, res) => {
 
     const sql = `
       SELECT
-	      convert_tz(entry, '+00:00', ?) AS entry,
-        type
+        convert_tz(t.entry, '+00:00', ?) AS entry,
+        t.type,
+        t.participantid,
+        p.firstname,
+        p.lastname
       FROM
-	      employees__timelogs
+        employees__timelogs t
+      LEFT OUTER JOIN participants p ON t.participantid = p.participantid
       WHERE
-	      entry >= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), "%Y-%m-%d 00:00:00"), ?, '+00:00')
+        entry >= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), "%Y-%m-%d 00:00:00"), ?, '+00:00')
       AND
         entry <= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), '%Y-%m-%d 23:59:59'), ?, '+00:00')
       AND
@@ -63,9 +70,14 @@ exports.POST = (req, res) => {
         }
 
         const entries = result2.map((item) => {
+          const { type, entry, participantid, firstname, lastname } = item;
           const changedItem = {
-            type: item.type,
-            entry: moment(item.entry).format("h:mm:ss A"),
+            type: type,
+            entry: moment(entry).format("h:mm:ss A"),
+            participant: {
+              id: participantid,
+              name: participantid === 0 ? "EASE" : `${firstname} ${lastname}`,
+            },
           };
           return changedItem;
         });

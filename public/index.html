@@ -63,6 +63,19 @@
     <!-- Toasts -->
     <div id="toasts"></div>
 
+    <!-- Alert -->
+    <div class="row">
+      <div class="col col-md-12">
+        <div id="alertMessage" class="col col-md-6 offset-md-3 mt-4 d-none">
+          <div
+            data-alert-content
+            class="alert alert-danger border-danger"
+            role="alert"
+          ></div>
+        </div>
+      </div>
+    </div>
+
     <!-- Content -->
     <div class="container-fluid pt-3 fade-in">
       <div class="row">
@@ -79,11 +92,21 @@
 
               <!-- Buttons -->
               <div class="text-center">
-                <button class="btn btn-dark d-none" id="btnClockIn">
-                  Clock In
-                </button>
+                <form id="formClockInFor">
+                  <strong><em>Clock in for:</em></strong>
+                  <select
+                    class="form-control border border-dark mt-1 mb-3"
+                    id="clockInFor"
+                  >
+                    <option value="">(Select)</option>
+                    <option value="0">EASE</option>
+                  </select>
+                  <button class="btn btn-dark d-none" id="btnClockIn">
+                    Clock In
+                  </button>
+                </form>
 
-                <button class="btn btn-info d-none" id="btnClockOut">
+                <button class="btn btn-info mt-4 d-none" id="btnClockOut">
                   Clock Out
                 </button>
               </div>

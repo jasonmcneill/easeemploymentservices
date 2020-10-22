@@ -7,10 +7,14 @@ exports.POST = (req, res) => {
   const timeZoneOffset = moment.tz(timeZone).format("Z:00").slice(0, -3);
   const sql = `
     SELECT
-      convert_tz(entry, '+00:00', ?) AS entry,
-      type
+      convert_tz(t.entry, '+00:00', ?) AS entry,
+      t.type,
+      t.participantid,
+      p.firstname,
+      p.lastname
     FROM
-      employees__timelogs
+      employees__timelogs t
+    LEFT OUTER JOIN participants p ON t.participantid = p.participantid
     WHERE
       entry >= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), "%Y-%m-%d 00:00:00"), ?, '+00:00')
     AND
@@ -40,9 +44,14 @@ exports.POST = (req, res) => {
       }
 
       const entries = result.map((item) => {
+        const { type, entry, participantid, firstname, lastname } = item;
         const changedItem = {
-          type: item.type,
-          entry: moment(item.entry).format("h:mm:ss A"),
+          type: type,
+          entry: moment(entry).format("h:mm:ss A"),
+          participant: {
+            id: participantid,
+            name: participantid === 0 ? "EASE" : `${firstname} ${lastname}`,
+          },
         };
         return changedItem;
       });

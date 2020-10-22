@@ -23,11 +23,15 @@ function populateClockTime() {
   }, 1000);
 }
 
-async function onClockInClicked() {
+async function onClockInClicked(e) {
+  e.preventDefault();
+  hideAlertMessage();
+
   const timeZone = moment.tz.guess();
   const timeZoneOffset = new Date().getTimezoneOffset() * 60;
   const btnClockIn = document.querySelector("#btnClockIn");
   const btnClockOut = document.querySelector("#btnClockOut");
+  const participantid = document.querySelector("#clockInFor").value || "";
   const timeEntries = document.querySelector("#timeEntries");
   const spinner = `
   <div class="text-center my-3">
@@ -35,6 +39,15 @@ async function onClockInClicked() {
       <span class="sr-only">Loading...</span>
     </div>
   </div>`;
+
+  if (participantid === "") {
+    showToast(
+      `Please select an item under <strong class="text-nowrap">"Clock in for."</strong>`,
+      "Incomplete",
+      "danger"
+    );
+    return;
+  }
 
   timeEntries.innerHTML = spinner;
   btnClockIn.setAttribute("disabled", true);
@@ -45,6 +58,7 @@ async function onClockInClicked() {
     mode: "cors",
     method: "POST",
     body: JSON.stringify({
+      participantid: participantid,
       timeZone: timeZone,
       timeZoneOffset: timeZoneOffset,
     }),
@@ -94,6 +108,7 @@ async function onClockOutConfirmed(e) {
   const btnClockIn = document.querySelector("#btnClockIn");
   const btnClockOut = document.querySelector("#btnClockOut");
   const timeEntries = document.querySelector("#timeEntries");
+  const clockInFor = document.querySelector("#clockInFor");
   const spinner = `
   <div class="text-center my-3">
     <div class="spinner-border" role="status">
@@ -138,6 +153,7 @@ async function onClockOutConfirmed(e) {
         case "clock-out succeeded":
           showToast("You are now clocked out.", "Clock-out Succeeded", "info");
           showTimeEntries(data.entries);
+          clockInFor.options[0].selected = true;
           break;
       }
     })
@@ -153,6 +169,7 @@ function showTimeEntries(entries) {
   const timeEntries = document.querySelector("#timeEntries");
   const btnClockIn = document.querySelector("#btnClockIn");
   const btnClockOut = document.querySelector("#btnClockOut");
+  const formClockInFor = document.querySelector("#formClockInFor");
   let timeHtml = ``;
 
   // Return if no entries received
@@ -164,28 +181,41 @@ function showTimeEntries(entries) {
     // Show "Clock Out"
     btnClockIn.classList.add("d-none");
     btnClockOut.classList.remove("d-none");
+    formClockInFor.classList.add("d-none");
   } else {
     // Show "Clock In"
     btnClockIn.classList.remove("d-none");
     btnClockOut.classList.add("d-none");
+    formClockInFor.classList.remove("d-none");
   }
 
   entries.forEach((item) => {
-    timeHtml += `
-      <tr>
-        <td>
-          <span class="text-success">
-            <strong>${item.type === "in" ? "IN" : "OUT"}:</strong>
-          </span>
-        </td>
-        <td class="text-right">
-          ${item.entry}
-        </td>
-      </tr>
-    `;
+    const { type, entry } = item;
+    const { name } = item.participant;
+    let entryHtml = "";
+
+    if (type === "in") {
+      entryHtml += `
+        <div class="timein">
+          <strong>${name}</strong><br>
+          ${entry}
+          <strong class="text-success float-right">IN</strong>
+        </div>
+      `;
+    } else {
+      entryHtml += `
+        <div class="timeout mb-3">
+          ${entry}
+          <strong class="text-success float-right">OUT</strong>
+        </div>
+        <hr>
+      `;
+    }
+
+    timeHtml += entryHtml;
   });
 
-  timeHtml = `<table class="table mt-3">${timeHtml}</table>`;
+  timeHtml = `<hr><div class="mt-3">${timeHtml}</div>`;
   timeEntries.innerHTML = timeHtml;
 }
 
@@ -270,14 +300,18 @@ async function getParticipantsOfEmployee() {
           );
           break;
         case "participants of employee retrieved":
-          if (!data.participants.length) {
-            sessionStorage.removeItem("participants_of_employee");
-          } else {
-            sessionStorage.setItem(
-              "participants_of_employee",
-              JSON.stringify(data.participants)
-            );
+          const clockInFor = document.querySelector("#clockInFor");
+          let clockInForOptions = `
+            <option value="">(Select)</option>
+            <option value="0">EASE</option>
+          `;
+          if (data.participants.length) {
+            data.participants.forEach((item) => {
+              const { participantid, firstname, lastname } = item;
+              clockInForOptions += `<option value="${participantid}">${firstname} ${lastname}</option>`;
+            });
           }
+          clockInFor.innerHTML = clockInForOptions;
           break;
       }
     })
