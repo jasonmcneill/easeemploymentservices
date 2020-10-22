@@ -81,6 +81,8 @@ async function populateEmployees() {
       if (employees.length === 1) {
         employeesEl[1].selected = true;
       }
+
+      getParticipant();
     })
     .catch((err) => {
       console.error(err);
@@ -297,7 +299,6 @@ function init() {
   populateStates();
   populateCountries();
   populateEmployees();
-  getParticipant();
   attachListeners();
   showToasts();
 }
