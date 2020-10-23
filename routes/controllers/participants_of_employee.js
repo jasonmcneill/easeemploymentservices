@@ -18,16 +18,19 @@ exports.GET = (req, res) => {
   const sql = `
     SELECT
       p.participantid,
+      p.employeeid,
       p.firstname,
-      p.lastname
+      p.lastname,
+      e.firstname AS employeeFirstName,
+      e.lastname AS employeeLastName
     FROM
       participants p
-    INNER JOIN
-      employees__participants ep
+    LEFT OUTER JOIN
+      employees e
     ON
-      ep.participantid = p.participantid
+      p.employeeid = e.employeeid
     WHERE
-      ep.employeeid = ?
+      p.employeeid = ?
     ORDER BY
       p.lastname,
       p.firstname

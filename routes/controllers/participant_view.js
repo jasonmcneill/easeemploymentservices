@@ -31,6 +31,7 @@ exports.POST = (req, res) => {
   const sql = `
     SELECT
       p.participantid,
+      p.employeeid,
       p.firstname,
       p.lastname,
       p.phone,
@@ -44,8 +45,7 @@ exports.POST = (req, res) => {
       e.lastname AS employeeLastName
     FROM
       participants p
-    LEFT OUTER JOIN employees__participants ep ON p.participantid = ep.participantid
-    LEFT OUTER JOIN employees e ON ep.employeeid = e.employeeid
+    LEFT OUTER JOIN employees e ON p.employeeid = e.employeeid
     WHERE
       p.participantid = ?
     LIMIT 1

@@ -117,10 +117,10 @@ exports.POST = (req, res) => {
       let sql = "";
       let sqlArray = [];
       if (typeof employeeid === "number") {
-        sql = `UPDATE employees__participants SET employeeid = ? WHERE participantid = ?;`;
+        sql = `UPDATE participants SET employeeid = ? WHERE participantid = ?;`;
         sqlArray = [employeeid, participantid];
       } else {
-        sql = `DELETE FROM employees__participants WHERE participantid = ?;`;
+        sql = `UPDATE participants SET employee = NULL WHERE participantid = ?;`;
         sqlArray = [participantid];
       }
       db.query(sql, sqlArray, (err, result) => {
