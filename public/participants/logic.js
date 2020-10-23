@@ -152,8 +152,22 @@ async function showList() {
   function renderList(data) {
     let html = ``;
     data.forEach((item) => {
-      const { participantid, firstname, lastname } = item;
-      html += `<a href="profile/#${participantid}" class="list-group-item list-group-item-action">${firstname} ${lastname}</a>`;
+      const { participantid, employeeid, firstname, lastname } = item;
+      console.log(employeeid);
+      if (typeof employeeid === "number") {
+        html += `
+          <a href="profile/#${participantid}" class="list-group-item list-group-item-action">
+            ${firstname} ${lastname}
+          </a>
+        `;
+      } else {
+        html += `
+          <a href="profile/#${participantid}" class="list-group-item list-group-item-action">
+            ${firstname} ${lastname}
+            <span class="badge badge-secondary float-right ml-2">Unassigned</span>
+          </a>
+        `;
+      }
     });
     html = `
       <p>
