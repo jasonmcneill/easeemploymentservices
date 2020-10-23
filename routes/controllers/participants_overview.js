@@ -14,12 +14,10 @@ exports.GET = (req, res) => {
 
   const sql = `
     SELECT
-      COUNT(participantid) AS numParticipants,
-      (SELECT COUNT(participantid) FROM employees__participants GROUP BY participantid LIMIT 1) AS numParticipantsManaged,
-      (SELECT COUNT(employeeid GROUP BY employeeid LIMIT 1) FROM employees) AS numEmployees,
-      (SELECT COUNT(employeeid) FROM employees__participants GROUP BY employeeid LIMIT 1) AS numEmployeesManaging
-    FROM
-      participants
+      (SELECT COUNT(participantid) FROM participants) AS numParticipants,
+      (SELECT COUNT(participantid) FROM employees__participants) AS numParticipantsManaged,
+      (SELECT COUNT(employeeid) FROM employees) AS numEmployees,
+      (SELECT COUNT(employeeid) FROM employees__participants) AS numEmployeesManaging
     ;
   `;
   db.query(sql, [], (err, result) => {
