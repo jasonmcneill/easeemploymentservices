@@ -136,8 +136,15 @@ exports.POST = (req, res) => {
 
           // Associate participant with employee
           const employeeidInt = parseInt(employeeid);
-          const sql =
-            "INSERT INTO employees__participants(employeeid, participantid, createdAt) VALUES(?, ?, utc_timestamp());";
+          const sql = `
+            UPDATE
+              participants
+            SET
+              employeeid = ?
+            WHERE
+              participantid = ?
+            ;
+          `;
           db.query(sql, [employeeidInt, participantid], (err, result) => {
             if (err) {
               console.log(err);

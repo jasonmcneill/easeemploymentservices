@@ -26,65 +26,53 @@ exports.POST = (req, res) => {
       .status(400)
       .send({ msg: "participant id must be a number", msgType: "error" });
 
-  // Query:  Disassociate participant from employees
-  const sql = "DELETE FROM employees__participants WHERE participantid = ?;";
+  // Query:  Delete participant from case notes
+  const sql = "DELETE FROM participants__casenotes WHERE participantid = ?;";
   db.query(sql, [participantid], (err, result) => {
     if (err) {
       console.log(err);
       return res.status(500).send({
-        msg: "unable to query to disassociate participant from employees",
+        msg: "unable to query to delete participant from case notes",
         msgType: "error",
       });
     }
 
-    // Query:  Delete participant from case notes
-    const sql = "DELETE FROM participants__casenotes WHERE participantid = ?;";
+    // Query:  Delete participant from placements
+    const sql = "DELETE FROM placements WHERE participantid = ?;";
     db.query(sql, [participantid], (err, result) => {
       if (err) {
         console.log(err);
         return res.status(500).send({
-          msg: "unable to query to delete participant from case notes",
+          msg: "unable to query to delete participant from placements",
           msgType: "error",
         });
       }
 
-      // Query:  Delete participant from placements
-      const sql = "DELETE FROM placements WHERE participantid = ?;";
+      // Query:  Delete participant from time entries
+      const sql = "DELETE FROM employees__timelogs WHERE participantid = ?;";
       db.query(sql, [participantid], (err, result) => {
         if (err) {
           console.log(err);
           return res.status(500).send({
-            msg: "unable to query to delete participant from placements",
+            msg: "unable to query to delete participant from time logs",
             msgType: "error",
           });
         }
 
-        // Query:  Delete participant from time entries
-        const sql = "DELETE FROM employees__timelogs WHERE participantid = ?;";
+        // Query: Delete participant
+        const sql = "DELETE FROM participants WHERE participantid = ?;";
         db.query(sql, [participantid], (err, result) => {
           if (err) {
             console.log(err);
             return res.status(500).send({
-              msg: "unable to query to delete participant from time logs",
+              msg: "unable to query to delete participant",
               msgType: "error",
             });
           }
 
-          // Query: Delete participant
-          const sql = "DELETE FROM participants WHERE participantid = ?;";
-          db.query(sql, [participantid], (err, result) => {
-            if (err) {
-              console.log(err);
-              return res.status(500).send({
-                msg: "unable to query to delete participant",
-                msgType: "error",
-              });
-            }
-
-            return res
-              .status(200)
-              .send({ msg: "participant deleted", msgType: "error" });
-          });
+          return res
+            .status(200)
+            .send({ msg: "participant deleted", msgType: "error" });
         });
       });
     });

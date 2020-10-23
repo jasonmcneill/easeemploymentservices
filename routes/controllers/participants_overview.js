@@ -14,13 +14,10 @@ exports.GET = (req, res) => {
 
   const sql = `
     SELECT
-      (SELECT COUNT(participantid) FROM participants) AS numParticipants,
-      (SELECT COUNT(participantid) FROM employees__participants) AS numParticipantsManaged,
-      (SELECT COUNT(employeeid) FROM employees) AS numEmployees,
-      (SELECT COUNT(employeeid) FROM employees__participants) AS numEmployeesManaging
+      (SELECT COUNT(participantid) FROM participants) AS numParticipants
     ;
   `;
-  db.query(sql, [], (err, result) => {
+  db.query(sql, [], (err, result1) => {
     if (err) {
       console.log(err);
       return res
@@ -28,22 +25,52 @@ exports.GET = (req, res) => {
         .send({ msg: "unable to query for summary", msgType: "error" });
     }
 
-    const {
-      numParticipants,
-      numParticipantsManaged,
-      numEmployees,
-      numEmployeesManaging,
-    } = result[0];
-    const summary = {
-      numParticipants: numParticipants,
-      numParticipantsUnassigned: numParticipants - numParticipantsManaged,
-      numEmployees: numEmployees,
-      numEmployeesUnassigned: numEmployees - numEmployeesManaging,
-    };
-    return res.status(200).send({
-      msg: "summary retrieved",
-      msgType: "success",
-      summary: summary,
+    const sql = `
+      SELECT
+        participantid,
+        firstname,
+        lastname
+      FROM
+        participants
+      WHERE
+        employeeid IS NULL
+      ORDER BY
+        lastname, firstname
+      ;
+    `;
+    db.query(sql, [], (err, result2) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({
+          msg: "unable to query for participants without assigned employees",
+        });
+      }
+
+      let participantsUnassigned = [];
+      if (result2.length) {
+        unassignedParticipants = result2.map((item) => {
+          const { participantid, firstname, lastname } = item;
+          return {
+            participantid: participantid,
+            firstname: firstname,
+            lastname: lastname,
+          };
+        });
+      }
+
+      const { numParticipants } = result1[0];
+
+      const summary = {
+        numParticipants: numParticipants,
+        numParticpantsUnassigned: participantsUnassigned.length,
+      };
+
+      return res.status(200).send({
+        msg: "summary retrieved",
+        msgType: "success",
+        summary: summary,
+        participantsUnassigned: participantsUnassigned,
+      });
     });
   });
 };
