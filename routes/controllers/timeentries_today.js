@@ -16,11 +16,11 @@ exports.POST = (req, res) => {
       employees__timelogs t
     LEFT OUTER JOIN participants p ON t.participantid = p.participantid
     WHERE
-      entry >= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), "%Y-%m-%d 00:00:00"), ?, '+00:00')
+      t.entry >= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), "%Y-%m-%d 00:00:00"), ?, '+00:00')
     AND
-      entry <= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), '%Y-%m-%d 23:59:59'), ?, '+00:00')
+      t.entry <= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), '%Y-%m-%d 23:59:59'), ?, '+00:00')
     AND
-      employeeid = ?
+      t.employeeid = ?
     ;
   `;
 
