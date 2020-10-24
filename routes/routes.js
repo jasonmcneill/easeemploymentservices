@@ -123,4 +123,9 @@ router.get(
   participants_of_employee.GET
 );
 
+// EMPLOYERS
+
+const employer_list = require("./controllers/employer_list");
+router.get("/api/employer-list", authenticateToken, employer_list.GET);
+
 module.exports = router;
