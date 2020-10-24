@@ -98,7 +98,7 @@ exports.POST = (req, res) => {
     AND
       entry <= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), '%Y-%m-%d 23:59:59'), ?, '+00:00')
     AND
-      p.employeeid = ?
+      t.employeeid = ?
     ;
   `;
 
