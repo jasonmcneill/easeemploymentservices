@@ -8,7 +8,7 @@ exports.POST = (req, res) => {
 
   const sql =
     "SELECT participantid FROM employees__timelogs WHERE employeeid = ? ORDER BY timelogid DESC LIMIT 1;";
-  db.query(sql, [employeeid], (err, result) => {
+  db.query(sql, [employeeid], (err, result0) => {
     if (err) {
       console.log(err);
       return res
@@ -17,25 +17,25 @@ exports.POST = (req, res) => {
     }
 
     let participantid = 0;
-    if (result.length === 1) {
-      participantid = result[0].participantid;
+    if (result0.length === 1) {
+      participantid = result0[0].participantid;
     }
 
     const sql = `
-    INSERT INTO employees__timelogs (
-      employeeid,
-      participantid,
-      entry,
-      type,
-      createdAt
-    ) VALUES (
-      ?,
-      ?,
-      UTC_TIMESTAMP(),
-      'out',
-      UTC_TIMESTAMP()
-    )
-  ;`;
+      INSERT INTO employees__timelogs (
+        employeeid,
+        participantid,
+        entry,
+        type,
+        createdAt
+      ) VALUES (
+        ?,
+        ?,
+        UTC_TIMESTAMP(),
+        'out',
+        UTC_TIMESTAMP()
+      )
+    ;`;
 
     db.query(sql, [employeeid, participantid], (err, result1) => {
       if (err) {
@@ -46,23 +46,23 @@ exports.POST = (req, res) => {
       }
 
       const sql = `
-      SELECT
-        convert_tz(t.entry, '+00:00', ?) AS entry,
-        t.type,
-        t.participantid,
-        p.firstname,
-        p.lastname
-      FROM
-        employees__timelogs t
-      LEFT OUTER JOIN participants p ON t.participantid = p.participantid
-      WHERE
-        entry >= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), "%Y-%m-%d 00:00:00"), ?, '+00:00')
-      AND
-        entry <= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), '%Y-%m-%d 23:59:59'), ?, '+00:00')
-      AND
-        employeeid = ?
-      ;
-    `;
+        SELECT
+          convert_tz(t.entry, '+00:00', ?) AS entry,
+          t.type,
+          t.participantid,
+          p.firstname,
+          p.lastname
+        FROM
+          employees__timelogs t
+        LEFT OUTER JOIN participants p ON t.participantid = p.participantid
+        WHERE
+          entry >= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), "%Y-%m-%d 00:00:00"), ?, '+00:00')
+        AND
+          entry <= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), '%Y-%m-%d 23:59:59'), ?, '+00:00')
+        AND
+          p.employeeid = ?
+        ;
+      `;
 
       db.query(
         sql,
@@ -80,6 +80,7 @@ exports.POST = (req, res) => {
             return res.status(500).send({
               msg: "unable to query for time entries",
               msgType: "error",
+              error: err,
             });
           }
 
