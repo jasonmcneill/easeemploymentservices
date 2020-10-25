@@ -83,7 +83,12 @@ async function onClockInClicked(e) {
           );
           break;
         case "clock-in succeeded":
-          showToast("You are now clocked in.", "Clock-in Succeeded", "success");
+          showToast(
+            "You are now clocked in.",
+            "Clock-in Succeeded",
+            "success",
+            2500
+          );
           showTimeEntries(data.entries);
           break;
       }
@@ -151,7 +156,12 @@ async function onClockOutConfirmed(e) {
           );
           break;
         case "clock-out succeeded":
-          showToast("You are now clocked out.", "Clock-out Succeeded", "info");
+          showToast(
+            "You are now clocked out.",
+            "Clock-out Succeeded",
+            "info",
+            2500
+          );
           showTimeEntries(data.entries);
           clockInFor.options[0].selected = true;
           break;
