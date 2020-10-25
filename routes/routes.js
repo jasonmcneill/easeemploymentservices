@@ -128,4 +128,7 @@ router.get(
 const employer_list = require("./controllers/employer_list");
 router.get("/api/employer-list", authenticateToken, employer_list.GET);
 
+const employer_add = require("./controllers/employer_add");
+router.post("/api/employer-add", authenticateToken, employer_add.POST);
+
 module.exports = router;
