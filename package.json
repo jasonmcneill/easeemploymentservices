@@ -25,6 +25,7 @@
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
     "uuid": "^8.3.0",
+    "valid-url": "^1.0.9",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
