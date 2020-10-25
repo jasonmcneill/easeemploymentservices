@@ -21,7 +21,7 @@
     />
 
     <link rel="stylesheet" href="../_assets/css/global.css" />
-    <title>Employees</title>
+    <title>Employment</title>
   </head>
   <body>
     <!-- TOP NAVBAR -->
@@ -43,15 +43,15 @@
           <li class="nav-item">
             <a class="nav-link" href="../">Home</a>
           </li>
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="../employees/">Employees</a>
-            <span class="sr-only">(current)</span>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="../participants/">Participants</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="../employment/">Employment</a>
+            <span class="sr-only">(current)</span>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="../logout/">Sign Out</a>
@@ -64,44 +64,36 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Employees</li>
+        <li class="breadcrumb-item active" aria-current="page">Employment</li>
       </ol>
     </nav>
 
     <!-- Toasts -->
     <div id="toasts"></div>
 
+    <!-- Spinner -->
+    <div class="my-2 text-center d-none" id="spinner">
+      <div class="spinner-border text-dark" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
     <!-- Content -->
-    <div class="container-fluid fade-in" id="employeescontainer">
+    <div class="container-fluid fade-in" id="content">
       <div class="row">
-        <div class="col col-md-12">
-          <h1 class="h3 my-2 text-center font-weight-normal">Employees</h1>
+        <div class="col col-md-4 offset-md-4">
+          <h1 class="h3 my-2 text-center font-weight-normal">Employment</h1>
         </div>
       </div>
+
       <!-- Alert -->
       <div class="row">
-        <div class="col col-md-12">
-          <div id="alertMessage" class="col col-md-6 offset-md-3 d-none">
-            <div
-              data-alert-content
-              class="alert alert-danger border-danger"
-              role="alert"
-            ></div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col col-md-2 offset-md-5">
-          <!-- Spinner -->
-          <div class="mt-3 text-center d-none" id="spinner">
-            <div class="spinner-border" role="status">
-              <span class="sr-only">Loading...</span>
-            </div>
-          </div>
-          <div class="list-group mt-4 mb-3" id="employeelist"></div>
-          <div class="text-center">
-            <a href="add/" class="btn btn-dark my-3">Add an Employee</a>
-          </div>
+        <div id="alertMessage" class="col col-md-4 offset-md-4 d-none">
+          <div
+            data-alert-content
+            class="alert alert-danger border-danger"
+            role="alert"
+          ></div>
         </div>
       </div>
     </div>
@@ -109,7 +101,6 @@
     <script src="../_assets/js/jquery-3.5.1.slim.min.js"></script>
     <script src="../_assets/js/popper.min.js"></script>
     <script src="../_assets/bootstrap-4.5.2-dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../_assets/Chart.js/Chart.bundle.min.js"></script>
     <script src="../_assets/js/global.js"></script>
     <script src="./logic.js"></script>
   </body>
