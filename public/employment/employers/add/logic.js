@@ -211,7 +211,11 @@ async function onSubmit(e) {
           );
           break;
         case "employer added successfully":
-          addToast("The employer was added successfully.", "Employer Added");
+          addToast(
+            "The employer was added successfully.",
+            "Employer Added",
+            "success"
+          );
           window.location.href = "../";
           break;
       }
