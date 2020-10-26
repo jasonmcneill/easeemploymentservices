@@ -109,13 +109,6 @@ exports.POST = (req, res) => {
             employerid: result[0].employerid,
           });
 
-        if (result.length)
-          return res.status(403).send({
-            msg: "website already exists",
-            msgType: "error",
-            employerid: result[0].employerid,
-          });
-
         const validatedPhone = require("../utils").validatePhone(
           phone,
           phonecountry
@@ -144,6 +137,7 @@ exports.POST = (req, res) => {
               companyname,
               website,
               phone,
+              phonecountry,
               address,
               city,
               state,
@@ -151,6 +145,7 @@ exports.POST = (req, res) => {
               createdAt
             )
           VALUES(
+            ?,
             ?,
             ?,
             ?,
