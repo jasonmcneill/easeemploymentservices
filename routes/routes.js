@@ -131,4 +131,10 @@ router.get("/api/employer-list", authenticateToken, employer_list.GET);
 const employer_add = require("./controllers/employer_add");
 router.post("/api/employer-add", authenticateToken, employer_add.POST);
 
+const employer_view = require("./controllers/employer_view");
+router.get("/api/employer/:id", employer_view.GET);
+
+const employer_delete = require("./controllers/employer_delete");
+router.post("/api/employer-delete", authenticateToken, employer_delete.POST);
+
 module.exports = router;
