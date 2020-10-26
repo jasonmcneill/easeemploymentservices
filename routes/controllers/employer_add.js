@@ -14,8 +14,9 @@ exports.POST = (req, res) => {
   }
 
   const companyname = req.body.companyname || "";
-  const website = req.body.website || null;
+  const website = req.body.website || "";
   const phone = req.body.phone || "";
+  const phonecountry = req.body.phonecountry || "";
   const address = req.body.address || "";
   const city = req.body.city || "";
   const state = req.body.state || "";
@@ -33,6 +34,11 @@ exports.POST = (req, res) => {
 
   if (!phone.length)
     return res.status(400).send({ msg: "missing phone", msgType: "error" });
+
+  if (!phonecountry.length)
+    return res
+      .status(400)
+      .send({ msg: "missing phone country", msgType: "error" });
 
   if (!address.length)
     return res.status(400).send({ msg: "missing address", msgType: "error" });
@@ -78,13 +84,11 @@ exports.POST = (req, res) => {
       }
 
       if (result.length)
-        return res
-          .status(403)
-          .send({
-            msg: "phone number already exists",
-            msgType: "error",
-            employerid: result[0].employerid,
-          });
+        return res.status(403).send({
+          msg: "phone number already exists",
+          msgType: "error",
+          employerid: result[0].employerid,
+        });
 
       // Check for duplicate web site
 
@@ -99,13 +103,38 @@ exports.POST = (req, res) => {
         }
 
         if (result.length)
+          return res.status(403).send({
+            msg: "website already exists",
+            msgType: "error",
+            employerid: result[0].employerid,
+          });
+
+        if (result.length)
+          return res.status(403).send({
+            msg: "website already exists",
+            msgType: "error",
+            employerid: result[0].employerid,
+          });
+
+        const validatedPhone = require("../utils").validatePhone(
+          phone,
+          phonecountry
+        );
+
+        const {
+          isPossibleNumber,
+          isValidForRegion,
+          nationalFormat,
+        } = validatedPhone;
+
+        if (!isPossibleNumber)
           return res
-            .status(403)
-            .send({
-              msg: "website already exists",
-              msgType: "error",
-              employerid: result[0].employerid,
-            });
+            .status(400)
+            .send({ msg: "invalid phone number", msgType: "error" });
+        if (!isValidForRegion)
+          return res
+            .status(400)
+            .send({ msg: "invalid phone number for region", msgType: "error" });
 
         // Insert the record
 
@@ -134,7 +163,7 @@ exports.POST = (req, res) => {
         `;
         db.query(
           sql,
-          [companyname, website, phone, address, city, state, zip],
+          [companyname, website, nationalFormat, address, city, state, zip],
           (err, result) => {
             if (err) {
               console.log(err);
