@@ -158,7 +158,16 @@ exports.POST = (req, res) => {
         `;
         db.query(
           sql,
-          [companyname, website, nationalFormat, address, city, state, zip],
+          [
+            companyname,
+            website,
+            nationalFormat,
+            phonecountry,
+            address,
+            city,
+            state,
+            zip,
+          ],
           (err, result) => {
             if (err) {
               console.log(err);
