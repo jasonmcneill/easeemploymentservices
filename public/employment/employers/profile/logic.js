@@ -62,7 +62,8 @@ function showEmployer(data) {
 
 function onEdit(e) {
   e.preventDefault();
-  console.log("Edit");
+  const employerid = parseInt(document.location.hash.split("#")[1]) || "";
+  window.location.href = `edit/#${employerid}`;
 }
 
 function onDelete(e) {

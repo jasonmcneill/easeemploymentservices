@@ -137,4 +137,7 @@ router.get("/api/employer/:id", employer_view.GET);
 const employer_delete = require("./controllers/employer_delete");
 router.post("/api/employer-delete", authenticateToken, employer_delete.POST);
 
+const employer_edit = require("./controllers/employer_edit");
+router.post("/api/employer-edit", authenticateToken, employer_edit.POST);
+
 module.exports = router;
