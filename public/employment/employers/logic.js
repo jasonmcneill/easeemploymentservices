@@ -1,3 +1,18 @@
+function populate(data) {
+  const joblist = document.querySelector("#employerlist");
+  let html = "";
+  html +=
+    data.length === 1
+      ? `<p class='text-center'><strong>1 employer:</strong></p>`
+      : `<p class='text-center'><strong>${data.length} employers:</p>`;
+  data.forEach((item) => {
+    const { employerid, companyname, city, state } = item;
+    html += `<a href="profile/#${employerid}" class="list-group-item list-group-item-action">${companyname}<br><small class="text-muted">${city}, ${state}</small></a>`;
+  });
+  html = `<div class="list-group">${html}</div>`;
+  joblist.innerHTML = html;
+}
+
 async function getEmployerList() {
   const employerlist = document.querySelector("#employerlist");
   const accessToken = await getAccessToken();
@@ -32,6 +47,8 @@ async function getEmployerList() {
             employerlist.innerHTML =
               "<div class='text-center'>There are no employers in the system.</div>";
             break;
+          } else {
+            populate(data.data);
           }
           break;
       }
