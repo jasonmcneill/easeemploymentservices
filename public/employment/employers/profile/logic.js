@@ -1,3 +1,18 @@
+function getCallingCodes() {
+  const endpoint = "../../../../_assets/json/calling-codes.json";
+  return new Promise((resolve, reject) => {
+    fetch(endpoint)
+      .then((res) => res.json())
+      .then((data) => {
+        resolve(data);
+      })
+      .catch((err) => {
+        console.error(err);
+        reject(err);
+      });
+  });
+}
+
 async function getEmployer() {
   const employerid = parseInt(document.location.hash.split("#")[1]) || "";
   const accessToken = await getAccessToken();
@@ -44,8 +59,27 @@ async function getEmployer() {
     });
 }
 
-function showEmployer(data) {
-  const { companyname, website, phone, address, city, state, zip } = data;
+async function showEmployer(data) {
+  const {
+    companyname,
+    website,
+    phone,
+    phonecountry,
+    address,
+    city,
+    state,
+    zip,
+  } = data;
+
+  const callingCodes = await getCallingCodes();
+  let dialCode = "";
+  if (callingCodes.length) {
+    callingCodes.forEach((item) => {
+      if (item.isoCode.toLowerCase() === phonecountry) {
+        dialCode = item.dialCode;
+      }
+    });
+  }
 
   document.querySelectorAll("[data-name]").forEach((item) => {
     item.innerHTML = companyname;
@@ -54,7 +88,8 @@ function showEmployer(data) {
   document.querySelector(
     "#website"
   ).innerHTML = `<a href="${website}">${website}</a>`;
-  document.querySelector("#phone").innerHTML = phone;
+  document.querySelector("#phone").innerHTML =
+    phonecountry === "us" ? `${phone}` : `${dialCode} ${phone}`;
   document.querySelector(
     "#address"
   ).innerHTML = `${address}<br>${city}, ${state} ${zip}`;
