@@ -101,7 +101,7 @@
       <!-- Form -->
       <div class="row">
         <div class="col col-md-4 offset-md-4">
-          <form id="formAddJob">
+          <form id="formAddJob" novalidate autocomplete="off">
             <div class="form-group">
               <label for="foundbyemployeeid"><strong>Found by:</strong></label>
               <select id="foundbyemployeeid" class="form-control"></select>
@@ -120,7 +120,12 @@
 
             <div class="form-group">
               <label for="jobtitle"><strong>Job Title:</strong></label>
-              <input type="text" class="form-control" id="jobtitle" />
+              <input
+                type="text"
+                class="form-control"
+                id="jobtitle"
+                autocomplete="off"
+              />
             </div>
 
             <div class="form-group">
@@ -160,6 +165,7 @@
                 id="contactname"
                 class="form-control"
                 maxlength="255"
+                autocomplete="off"
               />
             </div>
 
@@ -171,6 +177,7 @@
                 id="contactphone"
                 class="form-control"
                 maxlength="255"
+                autocomplete="off"
               />
             </div>
 
@@ -181,6 +188,7 @@
                 id="contactemail"
                 class="form-control"
                 maxlength="255"
+                autocomplete="off"
               />
             </div>
 
@@ -197,6 +205,7 @@
                 id="address"
                 class="form-control"
                 maxlength="255"
+                autocomplete="off"
               />
             </div>
 
@@ -207,6 +216,7 @@
                 id="city"
                 class="form-control"
                 maxlength="255"
+                autocomplete="off"
               />
             </div>
 
@@ -217,7 +227,13 @@
 
             <div class="form-group">
               <label for="zip"><strong>ZIP:</strong></label>
-              <input type="tel" pattern="[0-9]" id="zip" class="form-control" />
+              <input
+                type="tel"
+                pattern="[0-9]"
+                id="zip"
+                class="form-control"
+                autocomplete="off"
+              />
             </div>
 
             <div class="form-group">
