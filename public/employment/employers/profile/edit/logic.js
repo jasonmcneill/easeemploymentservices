@@ -137,6 +137,7 @@ async function onSubmit(e) {
   const endpoint = "/api/employer-edit";
   const accessToken = await getAccessToken();
 
+  hideAlertMessage();
   showSpinner(content, spinner);
   fetch(endpoint, {
     mode: "cors",

@@ -59,6 +59,7 @@ async function onSubmit(e) {
     website = `http://${website}`;
   }
 
+  hideAlertMessage();
   showSpinner(content, spinner);
   fetch(endpoint, {
     mode: "cors",
