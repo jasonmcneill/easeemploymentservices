@@ -73,10 +73,12 @@ async function showEmployer(data) {
 
   const callingCodes = await getCallingCodes();
   let dialCode = "";
+  let countryName = "";
   if (callingCodes.length) {
     callingCodes.forEach((item) => {
       if (item.isoCode.toLowerCase() === phonecountry) {
         dialCode = item.dialCode;
+        countryName = item.name;
       }
     });
   }
@@ -89,7 +91,9 @@ async function showEmployer(data) {
     "#website"
   ).innerHTML = `<a href="${website}">${website}</a>`;
   document.querySelector("#phone").innerHTML =
-    phonecountry === "us" ? `${phone}` : `${dialCode} ${phone}`;
+    phonecountry === "us"
+      ? `${phone}`
+      : `${dialCode} ${phone} <span class="ml-3 text-muted">(${countryName})`;
   document.querySelector(
     "#address"
   ).innerHTML = `${address}<br>${city}, ${state} ${zip}`;
