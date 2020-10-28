@@ -108,8 +108,8 @@
             </div>
 
             <div class="form-group">
-              <label for="employer"><strong>Employer:</strong></label>
-              <select id="employer" class="form-control"></select>
+              <label for="employerid"><strong>Employer:</strong></label>
+              <select id="employerid" class="form-control"></select>
               <div>
                 Don't see the employer in this dropdown?
                 <a href="../employers/add/" class="text-nowrap">
@@ -175,6 +175,20 @@
                 type="tel"
                 pattern="[0-9]"
                 id="contactphone"
+                class="form-control"
+                maxlength="255"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="contactphoneext"
+                ><strong>Phone extension:</strong></label
+              >
+              <input
+                type="tel"
+                pattern="[0-9]"
+                id="contactphoneext"
                 class="form-control"
                 maxlength="255"
                 autocomplete="off"
