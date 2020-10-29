@@ -72,7 +72,7 @@ exports.POST = (req, res) => {
 
     // Validate contact e-mail
     const emailValidator = require("email-validator");
-    if (contactemail.length && !emailValidator.validate(email))
+    if (contactemail.length && !emailValidator.validate(contactemail))
       return res
         .status(400)
         .send({ msg: "invalid email format", msgType: "error" });
