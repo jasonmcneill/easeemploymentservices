@@ -310,6 +310,10 @@ function checkIfOffline() {
   }, 3000);
 }
 
+function linebreak(str) {
+  return str.replace(/(?:\r\n|\r|\n)/g, "<br>");
+}
+
 function init() {
   registerSW();
   checkIfOffline();
