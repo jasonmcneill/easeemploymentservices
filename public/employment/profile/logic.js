@@ -1,3 +1,9 @@
+function renderData(selector, data) {
+  document
+    .querySelectorAll(selector)
+    .forEach((item) => (item.innerHTML = data));
+}
+
 function showJob(data) {
   const timeZone = moment.tz.guess();
   const {
@@ -10,67 +16,55 @@ function showJob(data) {
     contactphone,
     contactphoneext,
     contactemail,
+    address,
+    city,
+    state,
+    zip,
+    jobsitedetails,
     createdAt,
   } = data;
   document.title = `${jobtitle} @ ${companyname} (job id: ${jobid})`;
 
   // Title
-  document
-    .querySelectorAll("[data-jobtitle]")
-    .forEach((item) => (item.innerHTML = jobtitle));
+  renderData("[data-jobtitle]", jobtitle);
 
   // Company name
-  document
-    .querySelectorAll("[data-companyname]")
-    .forEach((item) => (item.innerHTML = companyname));
+  renderData("[data-companyname]", companyname);
 
   // Posted on date
-  document
-    .querySelectorAll("[data-createdAt]")
-    .forEach(
-      (item) =>
-        (item.innerHTML = `Posted: ${moment()
-          .tz(timeZone, createdAt)
-          .format("MMMM D, YYYY")}`)
-    );
+  renderData(
+    "[data-createdAt]",
+    `Posted: ${moment(createdAt).tz(timeZone, false).format("MMMM D, YYYY")}`
+  );
 
   // Hours
-  document
-    .querySelectorAll("[data-hours]")
-    .forEach((item) => (item.innerHTML = hours));
+  renderData("[data-hours]", hours);
 
   // Description
   let jobdescriptionbr = jobdescription.replace(/(?:\r\n|\r|\n)/g, "<br>");
-  document
-    .querySelectorAll("[data-jobdescription]")
-    .forEach((item) => (item.innerHTML = jobdescriptionbr));
+  renderData("[data-jobdescription]", jobdescriptionbr);
 
   // Contact
-  document
-    .querySelectorAll("[data-contact-name]")
-    .forEach((item) => (item.innerHTML = contactname));
-  document
-    .querySelectorAll("[data-contact-phone]")
-    .forEach(
-      (item) =>
-        (item.innerHTML = `${
-          contactphoneext.length >= 1 ? contactphone + "," : contactphone
-        }`)
-    );
-  document
-    .querySelectorAll("[data-contact-phone-ext]")
-    .forEach(
-      (item) =>
-        (item.innerHTML = `${
-          contactphoneext.length && "Ext. " + contactphoneext
-        }`)
-    );
-  document
-    .querySelectorAll("[data-contact-email]")
-    .forEach(
-      (item) =>
-        (item.innerHTML = `<a href="mailto:${contactemail}">${contactemail}</a>`)
-    );
+  renderData("[data-contact-name]", contactname);
+  renderData(
+    "[data-contact-phone]",
+    `${contactphoneext.length >= 1 ? contactphone + "," : contactphone}`
+  );
+  renderData(
+    "[data-contact-phone-ext]",
+    `${contactphoneext.length && "Ext. " + contactphoneext}`
+  );
+  renderData(
+    "[data-contact-email]",
+    `<a href="mailto:${contactemail}">${contactemail}</a>`
+  );
+
+  // Job Site Details
+  renderData("[data-address]", address);
+  renderData("[data-city]", city);
+  renderData("[data-state]", state);
+  renderData("[data-zip]", zip);
+  renderData("[data-jobsitedetails]", jobsitedetails);
 }
 
 async function getJobInfo() {
