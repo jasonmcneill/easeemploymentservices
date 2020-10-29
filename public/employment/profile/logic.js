@@ -41,8 +41,7 @@ function showJob(data) {
   renderData("[data-hours]", hours);
 
   // Description
-  let jobdescriptionbr = jobdescription.replace(/(?:\r\n|\r|\n)/g, "<br>");
-  renderData("[data-jobdescription]", jobdescriptionbr);
+  renderData("[data-jobdescription]", linebreak(jobdescription));
 
   // Contact
   renderData("[data-contact-name]", contactname);
@@ -64,7 +63,7 @@ function showJob(data) {
   renderData("[data-city]", city);
   renderData("[data-state]", state);
   renderData("[data-zip]", zip);
-  renderData("[data-jobsitedetails]", jobsitedetails);
+  renderData("[data-jobsitedetails]", linebreak(jobsitedetails));
 }
 
 async function getJobInfo() {
