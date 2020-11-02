@@ -1,5 +1,5 @@
 async function populateContent(scrollAfterFetch = false) {
-  const employeeid = parseInt(document.location.hash.split("#")[1]) || "";
+  const employeeid = getId();
   const content = document.querySelector("#content");
   const spinner = document.querySelector("#spinner");
   const breadcrumbProfileLink = document.querySelector(

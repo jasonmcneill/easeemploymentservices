@@ -80,7 +80,7 @@ function renderData(data) {
 }
 
 async function getProfileData() {
-  const participantid = parseInt(document.location.hash.split("#")[1]) || "";
+  const participantid = getId();
   const accessToken = await getAccessToken();
   const endpoint = "/api/participant-view";
 
@@ -134,7 +134,7 @@ async function getProfileData() {
 }
 
 function onEdit() {
-  const participantid = parseInt(document.location.hash.split("#")[1]) || "";
+  const participantid = getId();
 
   window.location.href = `edit/#${participantid}`;
 }
@@ -144,7 +144,7 @@ function onDelete() {
 }
 
 async function onConfirmDelete() {
-  const participantid = parseInt(document.location.hash.split("#")[1]) || "";
+  const participantid = getId();
   const accessToken = await getAccessToken();
   const endpoint = "/api/participant-delete";
   const content = document.querySelector("#content");

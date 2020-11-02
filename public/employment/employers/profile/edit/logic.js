@@ -1,5 +1,5 @@
 async function getEmployer() {
-  const employerid = parseInt(document.location.hash.split("#")[1]) || "";
+  const employerid = getId();
   const accessToken = await getAccessToken();
   const endpoint = `/api/employer/${employerid}`;
   const content = document.querySelector("#content");

@@ -1,7 +1,7 @@
 function showEmployee() {
   const spinner = document.querySelector("#spinner");
   const contentEl = document.querySelector("#employeescontainer");
-  const employeeid = parseInt(document.location.hash.split("#")[1]) || "";
+  const employeeid = getId();
   if (typeof employeeid !== "number") window.location.href = "/employees/";
   const endpoint = `/api/employee/${employeeid}`;
 
@@ -91,7 +91,7 @@ function showEmployee() {
 
   async function getContent() {
     const accessToken = await getAccessToken();
-    const employeeid = parseInt(document.location.hash.split("#")[1]) || "";
+    const employeeid = getId();
     const endpoint = `/api/employee/${employeeid}`;
     fetch(endpoint, {
       mode: "cors",
@@ -142,7 +142,7 @@ function onShowDeleteModal(e) {
 
 async function onConfirmDelete(e) {
   e.preventDefault();
-  const employeeid = parseInt(document.location.hash.split("#")[1]) || "";
+  const employeeid = getId();
   const endpoint = `/api/employee/delete`;
   const spinner = document.querySelector("#spinner");
   const content = document.querySelector("#employeescontainer");
@@ -233,7 +233,7 @@ async function onConfirmDelete(e) {
 }
 
 function attachListeners() {
-  const employeeid = parseInt(document.location.hash.split("#")[1]) || "";
+  const employeeid = getId();
 
   // Edit button
   document.querySelector("#btnEdit").addEventListener("click", () => {

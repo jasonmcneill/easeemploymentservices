@@ -14,7 +14,7 @@ function getCallingCodes() {
 }
 
 async function getEmployer() {
-  const employerid = parseInt(document.location.hash.split("#")[1]) || "";
+  const employerid = getId();
   const accessToken = await getAccessToken();
   const endpoint = `/api/employer/${employerid}`;
   const content = document.querySelector("#content");
@@ -101,7 +101,7 @@ async function showEmployer(data) {
 
 function onEdit(e) {
   e.preventDefault();
-  const employerid = parseInt(document.location.hash.split("#")[1]) || "";
+  const employerid = getId();
   window.location.href = `edit/#${employerid}`;
 }
 
@@ -111,7 +111,7 @@ function onDelete(e) {
 }
 
 async function onConfirmDelete(e) {
-  const employerid = parseInt(document.location.hash.split("#")[1]) || "";
+  const employerid = getId();
   const accessToken = await getAccessToken();
   const endpoint = "/api/employer-delete";
   const content = document.querySelector("#content");

@@ -314,6 +314,10 @@ function linebreak(str) {
   return str.replace(/(?:\r\n|\r|\n)/g, "<br>");
 }
 
+function getId() {
+  return parseInt(document.location.hash.split("#")[1]) || "";
+}
+
 function init() {
   registerSW();
   checkIfOffline();

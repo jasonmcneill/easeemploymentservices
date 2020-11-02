@@ -68,7 +68,7 @@ function showJob(data) {
 
 async function getJobInfo() {
   const accessToken = await getAccessToken();
-  const jobid = parseInt(document.location.hash.split("#")[1]) || "";
+  const jobid = getId();
   const endpoint = `/api/job/${jobid}`;
   const content = document.querySelector("#content");
   const spinner = document.querySelector("#spinner");
@@ -120,8 +120,107 @@ async function getJobInfo() {
     });
 }
 
+function onEdit(e) {
+  e.preventDefault();
+  const jobid = getId();
+  window.location.href = `edit/#${jobid}`;
+}
+
+function onDelete(e) {
+  e.preventDefault();
+  $("#modalDeleteJob").modal("show");
+}
+
+async function onConfirmDelete(e) {
+  e.preventDefault();
+  const jobid = getId();
+  const accessToken = await getAccessToken();
+  const endpoint = "/api/job-delete";
+  const content = document.querySelector("#content");
+  const spinner = document.querySelector("#spinner");
+
+  showSpinner(content, spinner);
+  fetch(endpoint, {
+    mode: "cors",
+    method: "POST",
+    body: JSON.stringify({
+      id: jobid,
+    }),
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      hideSpinner(content, spinner);
+      switch (data.msg) {
+        case "user is not authorized for this action":
+          addToast(
+            "You do not have sufficient permissions to delete a job.",
+            "Not authorized",
+            "danger"
+          );
+          window.location.href = "../";
+          break;
+        case "invalid job id":
+          addToast(
+            "The job could not be deleted. Please try again.",
+            "Could not delete job",
+            "danger"
+          );
+          break;
+        case "unable to query for job placements":
+          showError(
+            "There was a technical glitch preventing this job from being deleted.  Please wait a moment then try again.",
+            "Database is Down"
+          );
+          break;
+        case "unable to delete from placement notes":
+          showError(
+            "There was a technical glitch preventing this job from being deleted.  Please wait a moment then try again.",
+            "Database is Down"
+          );
+          break;
+        case "unable to delete from placements":
+          showError(
+            "There was a technical glitch preventing this job from being deleted.  Please wait a moment then try again.",
+            "Database is Down"
+          );
+          break;
+        case "unable to delete job":
+          showError(
+            "There was a technical glitch preventing this job from being deleted.  Please wait a moment then try again.",
+            "Database is Down"
+          );
+          break;
+        case "job deleted":
+          addToast(
+            "The job was deleted successfully.",
+            "Job deleted",
+            "success"
+          );
+          window.location.href = "../";
+          break;
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      hideSpinner(content, spinner);
+    });
+}
+
+function attachListeners() {
+  document.querySelector("#btnEditJob").addEventListener("click", onEdit);
+  document.querySelector("#btnDeleteJob").addEventListener("click", onDelete);
+  document
+    .querySelector("#btnConfirmDelete")
+    .addEventListener("click", onConfirmDelete);
+}
+
 function init() {
   getJobInfo();
+  attachListeners();
   showToasts();
 }
 

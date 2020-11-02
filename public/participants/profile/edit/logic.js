@@ -90,7 +90,7 @@ async function populateEmployees() {
 }
 
 async function getParticipant() {
-  const participantid = parseInt(document.location.hash.split("#")[1]) || "";
+  const participantid = getId();
   const accessToken = await getAccessToken();
   const endpoint = "/api/participant-view";
   const content = document.querySelector("#content");
