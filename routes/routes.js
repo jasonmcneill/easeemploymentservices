@@ -151,7 +151,13 @@ router.post("/api/jobs-list", authenticateToken, jobs_list.POST);
 const job_view = require("./controllers/job_view");
 router.get("/api/job/:id", authenticateToken, job_view.GET);
 
+const job_full = require("./controllers/job_full");
+router.get("/api/job-full/:id", authenticateToken, job_full.GET);
+
 const job_delete = require("./controllers/job_delete");
 router.post("/api/job-delete", authenticateToken, job_delete.POST);
+
+const job_edit = require("./controllers/job_edit");
+router.post("/api/job-edit", authenticateToken, job_edit.POST);
 
 module.exports = router;
