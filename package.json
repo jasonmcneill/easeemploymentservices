@@ -7,7 +7,7 @@
     "start:dev": "nodemon app.js",
     "ssh:staging": "ssh root@grindstonewebdev.com -i ../../../.ssh/grindstone/id_rsa",
     "ssh:prod": "ssh root@access.easeemploymentservices.com -i ../../../.ssh/ease/id_rsa",
-    "staging": "ssh root@access.easeemploymentservices.com -i ../../../.ssh/grindstone/id_rsa \"cd /var/www/staging-access.easeemploymentservices.com; ./pull.sh\"",
+    "staging": "ssh root@grindstonewebdev.com -i ../../../.ssh/grindstone/id_rsa \"cd /var/www/staging-access.easeemploymentservices.com; ./pull.sh\"",
     "prod": "ssh root@access.easeemploymentservices.com -i ../../../.ssh/ease/id_rsa \"cd /var/www/access.easeemploymentservices.com; ./pull.sh\""
   },
   "dependencies": {
