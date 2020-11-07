@@ -117,6 +117,60 @@ async function getEmployees() {
     });
 }
 
+async function getParticipants() {
+  const endpoint = "/api/participants-list";
+  const accessToken = await getAccessToken();
+
+  fetch(endpoint, {
+    mode: "cors",
+    method: "GET",
+    headers: new Headers({
+      "Content-Type": "applicatin/json",
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      const filledby = document.querySelector("#filledby");
+      const filledby_container = document.querySelector("#filledby_container");
+
+      let filledByHtml = `
+        <optgroup label="Status">
+          <option value="">
+            Not yet filled
+          </option>
+          <option value="0">
+            No longer on the market
+          </option>
+        </optgroup>
+      `;
+
+      filledByHtml += `<optgroup label="Participants">`;
+      switch (data.msg) {
+        case "user is not authorized for this action":
+          filledby_container.classList.add("d-none");
+          break;
+        case "unable to query for participant list":
+          filledby_container.classList.add("d-none");
+          break;
+        case "no particpants found":
+          filledby_container.classList.add("d-none");
+          break;
+        case "participant list retrieved":
+          data.data.forEach((item) => {
+            const { participantid, firstname, lastname } = item;
+            filledByHtml += `<option value="${participantid}">${firstname} ${lastname}</option>`;
+          });
+          break;
+      }
+      filledByHtml += `</optgroup>`;
+      filledby.innerHTML = filledByHtml;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
 async function getJobData() {
   const jobid = getId();
   const accessToken = await getAccessToken();
@@ -424,6 +478,7 @@ function attachListeners() {
 
 function init() {
   getJobData();
+  getParticipants();
   attachListeners();
   showToasts();
 }
