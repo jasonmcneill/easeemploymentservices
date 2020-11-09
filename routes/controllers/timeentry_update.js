@@ -8,8 +8,6 @@ exports.POST = (req, res) => {
   const timeZone = req.body.timeZone || "";
   const timeZoneOffset = moment.tz(timeZone).format("Z:00").slice(0, -3);
 
-  console.log(require("util").inspect(req.body, true, 7, true));
-
   // Enforce authorization
   const usertype = req.user.type;
   const allowedUsertypes = ["sysadmin", "director"];
