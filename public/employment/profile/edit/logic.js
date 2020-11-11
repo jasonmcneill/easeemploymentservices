@@ -134,18 +134,8 @@ async function getParticipants() {
       const filledby = document.querySelector("#filledby");
       const filledby_container = document.querySelector("#filledby_container");
 
-      let filledByHtml = `
-        <optgroup label="Status">
-          <option value="">
-            Not yet filled
-          </option>
-          <option value="0">
-            No longer on the market
-          </option>
-        </optgroup>
-      `;
+      let filledByHtml = `<option value="">Unfilled</option>`;
 
-      filledByHtml += `<optgroup label="Participants">`;
       switch (data.msg) {
         case "user is not authorized for this action":
           filledby_container.classList.add("d-none");
@@ -163,7 +153,6 @@ async function getParticipants() {
           });
           break;
       }
-      filledByHtml += `</optgroup>`;
       filledby.innerHTML = filledByHtml;
     })
     .catch((err) => {
@@ -472,8 +461,23 @@ async function onSubmit(e) {
     });
 }
 
+function noLongerOnTheMarket(e) {
+  const filledby = document.querySelector("#filledby");
+  const checked = e.target.checked || false;
+
+  if (checked) {
+    filledby.value = "";
+    filledby.setAttribute("disabled", true);
+  } else {
+    filledby.removeAttribute("disabled");
+  }
+}
+
 function attachListeners() {
   document.querySelector("#formEditJob").addEventListener("submit", onSubmit);
+  document
+    .querySelector("#status_no_longer_on_the_market")
+    .addEventListener("change", noLongerOnTheMarket);
 }
 
 function init() {
