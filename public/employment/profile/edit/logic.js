@@ -293,6 +293,13 @@ async function onSubmit(e) {
   const zip = e.target["zip"].value.trim();
   const jobsitedetails = e.target["jobsitedetails"].value.trim();
   const jobid = getId();
+  const filledby = e.target["filledby"].value;
+  const noLongerOnTheMarket =
+    e.target["status_no_longer_on_the_market"].checked || false;
+
+  console.log(`filledby: ${filledby}`);
+  console.log(`noLongerOnTheMarket: ${noLongerOnTheMarket}`);
+  return;
 
   document
     .querySelectorAll(".is-invalid")

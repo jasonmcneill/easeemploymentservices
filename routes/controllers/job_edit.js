@@ -27,6 +27,8 @@ exports.POST = (req, res) => {
   const jobtitle = req.body.jobtitle || "";
   const state = req.body.state || "";
   const zip = req.body.zip || "";
+  const filledby = req.body.filledby || "";
+  const noLongerOnTheMarket = req.body.noLongerOnTheMarket == "true" || false;
 
   // Validate
 
@@ -180,6 +182,8 @@ exports.POST = (req, res) => {
               .status(500)
               .send({ msg: "unable to update job", msgType: "error" });
           }
+
+          // TODO:  add one more query section here for updating placement info, or else deleting if no longer on the market
 
           return res
             .status(200)
