@@ -30,6 +30,7 @@ function populateEmployers(data) {
     html += option;
   });
   employerid.innerHTML = html;
+  preSelectEmployer();
 }
 
 async function getEmployers() {
@@ -293,6 +294,14 @@ async function onSubmit(e) {
       hideSpinner(content, spinner);
       console.error(err);
     });
+}
+
+function preSelectEmployer() {
+  const preSelectedEmployer = sessionStorage.getItem("addJobForEmployer") || "";
+  const employerid = document.querySelector("#employerid");
+
+  if (preSelectedEmployer.length) employerid.value = preSelectedEmployer;
+  sessionStorage.removeItem("addJobForEmployer");
 }
 
 function attachListeners() {

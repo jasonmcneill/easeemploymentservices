@@ -182,12 +182,20 @@ async function onConfirmDelete(e) {
     });
 }
 
+function onAddJob(e) {
+  const employerid = getId();
+  sessionStorage.setItem("addJobForEmployer", employerid);
+}
+
 function attachListeners() {
   document.querySelector("#btnEdit").addEventListener("click", onEdit);
   document.querySelector("#btnDelete").addEventListener("click", onDelete);
   document
     .querySelector("#btnConfirmDelete")
     .addEventListener("click", onConfirmDelete);
+  document
+    .querySelector("a[href='../../add-a-job/']")
+    .addEventListener("click", onAddJob);
 }
 
 function init() {
