@@ -228,10 +228,12 @@ function populateForm(data) {
     jobid,
     jobsitedetails,
     jobtitle,
-    participantid,
     state,
     zip,
   } = data;
+
+  let participantid = data.participantid;
+  if (participantid === null) participantid = "";
 
   document
     .querySelectorAll("[data-jobname]")
