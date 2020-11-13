@@ -5,7 +5,6 @@ exports.POST = (req, res) => {
   const usertype = req.user.type;
   const allowedUsertypes = ["director", "sysadmin"];
   if (!allowedUsertypes.includes(usertype)) {
-    console.log(`User (employeeid ${req.user.employeeid} is not authorized.`);
     return res.status(401).send({
       msg: "user is not authorized for this action",
       msgType: "error",
@@ -27,8 +26,9 @@ exports.POST = (req, res) => {
   const jobtitle = req.body.jobtitle || "";
   const state = req.body.state || "";
   const zip = req.body.zip || "";
-  const filledby = req.body.filledby || "";
-  const noLongerOnTheMarket = req.body.noLongerOnTheMarket == "true" || false;
+  const filledby = parseInt(req.body.filledby) || "";
+  const noLongerOnTheMarket =
+    req.body.noLongerOnTheMarket === true ? true : false;
 
   // Validate
 
@@ -178,16 +178,170 @@ exports.POST = (req, res) => {
         (err, result) => {
           if (err) {
             console.log(err);
-            return res
-              .status(500)
-              .send({ msg: "unable to update job", msgType: "error" });
+            return res.status(500).send({
+              msg: "unable to update job",
+              msgType: "error",
+              error: err,
+            });
           }
 
-          // TODO:  add one more query section here for updating placement info, or else deleting if no longer on the market
+          // Remove job and its references if no longer on the market
+          if (noLongerOnTheMarket) {
+            const sql = `DELETE FROM placements__notes WHERE placementid = (SELECT placementid FROM placements WHERE jobid = ? LIMIT 1);`;
+            db.query(sql, [jobid], (err, result) => {
+              if (err) {
+                console.log(err);
+                return res.status(500).send({
+                  msg:
+                    "unable to delete associated placement notes for this job",
+                  msgType: "error",
+                  error: err,
+                  jobid: jobid,
+                });
+              }
 
-          return res
-            .status(200)
-            .send({ msg: "job updated", msgType: "success" });
+              const sql = `DELETE FROM placements WHERE jobid = ?;`;
+              db.query(sql, [jobid], (err, result) => {
+                if (err) {
+                  console.log(err);
+                  return res.status(500).send({
+                    msg: "unable to delete placements for this job",
+                    msgType: "error",
+                    error: err,
+                    jobid: jobid,
+                  });
+                }
+
+                const sql = `DELETE FROM jobs WHERE jobid = ?;`;
+                db.query(sql, [jobid], (err, result) => {
+                  if (err) {
+                    console.log(err);
+                    return res.status(500).send({
+                      msg: "unable to delete job",
+                      msgType: "error",
+                      error: err,
+                      jobid: jobid,
+                    });
+                  }
+
+                  return res
+                    .status(200)
+                    .send({ msg: "job deleted", msgType: "success" });
+                });
+              });
+            });
+          } else {
+            // Remove placement
+            const sql =
+              "SELECT placementid FROM placements WHERE jobid = ? LIMIT 1;";
+            db.query(sql, [jobid], async (err, result) => {
+              if (err) {
+                console.log(err);
+                return res.status(500).send({
+                  msg: "unable to retrieve placements",
+                  msgType: "error",
+                  error: err,
+                });
+              }
+
+              if (!result.length) {
+                // Insert placement
+                if (typeof filledby === "number") {
+                  const sql = `
+                    INSERT INTO placements (
+                      jobid,
+                      participantid,
+                      begindate,
+                      createdAt
+                    ) VALUES (
+                      ?,
+                      ?,
+                      utc_timestamp(),
+                      utc_timestamp()
+                    )
+                  `;
+                  db.query(sql, [jobid, filledby], (err, response) => {
+                    if (err) {
+                      console.log(err);
+                      return res.status(500).send({
+                        msg: "unable to insert placement",
+                        msgType: "error",
+                        error: err,
+                      });
+                    }
+
+                    return res
+                      .status(200)
+                      .send({ msg: "job updated", msgType: "success" });
+                  });
+                } else {
+                  return res
+                    .status(200)
+                    .send({ msg: "job updated", msgType: "success" });
+                }
+              } else {
+                // Delete placement notes
+                const sql =
+                  "DELETE FROM placements__notes WHERE placementid = (SELECT placementid FROM placements WHERE jobid = ? LIMIT 1);";
+                db.query(sql, [jobid], (err, result) => {
+                  if (err) {
+                    console.log(err);
+                    return res.status(500).send({
+                      msg: "unable to delete placement notes",
+                      msgType: "error",
+                      error: err,
+                    });
+                  }
+
+                  // Delete placements
+                  const sql = "DELETE FROM placements WHERE jobid = ?;";
+                  db.query(sql, [jobid], (err, result) => {
+                    if (err) {
+                      console.log(err);
+                      return res.status(500).send({
+                        msg: "unable to delete placements",
+                        msgType: "error",
+                        error: err,
+                      });
+                    }
+
+                    if (typeof filledby !== "number")
+                      return res
+                        .status(200)
+                        .send({ msg: "job updated", msgType: "success" });
+
+                    const sql = `
+                      INSERT INTO placements (
+                        jobid,
+                        participantid,
+                        begindate,
+                        createdAt
+                      ) VALUES (
+                        ?,
+                        ?,
+                        utc_timestamp(),
+                        utc_timestamp()
+                      )
+                    `;
+                    db.query(sql, [jobid, filledby], (err, result) => {
+                      if (err) {
+                        console.log(err);
+                        return res.status(500).send({
+                          msg: "unable to insert placement",
+                          msgType: "error",
+                          error: err,
+                        });
+                      }
+
+                      return res
+                        .status(200)
+                        .send({ msg: "job updated", msgType: "success" });
+                    });
+                  });
+                });
+              }
+            });
+          }
         }
       );
     });
