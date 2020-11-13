@@ -12,8 +12,27 @@ exports.GET = (req, res) => {
     });
   }
 
-  const sql =
-    "SELECT j.*, e.companyname FROM jobs j INNER JOIN employers e ON j.employerid = e.employerid WHERE j.jobid = ? ORDER BY createdAt DESC;";
+  const sql = `
+    SELECT
+      j.*,
+      e.companyname,
+      pl.participantid
+    FROM
+      jobs j
+    LEFT OUTER JOIN
+      placements pl
+    ON
+      pl.jobid = j.jobid
+    INNER JOIN
+      employers e
+    ON
+      j.employerid = e.employerid
+    WHERE
+      j.jobid = ?
+    ORDER BY
+      createdAt DESC
+    ;
+  `;
   db.query(sql, [req.params.id], (err, result) => {
     if (err) {
       console.log(err);

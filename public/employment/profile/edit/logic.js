@@ -121,43 +121,49 @@ async function getParticipants() {
   const endpoint = "/api/participants-list";
   const accessToken = await getAccessToken();
 
-  fetch(endpoint, {
-    mode: "cors",
-    method: "GET",
-    headers: new Headers({
-      "Content-Type": "applicatin/json",
-      authorization: `Bearer ${accessToken}`,
-    }),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      const filledby = document.querySelector("#filledby");
-      const filledby_container = document.querySelector("#filledby_container");
-
-      let filledByHtml = `<option value="">Unfilled</option>`;
-
-      switch (data.msg) {
-        case "user is not authorized for this action":
-          filledby_container.classList.add("d-none");
-          break;
-        case "unable to query for participant list":
-          filledby_container.classList.add("d-none");
-          break;
-        case "no particpants found":
-          filledby_container.classList.add("d-none");
-          break;
-        case "participant list retrieved":
-          data.data.forEach((item) => {
-            const { participantid, firstname, lastname } = item;
-            filledByHtml += `<option value="${participantid}">${firstname} ${lastname}</option>`;
-          });
-          break;
-      }
-      filledby.innerHTML = filledByHtml;
+  return new Promise((resolve, reject) => {
+    fetch(endpoint, {
+      mode: "cors",
+      method: "GET",
+      headers: new Headers({
+        "Content-Type": "applicatin/json",
+        authorization: `Bearer ${accessToken}`,
+      }),
     })
-    .catch((err) => {
-      console.error(err);
-    });
+      .then((res) => res.json())
+      .then((data) => {
+        const filledby = document.querySelector("#filledby");
+        const filledby_container = document.querySelector(
+          "#filledby_container"
+        );
+
+        let filledByHtml = `<option value="">Unfilled</option>`;
+
+        switch (data.msg) {
+          case "user is not authorized for this action":
+            filledby_container.classList.add("d-none");
+            break;
+          case "unable to query for participant list":
+            filledby_container.classList.add("d-none");
+            break;
+          case "no particpants found":
+            filledby_container.classList.add("d-none");
+            break;
+          case "participant list retrieved":
+            data.data.forEach((item) => {
+              const { participantid, firstname, lastname } = item;
+              filledByHtml += `<option value="${participantid}">${firstname} ${lastname}</option>`;
+            });
+            break;
+        }
+        filledby.innerHTML = filledByHtml;
+        resolve();
+      })
+      .catch((err) => {
+        console.error(err);
+        reject(err);
+      });
+  });
 }
 
 async function getJobData() {
@@ -222,6 +228,7 @@ function populateForm(data) {
     jobid,
     jobsitedetails,
     jobtitle,
+    participantid,
     state,
     zip,
   } = data;
@@ -262,6 +269,8 @@ function populateForm(data) {
 
   document.querySelector("#jobsitedetails").value = jobsitedetails;
 
+  document.querySelector("#filledby").value = participantid;
+
   document.querySelector("[data-createdAt]").innerHTML = `
     Posted: 
       ${moment(createdAt).tz(timeZone, false).format("MMMM D, YYYY")}`;
@@ -293,6 +302,11 @@ async function onSubmit(e) {
   const zip = e.target["zip"].value.trim();
   const jobsitedetails = e.target["jobsitedetails"].value.trim();
   const jobid = getId();
+  const filledby = e.target["filledby"].value;
+  const noLongerOnTheMarket = e.target["status_no_longer_on_the_market"].checked
+    ? true
+    : false;
+  const timeZone = moment.tz.guess();
 
   document
     .querySelectorAll(".is-invalid")
@@ -318,6 +332,9 @@ async function onSubmit(e) {
       state: state,
       zip: zip,
       jobsitedetails: jobsitedetails,
+      filledby: filledby,
+      noLongerOnTheMarket: noLongerOnTheMarket,
+      timeZone: timeZone,
     }),
     headers: new Headers({
       "Content-Type": "application/json",
@@ -453,6 +470,20 @@ async function onSubmit(e) {
           );
           window.location.href = `../#${jobid}`;
           break;
+        case "job deleted":
+          addToast(
+            "The job was removed successfully.",
+            "Job Removed",
+            "success"
+          );
+          window.location.href = "../../";
+          break;
+        default:
+          showError(
+            "There was a technical glitch preventing the update from being processed. Please wait a moment then try again.",
+            "Database is Down"
+          );
+          break;
       }
     })
     .catch((err) => {
@@ -480,9 +511,9 @@ function attachListeners() {
     .addEventListener("change", noLongerOnTheMarket);
 }
 
-function init() {
+async function init() {
+  await getParticipants();
   getJobData();
-  getParticipants();
   attachListeners();
   showToasts();
 }
