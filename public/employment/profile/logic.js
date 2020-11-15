@@ -85,6 +85,7 @@ function showJob(data) {
 }
 
 async function getJobInfo() {
+  const timeZone = moment.tz.guess();
   const accessToken = await getAccessToken();
   const jobid = getId();
   const endpoint = `/api/job/${jobid}`;
@@ -94,7 +95,10 @@ async function getJobInfo() {
   showSpinner(content, spinner);
   fetch(endpoint, {
     mode: "cors",
-    method: "GET",
+    method: "POST",
+    body: JSON.stringify({
+      timeZone: timeZone,
+    }),
     headers: new Headers({
       "Content-Type": "application/json",
       authorization: `Bearer ${accessToken}`,

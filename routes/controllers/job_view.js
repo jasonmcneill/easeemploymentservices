@@ -1,6 +1,7 @@
+const moment = require("moment-timezone");
 const db = require("../../database");
 
-exports.GET = (req, res) => {
+exports.POST = (req, res) => {
   // Enforce authorization
   const usertype = req.user.type;
   const allowedUsertypes = ["sysadmin", "director"];
@@ -11,6 +12,9 @@ exports.GET = (req, res) => {
       msgType: "error",
     });
   }
+
+  const timeZone = req.body.timeZone || "America/Los_Angeles";
+  const timeZoneOffset = moment.tz(timeZone).format("Z:00").slice(0, -3);
 
   const jobid = parseInt(req.params.id) || "";
   if (typeof jobid !== "number" || jobid <= 0) {
@@ -24,7 +28,8 @@ exports.GET = (req, res) => {
       p.participantid,
       p.firstname AS participantFirstName,
       p.lastname AS participantLastName,
-      pl.begindate AS placementBeginDate
+      date_format(convert_tz(pl.createdAt, '+00:00', ?), "%Y-%m-%d") AS createdAt,
+      date_format(convert_tz(pl.begindate, '+00:00', ?), "%Y-%m-%d") AS placementBeginDate
     FROM
       jobs j
     INNER JOIN employers e ON j.employerid = e.employerid
@@ -36,7 +41,7 @@ exports.GET = (req, res) => {
       createdAt DESC
     ;
   `;
-  db.query(sql, [jobid], (err, result) => {
+  db.query(sql, [timeZoneOffset, timeZoneOffset, jobid], (err, result) => {
     if (err) {
       console.log(err);
       return res

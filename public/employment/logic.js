@@ -32,7 +32,7 @@ async function getJobs() {
           if (!data.data.length) {
             joblist.innerHTML = `
               <p class="text-center">
-                <strong>There are no jobs in the system.</strong>
+                <strong>There are no open jobs in the system.</strong>
               </p>
             `;
           } else {
