@@ -160,4 +160,13 @@ router.post("/api/job-delete", authenticateToken, job_delete.POST);
 const job_edit = require("./controllers/job_edit");
 router.post("/api/job-edit", authenticateToken, job_edit.POST);
 
+// PLACEMENTS
+
+const placements_of_participant = require("./controllers/placements_of_participant");
+router.post(
+  "/api/placements-of-participant",
+  authenticateToken,
+  placements_of_participant.POST
+);
+
 module.exports = router;

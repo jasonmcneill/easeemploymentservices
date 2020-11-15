@@ -284,11 +284,98 @@ function populateForm(data) {
 
 async function onSubmit(e) {
   e.preventDefault();
-  const accessToken = await getAccessToken();
-  const endpoint = "/api/job-edit";
   const content = document.querySelector("#content");
   const spinner = document.querySelector("#spinner");
+  const filledby = e.target["filledby"].value;
+  let confirmedModal =
+    e.target["confirmedmodal"].value === "true" ? true : false;
 
+  document
+    .querySelectorAll(".is-invalid")
+    .forEach((item) => item.classList.remove("is-invalid"));
+
+  showSpinner(content, spinner);
+
+  if (!confirmedModal) {
+    if (filledby !== "") {
+      const participantid = parseInt(filledby);
+      const otherPlacements =
+        (await checkIfParticipantAlreadyPlaced(participantid)) || [];
+      if (otherPlacements.length) {
+        e.stopPropagation();
+        hideSpinner(content, spinner);
+        showConfirmation(otherPlacements, e);
+      } else {
+        updateJob(e);
+      }
+    } else {
+      updateJob(e);
+    }
+  } else {
+    updateJob(e);
+  }
+
+  confirmedModal =
+    document.querySelector("#confirmedmodal").value === "true" ? true : false;
+  if (confirmedModal) onConfirmedModal();
+}
+
+function showConfirmation(otherPlacements, e) {
+  const confirmedModal = document.querySelector("#confirmedmodal");
+  const filledby = document.querySelector("#filledby");
+  const participantName = filledby.selectedOptions[0].text;
+  const jobswordEl = document.querySelector(".jobsword");
+  const jobsword = otherPlacements.length === 1 ? "job" : "jobs";
+  const summaryOtherPlacements = document.querySelector(
+    "#summaryOtherPlacements"
+  );
+  let summaryHtml = "";
+  const thisjobname = document.querySelector("[data-jobname]").innerText;
+
+  confirmedModal.value = "false";
+  jobswordEl.innerHTML = jobsword;
+
+  document
+    .querySelectorAll(".participantname")
+    .forEach((item) => (item.innerHTML = participantName));
+  document
+    .querySelectorAll(".thisjobname")
+    .forEach((item) => (item.innerHTML = thisjobname));
+
+  otherPlacements.forEach((item) => {
+    const { jobid, jobtitle, city, state, employerid, companyname } = item;
+    summaryHtml += `
+      <li>
+        <big><a href="../#${jobid}"><strong>${jobtitle}</strong></a></big><br>
+        <a href="../../employers/profile/#${employerid}">${companyname}</a><br>
+        <small>${city}, ${state}</small>
+      </li>
+    `;
+  });
+
+  summaryHtml = `<ul class="my-2">${summaryHtml}</ul>`;
+  summaryOtherPlacements.innerHTML = summaryHtml;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  $("#modalConfirmOtherPlacements").modal("show");
+}
+
+function onConfirmedModal() {
+  const formEditJob = document.querySelector("#formEditJob");
+  const confirmedModal = document.querySelector("#confirmedmodal");
+
+  confirmedModal.value = "true";
+  $("#modalConfirmOtherPlacements").modal("hide");
+  formEditJob.querySelector("button[type=submit]").click();
+}
+
+async function updateJob(e) {
+  const content = document.querySelector("#content");
+  const spinner = document.querySelector("#spinner");
+  const accessToken = await getAccessToken();
+  const endpoint = "/api/job-edit";
   const foundbyemployeeid = e.target["foundbyemployeeid"].value;
   const employerid = e.target["employerid"].value.trim();
   const jobtitle = e.target["jobtitle"].value.trim();
@@ -310,11 +397,6 @@ async function onSubmit(e) {
     : false;
   const timeZone = moment.tz.guess();
 
-  document
-    .querySelectorAll(".is-invalid")
-    .forEach((item) => item.classList.remove("is-invalid"));
-
-  showSpinner(content, spinner);
   fetch(endpoint, {
     mode: "cors",
     method: "POST",
@@ -497,13 +579,79 @@ async function onSubmit(e) {
 function noLongerOnTheMarket(e) {
   const filledby = document.querySelector("#filledby");
   const checked = e.target.checked || false;
+  const btnSubmit = document.querySelector("button[type=submit]");
 
   if (checked) {
     filledby.value = "";
     filledby.setAttribute("disabled", true);
+    btnSubmit.classList.remove("btn-dark");
+    btnSubmit.classList.add("btn-danger");
+    btnSubmit.innerHTML = "Delete job";
   } else {
     filledby.removeAttribute("disabled");
+    btnSubmit.classList.remove("btn-danger");
+    btnSubmit.classList.add("btn-dark");
+    btnSubmit.innerHTML = "Update";
   }
+}
+
+async function checkIfParticipantAlreadyPlaced(participantid) {
+  const accessToken = await getAccessToken();
+  return new Promise((resolve, reject) => {
+    const endpoint = "/api/placements-of-participant";
+
+    fetch(endpoint, {
+      mode: "cors",
+      method: "POST",
+      body: JSON.stringify({
+        participantid: participantid,
+      }),
+      headers: new Headers({
+        "Content-Type": "application/json",
+        authorization: `Bearer ${accessToken}`,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const jobid = getId();
+        switch (data.msg) {
+          case "user is not authorized for this action":
+            addToast(
+              "You do not have sufficient permissions to edit a job listing.",
+              "Not authorized",
+              "danger"
+            );
+            window.location.href = `../#${jobid}`;
+            break;
+          case "invalid participant id":
+            showError(
+              `The participant could not be identified by the "filled by" dropdown. Please check the selected value then try again.`,
+              "Invalid participant ID"
+            );
+            reject("invalid participant id");
+            break;
+          case "unable to query for participant id":
+            showError(
+              "There was a technical glitch preventing the participant from filling this job.  Please wait a moment then try again.",
+              "Database is Down"
+            );
+            reject("unable to query for participant id");
+            break;
+          case "placements retrieved":
+            const otherPlacements = data.data.filter(
+              (item) => item.jobid !== jobid
+            );
+            resolve(otherPlacements);
+            break;
+          default:
+            resolve([]);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        reject(err);
+      });
+  });
 }
 
 function attachListeners() {
@@ -511,6 +659,9 @@ function attachListeners() {
   document
     .querySelector("#status_no_longer_on_the_market")
     .addEventListener("change", noLongerOnTheMarket);
+  document
+    .querySelector("#btnConfirmOtherPlacement")
+    .addEventListener("click", onConfirmedModal);
 }
 
 async function init() {

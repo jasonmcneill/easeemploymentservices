@@ -17,8 +17,25 @@ exports.GET = (req, res) => {
     return res.status(400).send({ msg: "invalid job id", msgType: "error" });
   }
 
-  const sql =
-    "SELECT j.*, e.companyname FROM jobs j INNER JOIN employers e ON j.employerid = e.employerid WHERE j.jobid = ? ORDER BY createdAt DESC;";
+  const sql = `
+    SELECT
+      j.*,
+      e.companyname,
+      p.participantid,
+      p.firstname AS participantFirstName,
+      p.lastname AS participantLastName,
+      pl.begindate AS placementBeginDate
+    FROM
+      jobs j
+    INNER JOIN employers e ON j.employerid = e.employerid
+    LEFT OUTER JOIN placements pl ON pl.jobid = j.jobid
+    LEFT OUTER JOIN participants p ON p.participantid = pl.participantid
+    WHERE
+      j.jobid = ?
+    ORDER BY
+      createdAt DESC
+    ;
+  `;
   db.query(sql, [jobid], (err, result) => {
     if (err) {
       console.log(err);

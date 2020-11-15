@@ -5,10 +5,13 @@ function renderData(selector, data) {
 }
 
 function showJob(data) {
-  const timeZone = moment.tz.guess();
   const {
     jobid,
     jobtitle,
+    participantid,
+    participantFirstName,
+    participantLastName,
+    placementBeginDate,
     hours,
     jobdescription,
     companyname,
@@ -24,6 +27,7 @@ function showJob(data) {
     createdAt,
   } = data;
   document.title = `${jobtitle} @ ${companyname} (job id: ${jobid})`;
+  const timeZone = moment.tz.guess();
 
   // Title
   renderData("[data-jobtitle]", jobtitle);
@@ -36,6 +40,20 @@ function showJob(data) {
     "[data-createdAt]",
     `Posted: ${moment(createdAt).tz(timeZone, false).format("MMMM D, YYYY")}`
   );
+
+  // Filled by participant
+  if (participantid !== null) {
+    const filledby = document.querySelector("#filledby");
+    renderData(
+      "[data-participant]",
+      `<a href="../../participants/profile/#${participantid}">${participantFirstName} ${participantLastName}</a>`
+    );
+    renderData(
+      "[data-begindate]",
+      `On ${moment(placementBeginDate).tz(timeZone).format("MMMM D, YYYY")}`
+    );
+    filledby.classList.remove("d-none");
+  }
 
   // Hours
   renderData("[data-hours]", hours);
