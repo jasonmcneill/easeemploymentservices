@@ -86,7 +86,8 @@ function showJob(data) {
   // Map Link
   const mapAddress = `${address}, ${city}, ${state}, ${zip}`;
   const encodedAddress = encodeURI(mapAddress);
-  const mapLinkHtml = `<small><a href="https://maps.googleapis.com/maps/api/directions/json?destination=${encodedAddress}&sensor=true">Driving Directions</a></small>`;
+
+  const mapLinkHtml = `<small><a href="https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}&sensor=true">Map</a></small>`;
   renderData("#maplink", mapLinkHtml);
 }
 
