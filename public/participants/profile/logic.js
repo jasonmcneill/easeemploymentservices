@@ -79,6 +79,29 @@ function renderData(data) {
   actionButtons.classList.remove("d-none");
 }
 
+function renderPlacements(data) {
+  const placements = document.querySelector("#placements");
+  const placementdata = document.querySelector("#placementdata");
+
+  if (!data.length) return;
+
+  let html = "";
+  data.forEach((item) => {
+    const { jobid, jobtitle, companyname, city, state } = item;
+    html += `
+      <a href="../../employment/profile/#${jobid}" class="list-group-item list-group-item-action">
+        <big><strong>${jobtitle}</strong></big><br>
+        <div class="text-muted">${companyname}</div>
+        <div class="text-muted">${city}, ${state}</div>
+      </a>
+    `;
+  });
+  html = `<div class="list-group">${html}</div>`;
+
+  placementdata.innerHTML = html;
+  placements.classList.remove("d-none");
+}
+
 async function getProfileData() {
   const participantid = getId();
   const accessToken = await getAccessToken();
@@ -204,6 +227,57 @@ async function onConfirmDelete() {
     });
 }
 
+async function getPlacementsData() {
+  const participantid = getId();
+  const endpoint = "/api/placements-of-participant";
+  const accessToken = await getAccessToken();
+
+  fetch(endpoint, {
+    mode: "cors",
+    method: "POST",
+    body: JSON.stringify({
+      participantid: participantid,
+    }),
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      switch (data.msg) {
+        case "user is not authorized for this action":
+          addToast(
+            "Your account does not have sufficient permissions to view a participant's job placements.",
+            "Not Authorized",
+            "danger"
+          );
+          window.location.href = "/";
+          break;
+        case "invalid participant id":
+          addToast(
+            "The participant could not be viewed because the URL was malformed.",
+            "Invalid participant ID",
+            "danger"
+          );
+          window.location.href = "../";
+          break;
+        case "unable to query for participant id":
+          showError(
+            "There was a technical glitch preventing the job placements for this participant from being displayed.  Please wait a moment then reload the page.",
+            "Database is Down"
+          );
+          break;
+        case "placements retrieved":
+          renderPlacements(data.data);
+          break;
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
 function attachListeners() {
   document.querySelector("#btnEdit").addEventListener("click", onEdit);
   document.querySelector("#btnDelete").addEventListener("click", onDelete);
@@ -214,6 +288,7 @@ function attachListeners() {
 
 function init() {
   getProfileData();
+  getPlacementsData();
   attachListeners();
   showToasts();
 }
