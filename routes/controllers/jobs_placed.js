@@ -11,15 +11,25 @@ exports.POST = (req, res) => {
       j.city,
       j.state,
       convert_tz(j.createdAt, '+00:00', ?) AS createdAt,
-      e.companyname
+      e.companyname,
+      p.firstname AS participantFirstName,
+      p.lastname AS participantLastName
     FROM
       jobs j
     INNER JOIN
       employers e
     ON
       j.employerid = e.employerid
+    INNER JOIN
+      placements pl
+    ON
+      pl.jobid = j.jobid
+    INNER JOIN
+      participants p
+    ON
+      pl.participantid = p.participantid
     WHERE
-      j.jobid NOT IN (SELECT jobid FROM placements)
+      j.jobid IN (SELECT jobid FROM placements)
     ORDER BY
       j.createdAt DESC,
       j.employerid,

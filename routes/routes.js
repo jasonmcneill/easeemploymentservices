@@ -148,6 +148,9 @@ router.post("/api/job-add", authenticateToken, job_add.POST);
 const jobs_list = require("./controllers/jobs_list");
 router.post("/api/jobs-list", authenticateToken, jobs_list.POST);
 
+const jobs_placed = require("./controllers/jobs_placed");
+router.post("/api/jobs-placed", authenticateToken, jobs_placed.POST);
+
 const job_view = require("./controllers/job_view");
 router.get("/api/job/:id", authenticateToken, job_view.GET);
 
