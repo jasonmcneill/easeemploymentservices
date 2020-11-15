@@ -82,6 +82,12 @@ function showJob(data) {
   renderData("[data-state]", state);
   renderData("[data-zip]", zip);
   renderData("[data-jobsitedetails]", linebreak(jobsitedetails));
+
+  // Map Link
+  const mapAddress = `${address}, ${city}, ${state}, ${zip}`;
+  const encodedAddress = encodeURI(mapAddress);
+  const mapLinkHtml = `<small><a href="https://maps.googleapis.com/maps/api/directions/json?destination=${encodedAddress}&sensor=true">Driving Directions</a></small>`;
+  renderData("#maplink", mapLinkHtml);
 }
 
 async function getJobInfo() {
