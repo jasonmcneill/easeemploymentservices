@@ -16,7 +16,7 @@ exports.POST = (req, res) => {
   const timeZone = req.body.timeZone || "America/Los_Angeles";
   const timeZoneOffset = moment.tz(timeZone).format("Z:00").slice(0, -3);
 
-  const jobid = parseInt(req.params.id) || "";
+  const jobid = parseInt(req.body.jobid) || "";
   if (typeof jobid !== "number" || jobid <= 0) {
     return res.status(400).send({ msg: "invalid job id", msgType: "error" });
   }

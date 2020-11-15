@@ -88,7 +88,7 @@ async function getJobInfo() {
   const timeZone = moment.tz.guess();
   const accessToken = await getAccessToken();
   const jobid = getId();
-  const endpoint = `/api/job/${jobid}`;
+  const endpoint = `/api/job`;
   const content = document.querySelector("#content");
   const spinner = document.querySelector("#spinner");
 
@@ -97,6 +97,7 @@ async function getJobInfo() {
     mode: "cors",
     method: "POST",
     body: JSON.stringify({
+      jobid: jobid,
       timeZone: timeZone,
     }),
     headers: new Headers({
