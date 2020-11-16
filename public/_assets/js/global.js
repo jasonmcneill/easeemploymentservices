@@ -135,6 +135,7 @@ function render(where, what, how) {
     return;
   }
   el.innerHTML = how;
+  el.classList.add("text-truncate");
 }
 
 function addToast(

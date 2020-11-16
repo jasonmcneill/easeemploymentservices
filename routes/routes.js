@@ -116,11 +116,18 @@ router.post(
 const participant_edit = require("./controllers/participants_edit");
 router.post("/api/participant-edit", authenticateToken, participant_edit.POST);
 
-const participants_of_employee = require("./controllers/participants_of_employee");
+const participants_of_user = require("./controllers/participants_of_user");
 router.get(
+  "/api/participants-of-user",
+  authenticateToken,
+  participants_of_user.GET
+);
+
+const participants_of_employee = require("./controllers/participants_of_employee");
+router.post(
   "/api/participants-of-employee",
   authenticateToken,
-  participants_of_employee.GET
+  participants_of_employee.POST
 );
 
 // EMPLOYERS

@@ -232,6 +232,79 @@ async function onConfirmDelete(e) {
     });
 }
 
+async function getManagedParticipants() {
+  const accessToken = await getAccessToken();
+  const endpoint = "/api/participants-of-employee";
+  const employeeid = getId();
+
+  fetch(endpoint, {
+    mode: "cors",
+    method: "POST",
+    body: JSON.stringify({
+      employeeid: employeeid,
+    }),
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      switch (data.msg) {
+        case "user is not authorized for this action":
+          showToast(
+            "Participants managed by this employee could not be retrieved because you do not have sufficient permissions.",
+            "Not authorized",
+            "danger"
+          );
+          break;
+        case "invalid employee id":
+          addToast(
+            "Employee's data could not be displayed because the page URL was malformed.",
+            "Unable to display employee",
+            "danger"
+          );
+          window.location.href = "../";
+          break;
+        case "unable to query for participants of employee":
+          showToast(
+            "Participants managed by this employee could not be retrieved.",
+            "Database is Down",
+            "danger"
+          );
+          break;
+        case "participants of employee retrieved":
+          const participants = data.participants || [];
+          if (participants.length) showManagedParticipants(participants);
+          break;
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
+function showManagedParticipants(participants) {
+  const participantList_container = document.querySelector(
+    "#participantList_container"
+  );
+  const participantList = document.querySelector("#participantList");
+  let html = "";
+
+  participants.forEach((item) => {
+    const { participantid, firstname, lastname } = item;
+    html += `
+      <a href="../../participants/profile/#${participantid}" class="list-group-item list-group-item-action">
+        ${firstname} ${lastname}
+      </a>
+    `;
+  });
+
+  html = `<div class="list-group">${html}</div>`;
+  participantList.innerHTML = html;
+  participantList_container.classList.remove("d-none");
+}
+
 function attachListeners() {
   const employeeid = getId();
 
@@ -254,6 +327,7 @@ function attachListeners() {
 function init() {
   checkIfOffline();
   showEmployee();
+  getManagedParticipants();
   attachListeners();
   showToasts();
 }

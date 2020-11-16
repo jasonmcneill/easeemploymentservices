@@ -1,9 +1,9 @@
 const db = require("../../database");
 
-exports.POST = (req, res) => {
+exports.GET = (req, res) => {
   // Enforce authorization
   const usertype = req.user.type;
-  const allowedUsertypes = ["director", "sysadmin"];
+  const allowedUsertypes = ["regular", "director", "sysadmin"];
   if (!allowedUsertypes.includes(usertype)) {
     console.log(`User (employeeid ${req.user.employeeid} is not authorized.`);
     return res.status(401).send({
@@ -12,27 +12,28 @@ exports.POST = (req, res) => {
     });
   }
 
-  const employeeid = parseInt(req.body.employeeid) || "";
-
-  // Validate
-  if (typeof employeeid !== "number")
-    return res
-      .status(400)
-      .send({ msg: "invalid employee id", msgType: "error" });
+  const employeeid = req.user.employeeid;
 
   // Query
   const sql = `
     SELECT
-      participantid,
-      firstname,
-      lastname
+      p.participantid,
+      p.employeeid,
+      p.firstname,
+      p.lastname,
+      e.firstname AS employeeFirstName,
+      e.lastname AS employeeLastName
     FROM
-      participants
+      participants p
+    LEFT OUTER JOIN
+      employees e
+    ON
+      p.employeeid = e.employeeid
     WHERE
-      employeeid = ?
+      p.employeeid = ?
     ORDER BY
-      lastname,
-      firstname
+      p.lastname,
+      p.firstname
     ;
   `;
 
@@ -40,13 +41,13 @@ exports.POST = (req, res) => {
     if (err) {
       console.log(err);
       return res.status(500).send({
-        msg: "unable to query for participants of employee",
+        msg: "unable to query for participants of user",
         msgType: "error",
       });
     }
 
     return res.status(200).send({
-      msg: "participants of employee retrieved",
+      msg: "participants of user retrieved",
       msgType: "success",
       participants: result,
     });

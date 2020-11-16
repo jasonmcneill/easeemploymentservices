@@ -286,7 +286,7 @@ async function getTimeEntriesForToday() {
 
 async function getParticipantsOfEmployee() {
   const accessToken = await getAccessToken();
-  const endpoint = "/api/participants-of-employee";
+  const endpoint = "/api/participants-of-user";
 
   fetch(endpoint, {
     mode: "cors",
@@ -302,14 +302,14 @@ async function getParticipantsOfEmployee() {
         case "user is not authorized for this action":
           window.location.href = "/logout/";
           break;
-        case "unable to query for participants of employee":
+        case "unable to query for participants of user":
           showToast(
-            "Participants of employee could not be retrieved",
+            "Participants could not be retrieved",
             "Database is Down",
             "danger"
           );
           break;
-        case "participants of employee retrieved":
+        case "participants of user retrieved":
           const clockInFor = document.querySelector("#clockInFor");
           let clockInForOptions = `
             <option value="">(Select)</option>

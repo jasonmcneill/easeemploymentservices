@@ -1,7 +1,8 @@
 function renderData(selector, data) {
-  document
-    .querySelectorAll(selector)
-    .forEach((item) => (item.innerHTML = data));
+  document.querySelectorAll(selector).forEach((item) => {
+    item.innerHTML = data;
+    item.classList.add("text-truncate");
+  });
 }
 
 function showJob(data) {
