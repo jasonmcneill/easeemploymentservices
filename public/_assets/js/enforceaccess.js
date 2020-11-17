@@ -10,4 +10,14 @@ function enforceUserRoles(redirectUrl, allowedRoles) {
       .type || "regular";
   const isAuthorized = allowedRoles.includes(userRole);
   if (!isAuthorized) window.location.href = redirectUrl;
+  showAuthorizedContent(userRole);
+}
+
+function showAuthorizedContent(userRole) {
+  window.addEventListener("load", () => {
+    const selector = `[data-access-${userRole}]`;
+    document.querySelectorAll(selector).forEach((item) => {
+      item.classList.remove("d-none");
+    });
+  });
 }
