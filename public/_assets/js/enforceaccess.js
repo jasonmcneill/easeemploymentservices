@@ -5,9 +5,9 @@ function verifyRefreshToken(logoutUrl) {
 }
 
 function enforceUserRoles(allowedRoles, redirectUrl) {
-  const userRole = JSON.parse(
-    atob(sessionStorage.getItem("accessToken").split(".")[1])
-  ).type;
+  const userRole =
+    JSON.parse(atob(sessionStorage.getItem("accessToken").split(".")[1]))
+      .type || "regular";
   const isAuthorized = allowedRoles.includes(userRole);
   if (!isAuthorized) window.location.href = redirectUrl;
 }
