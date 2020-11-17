@@ -8,10 +8,15 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
 
-    <!-- Redirect to logout if refreshToken not detected -->
+    <!-- Enforce access -->
+    <script src="../../../_assets/js/enforceaccess.js"></script>
     <script type="text/javascript">
-      const refreshToken = localStorage.getItem("refreshToken") || "";
-      if (!refreshToken.length) window.location.href = "../../../logout/";
+      const allowedRolesForPage = ["director", "sysadmin"];
+      const redirectUrl = "../../../";
+      const logoutUrl = "../../../logout/";
+
+      verifyRefreshToken(logoutUrl);
+      enforceUserRoles(allowedRolesForPage, redirectUrl);
     </script>
 
     <!-- Bootstrap CSS -->
