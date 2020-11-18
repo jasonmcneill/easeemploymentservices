@@ -23,12 +23,26 @@ exports.POST = (req, res) => {
 
   const sql = `
     SELECT
-      j.*,
+      j.jobid,
+      j.employerid,
+      j.foundbyemployeeid,
+      j.contactname,
+      j.contactphone,
+      j.contactphoneext,
+      j.contactemail,
+      j.address,
+      j.city,
+      j.state,
+      j.zip,
+      j.hours,
+      j.jobtitle,
+      j.jobdescription,
+      j.jobsitedetails,
+      date_format(convert_tz(j.createdAt, '+00:00', ?), "%Y-%m-%d") AS createdAt,
       e.companyname,
       p.participantid,
       p.firstname AS participantFirstName,
       p.lastname AS participantLastName,
-      date_format(convert_tz(pl.createdAt, '+00:00', ?), "%Y-%m-%d") AS createdAt,
       date_format(convert_tz(pl.begindate, '+00:00', ?), "%Y-%m-%d") AS placementBeginDate
     FROM
       jobs j
