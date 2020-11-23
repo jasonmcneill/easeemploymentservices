@@ -14,10 +14,7 @@ function enforceUserRoles(redirectUrl, allowedRoles) {
 }
 
 function showAuthorizedContent(userRole) {
-  window.addEventListener("load", () => {
-    const selector = `[data-access-${userRole}]`;
-    document.querySelectorAll(selector).forEach((item) => {
-      item.classList.remove("d-none");
-    });
+  $("document").ready(($) => {
+    $(`[data-access-${userRole}]`).removeClass("d-none");
   });
 }
