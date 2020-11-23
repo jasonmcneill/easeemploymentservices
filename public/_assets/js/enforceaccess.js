@@ -4,7 +4,9 @@ function verifyRefreshToken(logoutUrl) {
   if (!isAuthorized) window.location.href = logoutUrl;
 }
 
-function enforceUserRoles(redirectUrl, allowedRoles) {
+async function enforceUserRoles(redirectUrl, allowedRoles) {
+  let accessToken = sessionStorage.accessToken || "";
+  if (!accessToken.length) accessToken = await getAccessToken();
   const userRole =
     JSON.parse(atob(sessionStorage.getItem("accessToken").split(".")[1]))
       .type || "regular";
