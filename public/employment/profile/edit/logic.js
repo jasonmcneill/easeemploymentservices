@@ -69,12 +69,7 @@ async function getEmployers(selectedEmployerId) {
           break;
         case "employers retrieved":
           if (!data.data.length) {
-            addToast(
-              "You can't add a job until you have added an employer first.",
-              "Can't add job",
-              "danger"
-            );
-            window.location.href = "../";
+            window.location.href = "../../employers/add/";
           } else {
             populateEmployers(data.data, selectedEmployerId);
           }
