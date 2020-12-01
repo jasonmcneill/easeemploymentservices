@@ -64,12 +64,5 @@ async function enforceUserRoles(redirectUrl, allowedRoles) {
 }
 
 function showAuthorizedContent(userRole) {
-  window.addEventListener("load", () => {
-    const selector = `[data-access-${userRole}]`;
-    setTimeout(() => {
-      document.querySelectorAll(selector).forEach((item) => {
-        item.classList.remove("d-none");
-      });
-    }, 750);
-  });
+  //
 }
