@@ -64,5 +64,15 @@ async function enforceUserRoles(redirectUrl, allowedRoles) {
 }
 
 function showAuthorizedContent(userRole) {
-  //
+  if (userRole === "regular") {
+    document
+      .querySelectorAll(
+        "nav-link.employees, nav-link.participants, nav-link.employment"
+      )
+      .forEach((item) => {
+        item.classList.add("d-none");
+      });
+  }
 }
+
+enforceUserRoles();
