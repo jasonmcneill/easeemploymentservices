@@ -42,18 +42,18 @@ exports.POST = (req, res) => {
 
   // Check eligibility to register (key on e-mail address)
   const sql =
-    "SELECT employeeid FROM employees WHERE email = ? AND status = 'pending' AND firstname = ? AND lastname = ? LIMIT 1;";
+    "SELECT employeeid FROM employees WHERE email = ? AND status = 'pending' LIMIT 1;";
   db.query(sql, [email, firstname, lastname], (err, result) => {
     if (err) {
       console.log(err);
-      return res
-        .status(500)
-        .send({
-          msg: "unable to query for eligibility",
-          msgType: "error",
-          error: err,
-        });
+      return res.status(500).send({
+        msg: "unable to query for eligibility",
+        msgType: "error",
+        error: err,
+      });
     }
+
+    console.log(require("util").inspect(result, true, 7, true));
 
     if (!result.length) {
       let isEligibleToRegister = false;

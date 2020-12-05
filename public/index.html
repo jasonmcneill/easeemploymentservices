@@ -8,14 +8,7 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
 
-    <script type="text/javascript">
-      const allowedRolesForPage = ["regular", "director", "sysadmin"];
-      const redirectUrl = "./logout/";
-      const logoutUrl = "./logout/";
-
-      verifyRefreshToken(logoutUrl);
-      enforceUserRoles(redirectUrl, allowedRolesForPage);
-    </script>
+    <script src="./_assets/js/enforceaccess.js"></script>
 
     <!-- Bootstrap CSS -->
     <link
@@ -69,7 +62,14 @@
     </nav>
 
     <!-- Enforce access -->
-    <script src="./_assets/js/enforceaccess.js"></script>
+    <script type="text/javascript">
+      const allowedRolesForPage = ["regular", "director", "sysadmin"];
+      const redirectUrl = "./logout/";
+      const logoutUrl = "./logout/";
+
+      verifyRefreshToken(logoutUrl);
+      enforceUserRoles(redirectUrl, allowedRolesForPage);
+    </script>
 
     <!-- Toasts -->
     <div id="toasts"></div>
