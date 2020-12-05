@@ -9,6 +9,11 @@
     />
 
     <script src="../../../_assets/js/enforceaccess.js"></script>
+    <script>
+      const logoutUrl = "../../../logout/";
+
+      verifyRefreshToken(logoutUrl);
+    </script>
 
     <!-- Bootstrap CSS -->
     <link
@@ -66,9 +71,7 @@
     <script type="text/javascript">
       const allowedRolesForPage = ["director", "sysadmin"];
       const redirectUrl = "../../../";
-      const logoutUrl = "../../../logout/";
 
-      verifyRefreshToken(logoutUrl);
       enforceUserRoles(redirectUrl, allowedRolesForPage);
     </script>
 
