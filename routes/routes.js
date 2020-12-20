@@ -32,6 +32,14 @@ router.post("/register", register.POST);
 const registerConfirm = require("./controllers/register-confirm");
 router.post("/register-confirm", registerConfirm.POST);
 
+// PROFILE
+
+const profile_view = require("./controllers/profile_view");
+router.post("/api/profile-view", authenticateToken, profile_view.POST);
+
+const profile_edit = require("./controllers/profile_edit");
+router.post("/api/profile-edit", authenticateToken, profile_edit.POST);
+
 // EMPLOYEES
 
 const employees_list = require("./controllers/employees_list");
