@@ -7,8 +7,8 @@
     "start:dev": "nodemon app.js",
     "ssh:staging": "ssh root@grindstonewebdev.com -i ../../../.ssh/grindstone/id_rsa",
     "ssh:prod": "ssh root@access.easeemploymentservices.com -i ../../../.ssh/ease/id_rsa",
-    "staging": "ssh root@grindstonewebdev.com -i ../../../.ssh/grindstone/id_rsa \"cd /var/www/staging-access.easeemploymentservices.com; ./pull.sh\"",
-    "prod": "ssh root@access.easeemploymentservices.com -i ../../../.ssh/ease/id_rsa \"cd /var/www/access.easeemploymentservices.com; ./pull.sh\""
+    "deploy:staging": "ssh root@grindstonewebdev.com -i ../../../.ssh/grindstone/id_rsa \"cd /var/www/staging-access.easeemploymentservices.com; ./pull.sh\"",
+    "deploy:prod": "ssh root@access.easeemploymentservices.com -i ../../../.ssh/ease/id_rsa \"cd /var/www/access.easeemploymentservices.com; ./pull.sh\""
   },
   "dependencies": {
     "@sendgrid/mail": "^7.2.5",
