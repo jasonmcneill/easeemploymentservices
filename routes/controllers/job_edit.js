@@ -187,7 +187,7 @@ exports.POST = (req, res) => {
 
           // Remove job and its references if no longer on the market
           if (noLongerOnTheMarket) {
-            const sql = `DELETE FROM placements__notes WHERE placementid = (SELECT placementid FROM placements WHERE jobid = ? LIMIT 1);`;
+            const sql = `DELETE FROM jobplacements__notes WHERE placementid = (SELECT placementid FROM jobplacements WHERE jobid = ? LIMIT 1);`;
             db.query(sql, [jobid], (err, result) => {
               if (err) {
                 console.log(err);
@@ -200,7 +200,7 @@ exports.POST = (req, res) => {
                 });
               }
 
-              const sql = `DELETE FROM placements WHERE jobid = ?;`;
+              const sql = `DELETE FROM jobplacements WHERE jobid = ?;`;
               db.query(sql, [jobid], (err, result) => {
                 if (err) {
                   console.log(err);
@@ -233,7 +233,7 @@ exports.POST = (req, res) => {
           } else {
             // Remove placement
             const sql =
-              "SELECT placementid FROM placements WHERE jobid = ? LIMIT 1;";
+              "SELECT placementid FROM jobplacements WHERE jobid = ? LIMIT 1;";
             db.query(sql, [jobid], async (err, result) => {
               if (err) {
                 console.log(err);
@@ -248,7 +248,7 @@ exports.POST = (req, res) => {
                 // Insert placement
                 if (typeof filledby === "number") {
                   const sql = `
-                    INSERT INTO placements (
+                    INSERT INTO jobplacements (
                       jobid,
                       participantid,
                       begindate,
@@ -282,7 +282,7 @@ exports.POST = (req, res) => {
               } else {
                 // Delete placement notes
                 const sql =
-                  "DELETE FROM placements__notes WHERE placementid = (SELECT placementid FROM placements WHERE jobid = ? LIMIT 1);";
+                  "DELETE FROM jobplacements__notes WHERE placementid = (SELECT placementid FROM jobplacements WHERE jobid = ? LIMIT 1);";
                 db.query(sql, [jobid], (err, result) => {
                   if (err) {
                     console.log(err);
@@ -294,12 +294,12 @@ exports.POST = (req, res) => {
                   }
 
                   // Delete placements
-                  const sql = "DELETE FROM placements WHERE jobid = ?;";
+                  const sql = "DELETE FROM jobplacements WHERE jobid = ?;";
                   db.query(sql, [jobid], (err, result) => {
                     if (err) {
                       console.log(err);
                       return res.status(500).send({
-                        msg: "unable to delete placements",
+                        msg: "unable to delete jobplacements",
                         msgType: "error",
                         error: err,
                       });
@@ -311,7 +311,7 @@ exports.POST = (req, res) => {
                         .send({ msg: "job updated", msgType: "success" });
 
                     const sql = `
-                      INSERT INTO placements (
+                      INSERT INTO jobplacements (
                         jobid,
                         participantid,
                         begindate,

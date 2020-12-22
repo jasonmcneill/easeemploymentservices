@@ -21,7 +21,7 @@ exports.POST = (req, res) => {
     ON
       j.employerid = e.employerid
     INNER JOIN
-      placements pl
+      jobplacements pl
     ON
       pl.jobid = j.jobid
     INNER JOIN
@@ -29,7 +29,7 @@ exports.POST = (req, res) => {
     ON
       pl.participantid = p.participantid
     WHERE
-      j.jobid IN (SELECT jobid FROM placements)
+      j.jobid IN (SELECT jobid FROM jobplacements)
     ORDER BY
       j.createdAt DESC,
       j.employerid,

@@ -47,7 +47,7 @@ exports.POST = (req, res) => {
     FROM
       jobs j
     INNER JOIN employers e ON j.employerid = e.employerid
-    LEFT OUTER JOIN placements pl ON pl.jobid = j.jobid
+    LEFT OUTER JOIN jobplacements pl ON pl.jobid = j.jobid
     LEFT OUTER JOIN participants p ON p.participantid = pl.participantid
     WHERE
       j.jobid = ?

@@ -33,7 +33,7 @@ exports.POST = (req, res) => {
   }
 
   // Get placements for this job
-  const sql = "SELECT placementid FROM placements WHERE jobid = ?;";
+  const sql = "SELECT placementid FROM jobplacements WHERE jobid = ?;";
   db.query(sql, [jobid], (err, result) => {
     if (err) {
       console.log(err);
@@ -46,7 +46,7 @@ exports.POST = (req, res) => {
 
     // Delete placement notes
     const placements = result.map((item) => item);
-    const sql = "DELETE FROM placements__notes WHERE placementid IN ?;";
+    const sql = "DELETE FROM jobplacements__notes WHERE placementid IN ?;";
     db.query(sql, [placements], (err, result) => {
       if (err) {
         console.log(err);
@@ -57,7 +57,7 @@ exports.POST = (req, res) => {
       }
 
       // Delete placements
-      const sql = "DELETE FROM placements WHERE jobid = ?;";
+      const sql = "DELETE FROM jobplacements WHERE jobid = ?;";
       db.query(sql, [jobid], (err, result) => {
         if (err) {
           console.log(err);

@@ -27,7 +27,7 @@ exports.POST = (req, res) => {
       e.employerid,
       e.companyname
     FROM
-      placements pl
+      jobplacements pl
     INNER JOIN
       jobs j
     ON

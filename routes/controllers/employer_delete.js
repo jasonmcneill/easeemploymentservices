@@ -63,7 +63,7 @@ exports.POST = (req, res) => {
         }
 
         // GET PLACEMENTS PER JOB
-        const sql = "SELECT placementid FROM placements WHERE jobid IN (?);";
+        const sql = "SELECT placementid FROM jobplacements WHERE jobid IN (?);";
         const jobsSql = jobs.forEach((item, index) => {
           let response = "";
           if (index !== 0) response += ",";
@@ -88,7 +88,7 @@ exports.POST = (req, res) => {
           const placements = result;
 
           // DELETE PLACEMENTS PER JOB
-          const sql = "DELETE FROM placements WHERE jobid IN ?;";
+          const sql = "DELETE FROM jobplacements WHERE jobid IN ?;";
           const placementsSql = placements.forEach((item, index) => {
             let response = "";
             if (index !== 0) response += ",";
@@ -105,7 +105,8 @@ exports.POST = (req, res) => {
             }
 
             // GET PLACEMENT NOTES PER PLACEMENT
-            const sql = "SELECT nodeid FROM placements WHERE placementid IN ?;";
+            const sql =
+              "SELECT nodeid FROM jobplacements WHERE placementid IN ?;";
             db.query(sql, [placementsSql], (err, result) => {
               if (err) {
                 console.log(err);
@@ -125,7 +126,7 @@ exports.POST = (req, res) => {
 
               // DELETE PLACEMENT NOTES PER PLACEMENT
               const sql =
-                "DELETE FROM placements__notes WHERE placementid IN ?;";
+                "DELETE FROM jobplacements__notes WHERE placementid IN ?;";
               const notesSql = notes.forEach((item, index) => {
                 let response = "";
                 if (index !== 0) response += ",";

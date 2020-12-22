@@ -241,7 +241,7 @@ exports.POST = (req, res) => {
                 // Insert placement
                 if (typeof filledby === "number") {
                   const sql = `
-                    INSERT INTO placements (
+                    INSERT INTO housingplacements (
                       homeid,
                       participantid,
                       begindate,

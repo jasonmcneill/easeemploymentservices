@@ -38,7 +38,7 @@ exports.POST = (req, res) => {
     }
 
     // Query:  Delete participant from placements
-    const sql = "DELETE FROM placements WHERE participantid = ?;";
+    const sql = "DELETE FROM jobplacements WHERE participantid = ?;";
     db.query(sql, [participantid], (err, result) => {
       if (err) {
         console.log(err);

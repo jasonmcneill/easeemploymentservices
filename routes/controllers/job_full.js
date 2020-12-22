@@ -20,7 +20,7 @@ exports.GET = (req, res) => {
     FROM
       jobs j
     LEFT OUTER JOIN
-      placements pl
+      jobplacements pl
     ON
       pl.jobid = j.jobid
     INNER JOIN

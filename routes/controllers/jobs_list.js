@@ -19,7 +19,7 @@ exports.POST = (req, res) => {
     ON
       j.employerid = e.employerid
     WHERE
-      j.jobid NOT IN (SELECT jobid FROM placements)
+      j.jobid NOT IN (SELECT jobid FROM jobplacements)
     ORDER BY
       j.createdAt DESC,
       j.employerid,
