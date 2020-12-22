@@ -22,7 +22,7 @@
     />
 
     <link rel="stylesheet" href="../../../_assets/css/global.css" />
-    <title data-name></title>
+    <title>Add a Housing Provider</title>
   </head>
   <body>
     <!-- TOP NAVBAR -->
@@ -49,19 +49,19 @@
               >Employees</a
             >
           </li>
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link participants" href="../../../participants/"
               >Participants</a
             >
-            <span class="sr-only">(current)</span>
           </li>
           <li class="nav-item">
             <a class="nav-link employment" href="../../../employment/"
               >Employment</a
             >
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link housing" href="../../../housing/">Housing</a>
+            <span class="sr-only">(current)</span>
           </li>
           <li class="nav-item">
             <a class="nav-link profile" href="../../../profile/">My Profile</a>
@@ -85,11 +85,9 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../../../">Home</a></li>
-        <li class="breadcrumb-item"><a href="../../">Participants</a></li>
-        <li class="breadcrumb-item">
-          <a href="../" id="breadcrumblink" data-name></a>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">Edit</li>
+        <li class="breadcrumb-item"><a href="../../">Housing</a></li>
+        <li class="breadcrumb-item"><a href="../">Providers</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Add</li>
       </ol>
     </nav>
 
@@ -106,140 +104,117 @@
     <!-- Content -->
     <div class="container-fluid fade-in" id="content">
       <div class="row">
-        <div class="col">
-          <h1 class="h3 my-2 text-center font-weight-normal" data-name></h1>
-        </div>
-      </div>
-
-      <!-- Alert -->
-      <div class="row">
-        <div class="col col-md-12">
-          <div id="alertMessage" class="col col-md-4 offset-md-4 d-none">
-            <div
-              data-alert-content
-              class="alert alert-danger border-danger"
-              role="alert"
-            ></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row my-3">
         <div class="col col-md-4 offset-md-4">
-          <form id="formEditParticipant" novalidate autocomplete="off">
-            <input
-              type="hidden"
-              name="participantid"
-              id="participantid"
-              value=""
-            />
+          <h1 class="h3 my-2 text-center font-weight-normal">
+            Add a Housing Provider
+          </h1>
+
+          <!-- Alert -->
+          <div class="row">
+            <div id="alertMessage" class="col mt-4 d-none">
+              <div
+                data-alert-content
+                class="alert alert-danger border-danger"
+                role="alert"
+              ></div>
+            </div>
+          </div>
+
+          <form
+            id="formAddProvider"
+            novalidate
+            autocomplete="off"
+            class="mt-3 mb-5"
+          >
+            <!-- Company name -->
             <div class="form-group">
-              <label for="firstname"><strong>First name:</strong></label>
+              <label for="companyname"><strong>Company Name:</strong></label>
               <input
                 class="form-control"
                 type="text"
-                name="firstname"
-                id="firstname"
                 maxlength="255"
-                autocomplete="off"
+                id="companyname"
               />
             </div>
 
+            <!-- Web site -->
             <div class="form-group">
-              <label for="lastname"><strong>Last name:</strong></label>
+              <label for="website"><strong>Web site address:</strong></label>
               <input
                 class="form-control"
-                type="text"
-                name="lastname"
-                id="lastname"
+                type="url"
                 maxlength="255"
-                autocomplete="off"
+                id="website"
+                placeholder="http://"
               />
             </div>
 
+            <!-- Phone -->
             <div class="form-group">
-              <label for="phone"><strong>Phone:</strong></label>
+              <label for="phone"><strong>Phone number:</strong></label>
               <input
                 class="form-control"
                 type="tel"
-                name="phone"
-                id="phone"
-                maxlength="255"
                 pattern="[0-9]"
-                autocomplete="off"
+                maxlength="255"
+                id="phone"
               />
             </div>
 
+            <!-- Phone country -->
             <div class="form-group">
-              <label for="phonecountry">
-                <strong>Country for phone:</strong>
-              </label>
-              <select class="form-control" id="phonecountry"></select>
+              <label for="phonecountry"
+                ><strong>Country for phone number:</strong></label
+              >
+              <select id="phonecountry" class="form-control"></select>
             </div>
 
+            <!-- Address -->
             <div class="form-group">
               <label for="address"><strong>Address:</strong></label>
               <input
                 class="form-control"
                 type="text"
-                name="address"
-                id="address"
                 maxlength="255"
-                autocomplete="off"
+                id="address"
               />
             </div>
 
+            <!-- City -->
             <div class="form-group">
               <label for="city"><strong>City:</strong></label>
               <input
                 class="form-control"
                 type="text"
-                name="city"
-                id="city"
                 maxlength="255"
-                autocomplete="off"
+                id="city"
               />
             </div>
 
+            <!-- State -->
             <div class="form-group">
               <label for="state"><strong>State:</strong></label>
-              <select class="form-control" id="state" name="state"></select>
+              <select class="form-control" id="state"></select>
             </div>
 
+            <!-- ZIP -->
             <div class="form-group">
-              <label for="zip"><strong>ZIP code:</strong></label>
-              <input
-                class="form-control"
-                type="tel"
-                name="zip"
-                id="zip"
-                maxlength="10"
-                pattern="^\s*?\d{5}(?:[-\s]\d{4})?\s*?$"
-                autocomplete="off"
-              />
+              <label for="zip"><strong>ZIP:</strong></label>
+              <input class="form-control" type="tel" pattern="[0-9]" id="zip" />
             </div>
 
-            <div class="form-group">
-              <label for="employeeid"
-                ><strong>Assign to Employee:</strong></label
-              >
-              <select
-                class="form-control"
-                id="employeeid"
-                name="employeeid"
-              ></select>
-            </div>
-
-            <div class="row my-4">
-              <div class="col">
-                <button type="submit" class="btn btn-dark btn-block">
-                  Update
-                </button>
-              </div>
+            <!-- Submit -->
+            <div class="form-row">
+              <button type="submit" class="btn btn-dark btn-block">
+                Add Provider
+              </button>
             </div>
           </form>
         </div>
       </div>
+
+      <!-- Provider List -->
+      <div id="providerlist"></div>
     </div>
 
     <script src="../../../_assets/js/jquery-3.5.1.slim.min.js"></script>

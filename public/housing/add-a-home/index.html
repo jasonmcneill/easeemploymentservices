@@ -22,12 +22,12 @@
     />
 
     <link rel="stylesheet" href="../../_assets/css/global.css" />
-    <title>Add a Participant</title>
+    <title>Add a Home</title>
   </head>
   <body>
     <!-- TOP NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand mb-0 h1" href="../">EASE</a>
+      <a class="navbar-brand mb-0 h1" href="../../">EASE</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -47,19 +47,19 @@
           <li class="nav-item">
             <a class="nav-link employees" href="../../employees/">Employees</a>
           </li>
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link participants" href="../../participants/"
               >Participants</a
             >
-            <span class="sr-only">(current)</span>
           </li>
           <li class="nav-item">
             <a class="nav-link employment" href="../../employment/"
               >Employment</a
             >
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link housing" href="../../housing/">Housing</a>
+            <span class="sr-only">(current)</span>
           </li>
           <li class="nav-item">
             <a class="nav-link profile" href="../../profile/">My Profile</a>
@@ -71,8 +71,9 @@
       </div>
     </nav>
 
+    <!-- Enforce access -->
     <script type="text/javascript">
-      const allowedRolesForPage = ["director", "sysadmin"];
+      const allowedRolesForPage = ["regular", "director", "sysadmin"];
       const redirectUrl = "../../";
 
       enforceUserRoles(redirectUrl, allowedRolesForPage);
@@ -82,8 +83,8 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../../">Home</a></li>
-        <li class="breadcrumb-item"><a href="../">Participants</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Add</li>
+        <li class="breadcrumb-item"><a href="../">Housing</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Add a Home</li>
       </ol>
     </nav>
 
@@ -100,80 +101,131 @@
     <!-- Content -->
     <div class="container-fluid fade-in" id="content">
       <div class="row">
-        <div class="col">
-          <h1 class="h3 my-2 text-center font-weight-normal">
-            Add a Participant
+        <div class="col col-md-4 offset-md-4">
+          <h1 class="h3 mt-2 mb-3 text-center font-weight-normal">
+            Add a Home
           </h1>
         </div>
       </div>
 
       <!-- Alert -->
       <div class="row">
-        <div class="col col-md-12">
-          <div id="alertMessage" class="col col-md-4 offset-md-4 d-none">
-            <div
-              data-alert-content
-              class="alert alert-danger border-danger"
-              role="alert"
-            ></div>
-          </div>
+        <div id="alertMessage" class="col col-md-4 offset-md-4 d-none">
+          <div
+            data-alert-content
+            class="alert alert-danger border-danger"
+            role="alert"
+          ></div>
         </div>
       </div>
 
-      <div class="row my-3">
+      <!-- Form -->
+      <div class="row">
         <div class="col col-md-4 offset-md-4">
-          <form id="formAddParticipant" novalidate autocomplete="off">
+          <form id="formAddJob" novalidate autocomplete="off">
             <div class="form-group">
-              <label for="firstname"><strong>First name:</strong></label>
+              <label for="foundbyemployeeid"><strong>Found by:</strong></label>
+              <select id="foundbyemployeeid" class="form-control"></select>
+            </div>
+
+            <div class="form-group">
+              <label for="providerid"><strong>Provider:</strong></label>
+              <select id="providerid" class="form-control"></select>
+              <div>
+                Don't see the provider in this dropdown?
+                <a href="../providers/add/" class="text-nowrap">
+                  Add the provider
+                </a>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="hometitle"><strong>Title:</strong></label>
               <input
-                class="form-control"
                 type="text"
-                name="firstname"
-                id="firstname"
+                class="form-control"
+                id="hometitle"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="homedescription"><strong>Description:</strong></label>
+              <textarea
+                class="form-control"
+                id="homedescription"
+                rows="7"
+              ></textarea>
+            </div>
+
+            <div class="providerprofile"></div>
+
+            <h5
+              class="h5 mt-5 mb-4 border border-dark border-top-0 border-right-0 border-left-0"
+            >
+              <em>Contact:</em>
+            </h5>
+
+            <div class="form-group">
+              <label for="contactname"><strong>Name:</strong></label>
+              <input
+                type="text"
+                id="contactname"
+                class="form-control"
                 maxlength="255"
                 autocomplete="off"
               />
             </div>
 
             <div class="form-group">
-              <label for="lastname"><strong>Last name:</strong></label>
+              <label for="contactphone"><strong>Phone:</strong></label>
               <input
-                class="form-control"
-                type="text"
-                name="lastname"
-                id="lastname"
-                maxlength="255"
-                autocomplete="off"
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="phone"><strong>Phone:</strong></label>
-              <input
-                class="form-control"
                 type="tel"
-                name="phone"
-                id="phone"
-                maxlength="255"
                 pattern="[0-9]"
+                id="contactphone"
+                class="form-control"
+                maxlength="255"
                 autocomplete="off"
               />
             </div>
 
             <div class="form-group">
-              <label for="phonecountry">
-                <strong>Country for phone:</strong>
-              </label>
-              <select class="form-control" id="phonecountry"></select>
+              <label for="contactphoneext"
+                ><strong>Phone extension:</strong></label
+              >
+              <input
+                type="tel"
+                pattern="[0-9]"
+                id="contactphoneext"
+                class="form-control"
+                maxlength="255"
+                autocomplete="off"
+              />
             </div>
+
+            <div class="form-group">
+              <label for="contactemail"><strong>E-mail:</strong></label>
+              <input
+                type="email"
+                id="contactemail"
+                class="form-control"
+                maxlength="255"
+                autocomplete="off"
+              />
+            </div>
+
+            <h5
+              class="h5 mt-5 mb-4 border border-dark border-top-0 border-right-0 border-left-0"
+            >
+              <em>Location:</em>
+            </h5>
 
             <div class="form-group">
               <label for="address"><strong>Address:</strong></label>
               <input
-                class="form-control"
                 type="text"
-                name="address"
                 id="address"
+                class="form-control"
                 maxlength="255"
                 autocomplete="off"
               />
@@ -182,10 +234,9 @@
             <div class="form-group">
               <label for="city"><strong>City:</strong></label>
               <input
-                class="form-control"
                 type="text"
-                name="city"
                 id="city"
+                class="form-control"
                 maxlength="255"
                 autocomplete="off"
               />
@@ -193,39 +244,24 @@
 
             <div class="form-group">
               <label for="state"><strong>State:</strong></label>
-              <select class="form-control" id="state" name="state"></select>
+              <select id="state" class="form-control"></select>
             </div>
 
             <div class="form-group">
-              <label for="zip"><strong>ZIP code:</strong></label>
+              <label for="zip"><strong>ZIP:</strong></label>
               <input
-                class="form-control"
                 type="tel"
-                name="zip"
+                pattern="[0-9]"
                 id="zip"
-                maxlength="10"
-                pattern="^\s*?\d{5}(?:[-\s]\d{4})?\s*?$"
+                class="form-control"
                 autocomplete="off"
               />
             </div>
 
-            <div class="form-group">
-              <label for="employeeid"
-                ><strong>Assign to Employee:</strong></label
-              >
-              <select
-                class="form-control"
-                id="employeeid"
-                name="employeeid"
-              ></select>
-            </div>
-
-            <div class="row my-4">
-              <div class="col">
-                <button type="submit" class="btn btn-dark btn-block">
-                  Add Participant
-                </button>
-              </div>
+            <div class="my-5">
+              <button type="submit" class="btn btn-dark btn-block">
+                Add Home
+              </button>
             </div>
           </form>
         </div>

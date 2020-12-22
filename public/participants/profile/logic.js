@@ -229,7 +229,7 @@ async function onConfirmDelete() {
 
 async function getPlacementsData() {
   const participantid = getId();
-  const endpoint = "/api/placements-of-participant";
+  const endpoint = "/api/job-placements-of-participant";
   const accessToken = await getAccessToken();
 
   fetch(endpoint, {

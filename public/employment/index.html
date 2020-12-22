@@ -57,6 +57,9 @@
             <span class="sr-only">(current)</span>
           </li>
           <li class="nav-item">
+            <a class="nav-link housing" href="../housing/">Housing</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link profile" href="../profile/">My Profile</a>
           </li>
           <li class="nav-item">
@@ -68,7 +71,7 @@
 
     <!-- Enforce access -->
     <script type="text/javascript">
-      const allowedRolesForPage = ["director", "sysadmin"];
+      const allowedRolesForPage = ["regular", "director", "sysadmin"];
       const redirectUrl = "../";
 
       enforceUserRoles(redirectUrl, allowedRolesForPage);

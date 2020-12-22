@@ -593,7 +593,7 @@ function noLongerOnTheMarket(e) {
 async function checkIfParticipantAlreadyPlaced(participantid) {
   const accessToken = await getAccessToken();
   return new Promise((resolve, reject) => {
-    const endpoint = "/api/placements-of-participant";
+    const endpoint = "/api/job-placements-of-participant";
 
     fetch(endpoint, {
       mode: "cors",

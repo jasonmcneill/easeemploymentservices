@@ -178,11 +178,51 @@ router.post("/api/job-delete", authenticateToken, job_delete.POST);
 const job_edit = require("./controllers/job_edit");
 router.post("/api/job-edit", authenticateToken, job_edit.POST);
 
+// HOUSING PROVIDERS
+
+const provider_list = require("./controllers/provider_list");
+router.get("/api/provider-list", authenticateToken, provider_list.GET);
+
+const provider_add = require("./controllers/provider_add");
+router.post("/api/provider-add", authenticateToken, provider_add.POST);
+
+const provider_view = require("./controllers/provider_view");
+router.get("/api/provider/:id", provider_view.GET);
+
+const provider_delete = require("./controllers/provider_delete");
+router.post("/api/provider-delete", authenticateToken, provider_delete.POST);
+
+const provider_edit = require("./controllers/provider_edit");
+router.post("/api/provider-edit", authenticateToken, provider_edit.POST);
+
+// HOMES
+
+const home_add = require("./controllers/home_add");
+router.post("/api/home-add", authenticateToken, home_add.POST);
+
+const homes_list = require("./controllers/homes_list");
+router.post("/api/homes-list", authenticateToken, homes_list.POST);
+
+const homes_placed = require("./controllers/homes_placed");
+router.post("/api/homes-placed", authenticateToken, homes_placed.POST);
+
+const home_view = require("./controllers/home_view");
+router.post("/api/home", authenticateToken, home_view.POST);
+
+const home_full = require("./controllers/home_full");
+router.get("/api/home-full/:id", authenticateToken, home_full.GET);
+
+const home_delete = require("./controllers/home_delete");
+router.post("/api/home-delete", authenticateToken, home_delete.POST);
+
+const home_edit = require("./controllers/home_edit");
+router.post("/api/home-edit", authenticateToken, home_edit.POST);
+
 // PLACEMENTS
 
-const placements_of_participant = require("./controllers/placements_of_participant");
+const placements_of_participant = require("./controllers/job_placements_of_participant");
 router.post(
-  "/api/placements-of-participant",
+  "/api/job-placements-of-participant",
   authenticateToken,
   placements_of_participant.POST
 );

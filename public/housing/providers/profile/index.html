@@ -54,14 +54,14 @@
               >Participants</a
             >
           </li>
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link employment" href="../../../employment/"
               >Employment</a
             >
-            <span class="sr-only">(current)</span>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link housing" href="../../../housing/">Housing</a>
+            <span class="sr-only">(current)</span>
           </li>
           <li class="nav-item">
             <a class="nav-link profile" href="../../../profile/">My Profile</a>
@@ -75,7 +75,7 @@
 
     <!-- Enforce access -->
     <script type="text/javascript">
-      const allowedRolesForPage = ["director", "sysadmin"];
+      const allowedRolesForPage = ["regular", "director", "sysadmin"];
       const redirectUrl = "../../../";
 
       enforceUserRoles(redirectUrl, allowedRolesForPage);
@@ -85,8 +85,8 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="../../../">Home</a></li>
-        <li class="breadcrumb-item"><a href="../../">Employment</a></li>
-        <li class="breadcrumb-item"><a href="../">Employers</a></li>
+        <li class="breadcrumb-item"><a href="../../">Housing</a></li>
+        <li class="breadcrumb-item"><a href="../">Providers</a></li>
         <li class="breadcrumb-item active" aria-current="page" data-name></li>
       </ol>
     </nav>
@@ -110,12 +110,12 @@
       </div>
 
       <div class="text-center my-3">
-        <a href="../../add-a-job/" class="btn btn-dark">Add a Job</a>
+        <a href="../../add-a-home/" class="btn btn-dark">Add a Home</a>
       </div>
 
       <div class="row">
         <div class="col col-md-4 offset-md-4">
-          <!-- Employer Profile -->
+          <!-- Provider Profile -->
           <table class="table table-bordered mt-3">
             <tr>
               <th>Phone:</th>
@@ -148,7 +148,7 @@
     <!-- Modal -->
     <div
       class="modal fade"
-      id="modalDeleteEmployer"
+      id="modalDeleteProvider"
       tabindex="-1"
       aria-labelledby="modalLabel"
       aria-hidden="true"
