@@ -1,6 +1,6 @@
 async function getHomes() {
   const accessToken = await getAccessToken();
-  const endpoint = "/api/housing-list";
+  const endpoint = "/api/homes-list";
   const content = document.querySelector("#content");
   const spinner = document.querySelector("#spinner");
   const timeZone = moment.tz.guess();
@@ -30,7 +30,7 @@ async function getHomes() {
           break;
         case "homes retrieved":
           if (!data.data.length) {
-            joblist.innerHTML = `
+            homeList.innerHTML = `
               <p class="text-center">
                 <strong>There are no vacancies in the system.</strong>
               </p>
@@ -72,7 +72,7 @@ async function getHomes() {
 
 async function getPlacedParticipants() {
   const accessToken = await getAccessToken();
-  const endpoint = "/api/participants-placed";
+  const endpoint = "/api/homes-placed";
   const content = document.querySelector("#content");
   const spinner = document.querySelector("#spinner");
   const timeZone = moment.tz.guess();
