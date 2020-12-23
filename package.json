@@ -11,6 +11,7 @@
     "deploy:prod": "ssh root@access.easeemploymentservices.com -i ../../../.ssh/ease/id_rsa \"cd /var/www/access.easeemploymentservices.com; ./pull.sh\""
   },
   "dependencies": {
+    "@mysql/xdevapi": "8.0.22",
     "@sendgrid/mail": "^7.2.5",
     "bcrypt": "^5.0.0",
     "cookie-parser": "~1.4.4",
