@@ -46,7 +46,40 @@ exports.sendSms = (recipient, content) => {
   });
 };
 
-exports.sendEmail = (recipient, sender, subject, body) => {
+function emailViaSMTP(recipient, emailSenderText, subject, body) {
+  const sender = `"${emailSenderText}" <${process.env.SMTP_SENDER_EMAIL}>`;
+  return new Promise((resolve, reject) => {
+    const nodemailer = require("nodemailer");
+    const transport = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      secureConnection: process.env.SMTP_SECURE,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+      tls: {
+        ciphers: "SSLv3",
+      },
+    });
+    const mailOptions = {
+      from: sender,
+      to: recipient,
+      subject: subject,
+      html: body,
+    };
+    transport.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.log(require("util").inspect(err, true, 7, true));
+        reject(err);
+      }
+      resolve(info);
+    });
+  });
+}
+
+function emailViaAPI(recipient, emailSenderText, subject, body) {
+  const sender = `"${emailSenderText}" <${process.env.SENDGRID_SENDER_EMAIL}>`;
   const sgMail = require("@sendgrid/mail");
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   const msg = {
@@ -66,6 +99,14 @@ exports.sendEmail = (recipient, sender, subject, body) => {
         reject(error);
       });
   });
+}
+
+exports.sendEmail = async (recipient, emailSenderText, subject, body) => {
+  try {
+    return await emailViaSMTP(recipient, emailSenderText, subject, body);
+  } catch (error) {
+    return await emailViaAPI(recipient, emailSenderText, subject, body);
+  }
 };
 
 /*
