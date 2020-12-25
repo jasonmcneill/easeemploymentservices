@@ -83,7 +83,7 @@ exports.POST = (req, res) => {
         const messageID = uuid.v4();
         const utils = require("../utils");
         const resetUrl = `${protocol}//${host}/reset-password#token=${resetToken}`;
-        const senderEmail = `E.A.S.E. <no-reply@em6223.easeemploymentservices.com>`;
+        const emailSenderText = "E.A.S.E.";
         const subject = "Reset your password";
         const body = `
           <p>This message is for ${firstname} ${lastname}. We just received your request to reset your password.  To do so, please click on the following link within 20 minutes of your request:</p>
@@ -97,9 +97,9 @@ exports.POST = (req, res) => {
           </div>
         `;
         utils
-          .sendEmail(recipientEmail, senderEmail, subject, body)
+          .sendEmail(recipientEmail, emailSenderText, subject, body)
           .then((result) => {
-            return res.status(result[0].statusCode || 200).send({
+            return res.status(200).send({
               msg: "password reset e-mail sent",
               msgType: "success",
             });

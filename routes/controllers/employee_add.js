@@ -16,12 +16,10 @@ exports.POST = (req, res) => {
   const allowedUsertypes = ["sysadmin", "director"];
   if (!allowedUsertypes.includes(usertype)) {
     console.log(`User (employeeid ${req.user.employeeid} is not authorized.`);
-    return res
-      .status(401)
-      .send({
-        msg: "user is not authorized for this action",
-        msgType: "error",
-      });
+    return res.status(401).send({
+      msg: "user is not authorized for this action",
+      msgType: "error",
+    });
   }
 
   // Validate
@@ -117,7 +115,7 @@ exports.POST = (req, res) => {
             "https://staging-access.easeemploymentservices.com/register/";
         if (process.env.ENV === "development")
           registerUrl = "http://localhost:3000/register/";
-        const sender = "E.A.S.E. <no-reply@em6223.easeemploymentservices.com>";
+        const emailSenderText = "E.A.S.E.";
         const recipient = `${firstname} ${lastname} <${email}>`;
         const subject = "You may now register";
         const body = `
@@ -140,7 +138,7 @@ exports.POST = (req, res) => {
           </div>
         `;
 
-        sendEmail(recipient, sender, subject, body)
+        sendEmail(recipient, emailSenderText, subject, body)
           .then((result) => {
             return res.status(result[0].statusCode || 200).send({
               msg: "notification e-mail sent",

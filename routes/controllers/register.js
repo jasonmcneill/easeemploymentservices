@@ -313,7 +313,7 @@ exports.POST = (req, res) => {
                     const messageID = require("uuid").v4();
                     const confirmationUrl = `${protocol}//${host}/register-confirm/#token=${registrationToken}`;
                     const recipient = `${firstname} ${lastname} <${email}>`;
-                    const sender = `E.A.S.E. <no-reply@em6223.easeemploymentservices.com>`;
+                    const emailSenderText = "E.A.S.E.";
                     const subject = "Confirm your registration";
                     const body = `
                   <p>
@@ -335,7 +335,7 @@ exports.POST = (req, res) => {
                   </div>
               `;
 
-                    sendEmail(recipient, sender, subject, body)
+                    sendEmail(recipient, emailSenderText, subject, body)
                       .then((result) => {
                         return res.status(result[0].statusCode || 200).send({
                           msg: "confirmation e-mail sent",
