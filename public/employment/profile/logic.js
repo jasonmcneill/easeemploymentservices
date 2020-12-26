@@ -68,10 +68,12 @@ function showJob(data) {
     "[data-contact-phone]",
     `${contactphoneext.length >= 1 ? contactphone + "," : contactphone}`
   );
-  renderData(
-    "[data-contact-phone-ext]",
-    `${contactphoneext.length && "Ext. " + contactphoneext}`
-  );
+  if (contactphoneext.length) {
+    renderData(
+      "[data-contact-phone-ext]",
+      `${contactphoneext.length && "Ext. " + contactphoneext}`
+    );
+  }
   renderData(
     "[data-contact-email]",
     `<a href="mailto:${contactemail}">${contactemail}</a>`
