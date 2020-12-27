@@ -15,6 +15,7 @@ function showHome(data) {
     placementBeginDate,
     homedescription,
     companyname,
+    providerid,
     contactname,
     contactphone,
     contactphoneext,
@@ -58,7 +59,19 @@ function showHome(data) {
   renderData("[data-homedescription]", linebreak(homedescription));
 
   // Contact
-  renderData("[data-contact-name]", contactname);
+  if (contactname === companyname) {
+    renderData(
+      "[data-company-name]",
+      `<a href="../providers/profile/#${providerid}">${companyname}</a>`
+    );
+  } else {
+    renderData("[data-contact-name]", contactname);
+    renderData(
+      "[data-company-name]",
+      `<a href="../providers/profile/#${providerid}">${companyname}</a>`
+    );
+  }
+
   renderData(
     "[data-contact-phone]",
     `${contactphoneext.length >= 1 ? contactphone + "," : contactphone}`
