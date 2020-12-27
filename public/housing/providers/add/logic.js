@@ -158,7 +158,7 @@ async function onSubmit(e) {
         case "company name already exists":
           hideSpinner(content, spinner);
           showError(
-            `This housing provider is <a href="../profile/#${data.employerid}" class="alert-link">already in the system</a>.`,
+            `This housing provider is <a href="../profile/#${data.providerid}" class="alert-link">already in the system</a>.`,
             "Duplicate"
           );
           break;
@@ -172,7 +172,7 @@ async function onSubmit(e) {
         case "phone number already exists":
           hideSpinner(content, spinner);
           showError(
-            `This housing provider is <a href="../profile/#${data.employerid}" class="alert-link">already in the system</a>.`,
+            `This housing provider is <a href="../profile/#${data.providerid}" class="alert-link">already in the system</a>.`,
             "Duplicate"
           );
           break;
@@ -186,7 +186,7 @@ async function onSubmit(e) {
         case "website already exists":
           hideSpinner(content, spinner);
           showError(
-            `This housing provider is <a href="../profile/#${data.employerid}" class="alert-link">already in the system</a>.`,
+            `This housing provider is <a href="../profile/#${data.providerid}" class="alert-link">already in the system</a>.`,
             "Duplicate"
           );
           break;

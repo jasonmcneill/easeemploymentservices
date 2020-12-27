@@ -8,6 +8,7 @@ exports.POST = (req, res) => {
     SELECT
       h.homeid,
       h.hometitle,
+      h.address,
       h.city,
       h.state,
       convert_tz(h.createdAt, '+00:00', ?) AS createdAt,

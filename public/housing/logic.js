@@ -44,13 +44,13 @@ async function getHomes() {
                 address,
                 city,
                 state,
-                providername,
+                companyname,
                 createdAt,
               } = item;
               html += `
                 <a href="profile/#${homeid}" class="list-group-item list-group-item-action">
                   <big><strong>${hometitle}</strong></big>
-                  <div class="text-muted">${providername}</div>
+                  <div class="text-muted">${companyname}</div>
                   <div class="text-muted">${address}</div>
                   <div class="text-muted">${city}, ${state}</div>
                   <div class="text-info"><small><em>
@@ -117,7 +117,7 @@ async function getPlacedParticipants() {
                 hometitle,
                 participantFirstName,
                 participantLastName,
-                providername,
+                companyname,
                 address,
                 city,
                 state,
@@ -127,7 +127,7 @@ async function getPlacedParticipants() {
                 <a href="profile/#${homeid}" class="list-group-item list-group-item-action">
                   <big><strong>${hometitle}</strong></big>
                   <div class="text-success">Placed: <strong>${participantFirstName} ${participantLastName}</strong></div>
-                  <div class="text-muted">${providername}</div>
+                  <div class="text-muted">${companyname}</div>
                   <div class="text-muted">${address}</div>
                   <div class="text-muted">${city}, ${state}</div>
                   <div class="text-info"><small><em>
