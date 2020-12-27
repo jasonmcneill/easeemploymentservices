@@ -33,8 +33,7 @@ exports.POST = (req, res) => {
   }
 
   // Get placements for this home
-  const sql =
-    "SELECT housingplacementid FROM housingplacements WHERE homeid = ?;";
+  const sql = "SELECT placementid FROM housingplacements WHERE homeid = ?;";
   db.query(sql, [homeid], (err, result) => {
     if (err) {
       console.log(err);
@@ -47,8 +46,7 @@ exports.POST = (req, res) => {
 
     // Delete placement notes
     const housingplacements = result.map((item) => item);
-    const sql =
-      "DELETE FROM housingplacements__notes WHERE housingplacementid IN ?;";
+    const sql = "DELETE FROM housingplacements__notes WHERE placementid IN ?;";
     db.query(sql, [housingplacements], (err, result) => {
       if (err) {
         console.log(err);

@@ -180,7 +180,7 @@ exports.POST = (req, res) => {
 
           // Remove home and its references if no longer on the market
           if (noLongerOnTheMarket) {
-            const sql = `DELETE FROM housingplacements__notes WHERE housingplacementid = (SELECT housingplacementid FROM housingplacements WHERE homeid = ? LIMIT 1);`;
+            const sql = `DELETE FROM housingplacements__notes WHERE placementid = (SELECT placementid FROM housingplacements WHERE homeid = ? LIMIT 1);`;
             db.query(sql, [homeid], (err, result) => {
               if (err) {
                 console.log(err);
@@ -226,7 +226,7 @@ exports.POST = (req, res) => {
           } else {
             // Remove housing placement
             const sql =
-              "SELECT housingplacementid FROM housingplacements WHERE homeid = ? LIMIT 1;";
+              "SELECT placementid FROM housingplacements WHERE homeid = ? LIMIT 1;";
             db.query(sql, [homeid], async (err, result) => {
               if (err) {
                 console.log(err);
@@ -275,7 +275,7 @@ exports.POST = (req, res) => {
               } else {
                 // Delete housing placement notes
                 const sql =
-                  "DELETE FROM housingplacements__notes WHERE housingplacementid = (SELECT housingplacementid FROM housingplacements WHERE homeid = ? LIMIT 1);";
+                  "DELETE FROM housingplacements__notes WHERE placementid = (SELECT placementid FROM housingplacements WHERE homeid = ? LIMIT 1);";
                 db.query(sql, [homeid], (err, result) => {
                   if (err) {
                     console.log(err);

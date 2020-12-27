@@ -127,7 +127,7 @@ exports.POST = (req, res) => {
 
               // DELETE PLACEMENT NOTES PER HOUSING PLACEMENT
               const sql =
-                "DELETE FROM housingplacements__notes WHERE housingplacementid IN ?;";
+                "DELETE FROM housingplacements__notes WHERE placementid IN ?;";
               const notesSql = notes.forEach((item, index) => {
                 let response = "";
                 if (index !== 0) response += ",";
