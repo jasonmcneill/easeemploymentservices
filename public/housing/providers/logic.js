@@ -45,7 +45,7 @@ async function getProviderList() {
         case "providers retrieved":
           if (!data.data.length) {
             providerlist.innerHTML =
-              "<div class='text-center'>There are no housing providers in the system.</div>";
+              "<div class='text-center'>There are no providers in the system.</div>";
             break;
           } else {
             populate(data.data);
