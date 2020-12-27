@@ -31,6 +31,7 @@ exports.POST = (req, res) => {
       e.firstname, 
       e.lastname, 
       e.email,
+      e.username,
       t.token,
       t.expiry
     FROM employees e
@@ -48,6 +49,7 @@ exports.POST = (req, res) => {
       return res.status(404).send({ msg: "user not found", msgType: "error" });
     const moment = require("moment");
     const employeeid = result[0].employeeid;
+    const username = result[0].username;
     const firstname = result[0].firstname;
     const lastname = result[0].lastname;
     const recipientEmail = result[0].email;
@@ -86,7 +88,8 @@ exports.POST = (req, res) => {
         const emailSenderText = "E.A.S.E.";
         const subject = "Reset your password";
         const body = `
-          <p>This message is for ${firstname} ${lastname}. We just received your request to reset your password.  To do so, please click on the following link within 20 minutes of your request:</p>
+          <p>This message is for ${firstname} ${lastname}. We just received your request to reset your password.  To do so, please click on the link below within 20 minutes of your request.</p>
+          <p>Your username is:<br>${username}</p>
           <p style="margin: 30px 0"><strong><big><a href="${resetUrl}" style="text-decoration: underline">Reset my password</a></big></strong></p>
           <p>E.A.S.E. Employment Services</p>
           <div style="margin: 40px 0 20px 0">
