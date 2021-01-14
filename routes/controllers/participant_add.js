@@ -21,6 +21,8 @@ exports.POST = (req, res) => {
   const state = req.body.state || "";
   const zip = req.body.zip || "";
   const employeeid = req.body.employeeid || "";
+  const needsEmployment = req.body.needsEmployment ? 1 : 0;
+  const needsHousing = req.body.needsHousing ? 1 : 0;
 
   // Validate
 
@@ -85,14 +87,24 @@ exports.POST = (req, res) => {
     // Insert the record
     const sql = `
       INSERT INTO participants(
-        firstname, lastname, phone, address, city, state, zip, createdAt
+        firstname, lastname, phone, address, city, state, zip, seekshousing, seeksemployment, createdAt
       ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, utc_timestamp()
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, utc_timestamp()
       );
     `;
     db.query(
       sql,
-      [firstname, lastname, phoneValidated, address, city, state, zip],
+      [
+        firstname,
+        lastname,
+        phoneValidated,
+        address,
+        city,
+        state,
+        zip,
+        needsHousing,
+        needsEmployment,
+      ],
       (err, result) => {
         if (err) {
           console.log(err);

@@ -8,6 +8,10 @@ async function onSubmit(e) {
   const city = e.target[(id = "city")].value.trim();
   const state = e.target[(id = "state")].value;
   const zip = e.target[(id = "zip")].value.trim();
+  const needsEmployment =
+    e.target[(id = "needsEmployment")].value === "1" ? true : false;
+  const needsHousing =
+    e.target[(id = "needsHousing")].value === "1" ? true : false;
   const employeeid = e.target[(id = "employeeid")].value;
   const endpoint = "/api/participant-add";
   const accessToken = await getAccessToken();
@@ -26,6 +30,8 @@ async function onSubmit(e) {
       city: city,
       state: state,
       zip: zip,
+      needsEmployment: needsEmployment,
+      needsHousing: needsHousing,
       employeeid: employeeid,
     }),
     headers: new Headers({
