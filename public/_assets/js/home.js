@@ -28,15 +28,20 @@ function participantsFilter(participantid) {
   document.querySelectorAll("#myparticipants_list > a").forEach((item) => {
     item.classList.add("d-none");
   });
-  document
-    .querySelector(`[data-participantid="${participantid}"]`)
-    .classList.remove("d-none");
+  const listItem = document.querySelector(
+    `[data-participantid="${participantid}"]`
+  );
+  listItem.style.borderTop = "1px solid rgba(0, 0, 0, 0.125)";
+  listItem.classList.remove("d-none");
 }
 
 function participantsUnfilter() {
-  document.querySelectorAll("#myparticipants_list > a").forEach((item) => {
-    item.classList.remove("d-none");
-  });
+  document
+    .querySelectorAll("#myparticipants_list > a")
+    .forEach((listItem, index) => {
+      if (index > 0) listItem.style.borderTop = "none";
+      listItem.classList.remove("d-none");
+    });
 }
 
 async function onClockInClicked(e) {
