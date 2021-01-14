@@ -99,7 +99,8 @@
     <!-- Content -->
     <div class="container-fluid pt-3 fade-in">
       <div class="row">
-        <div class="col col-xl-2 col-lg-3 col-md-3 col-sm-6 mb-4">
+        <!-- TIME ENTRIES -->
+        <div class="col col-xl-2 col-lg-3 col-md-3 col-12 mb-4">
           <div class="card border-dark">
             <h5 class="card-header bg-dark text-white">Time Entries</h5>
             <div class="card-body">
@@ -129,6 +130,83 @@
                 <button class="btn btn-info mt-4 d-none" id="btnClockOut">
                   Clock Out
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PARTICIPANTS -->
+        <div
+          class="col col-xl-2 col-lg-3 col-md-3 col-12 mb-4 d-none"
+          id="myparticipants"
+        >
+          <div class="card border-dark">
+            <h5 class="card-header bg-dark text-white">
+              Participants
+              <span
+                class="badge badge-light badge-pill float-right d-none"
+                id="myparticipants_count"
+              ></span>
+            </h5>
+            <div class="card-body">
+              <div class="list-group" id="myparticipants_list">
+                <a
+                  class="list-group-item list-group-item-light list-group-item-action"
+                  href="participants/profile/#1"
+                >
+                  1. John Doe
+                  <div class="float-right">
+                    <span class="badge badge-warning badge-pill">E</span>
+                    <span class="badge badge-warning badge-pill">H</span>
+                  </div>
+                </a>
+                <a
+                  href="participants/profile/#2"
+                  class="list-group-item list-group-item-light list-group-item-action"
+                >
+                  2. Jane Doe
+                </a>
+                <a
+                  href="participants/profile/#3"
+                  class="list-group-item list-group-item-light list-group-item-action"
+                >
+                  3. Jack Doe
+                </a>
+                <a
+                  href="participants/profile/#4"
+                  class="list-group-item list-group-item-light list-group-item-action"
+                >
+                  4. Joe Doe
+                  <div class="float-right">
+                    <span class="badge badge-warning badge-pill">H</span>
+                  </div></a
+                >
+                <a
+                  href="participants/profile/#5"
+                  class="list-group-item list-group-item-light list-group-item-action"
+                >
+                  5. Jean Doe
+                  <div class="float-right">
+                    <span class="badge badge-warning badge-pill">E</span>
+                    <span class="badge badge-warning badge-pill">H</span>
+                  </div></a
+                >
+              </div>
+              <div class="mt-4 mb-2 pl-2 float-right">
+                <table>
+                  <tr>
+                    <td class="text-right">
+                      <span class="badge badge-warning badge-pill">E</span> =
+                    </td>
+                    <td>Needs employment</td>
+                  </tr>
+                  <tr>
+                    <td class="text-right">
+                      <span class="badge badge-warning badge-pill">H</span> =
+                    </td>
+                    <td>Needs housing</td>
+                  </tr>
+                </table>
               </div>
             </div>
           </div>

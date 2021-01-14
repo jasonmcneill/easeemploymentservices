@@ -21,6 +21,8 @@ exports.GET = (req, res) => {
       p.employeeid,
       p.firstname,
       p.lastname,
+      p.seekshousing,
+      p.seeksemployment,
       e.firstname AS employeeFirstName,
       e.lastname AS employeeLastName
     FROM

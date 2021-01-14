@@ -23,6 +23,22 @@ function populateClockTime() {
   }, 1000);
 }
 
+function participantsFilter(participantid) {
+  if (participantid === "0") return;
+  document.querySelectorAll("#myparticipants_list > a").forEach((item) => {
+    item.classList.add("d-none");
+  });
+  document
+    .querySelector(`[data-participantid="${participantid}"]`)
+    .classList.remove("d-none");
+}
+
+function participantsUnfilter() {
+  document.querySelectorAll("#myparticipants_list > a").forEach((item) => {
+    item.classList.remove("d-none");
+  });
+}
+
 async function onClockInClicked(e) {
   e.preventDefault();
   hideAlertMessage();
@@ -48,6 +64,8 @@ async function onClockInClicked(e) {
     );
     return;
   }
+
+  participantsFilter(participantid);
 
   timeEntries.innerHTML = spinner;
   btnClockIn.setAttribute("disabled", true);
@@ -163,6 +181,7 @@ async function onClockOutConfirmed(e) {
             2500
           );
           showTimeEntries(data.entries);
+          participantsUnfilter();
           clockInFor.options[0].selected = true;
           break;
       }
@@ -284,6 +303,62 @@ async function getTimeEntriesForToday() {
     });
 }
 
+function populateParticipantsForTimeEntry(participants) {
+  const clockInFor = document.querySelector("#clockInFor");
+  let clockInForOptions = `
+    <option value="">(Select)</option>
+    <option value="0">EASE</option>
+  `;
+
+  if (participants.length) {
+    participants.forEach((item) => {
+      const { participantid, firstname, lastname } = item;
+      clockInForOptions += `<option value="${participantid}">${firstname} ${lastname}</option>`;
+    });
+  }
+  clockInFor.innerHTML = clockInForOptions;
+}
+
+function populateParticipantsForCaseManagement(participants) {
+  const participantsEl = document.querySelector("#myparticipants");
+  const participantsList = document.querySelector("#myparticipants_list");
+  const participantCountEl = document.querySelector("#myparticipants_count");
+  let participantsContent = "";
+
+  if (participants.length) {
+    participants.forEach((item, index) => {
+      const {
+        participantid,
+        firstname,
+        lastname,
+        seekshousing,
+        seeksemployment,
+      } = item;
+      participantsContent += `
+        <a href="participants/profile/#${participantid}" data-participantid="${participantid}" class="list-group-item list-group-item-light list-group-item-action">
+          ${index + 1}. ${firstname} ${lastname}
+          <div class="float-right">
+            ${
+              seeksemployment === 1
+                ? '<span class="badge badge-warning badge-pill">E</span>'
+                : ""
+            }
+            ${
+              seekshousing === 1
+                ? '<span class="badge badge-warning badge-pill">H</span>'
+                : ""
+            }
+          </div>
+        </a>
+      `;
+    });
+    participantCountEl.innerText = participants.length;
+    participantsList.innerHTML = participantsContent;
+    participantsEl.classList.remove("d-none");
+    participantCountEl.classList.remove("d-none");
+  }
+}
+
 async function getParticipantsOfEmployee() {
   const accessToken = await getAccessToken();
   const endpoint = "/api/participants-of-user";
@@ -310,18 +385,9 @@ async function getParticipantsOfEmployee() {
           );
           break;
         case "participants of user retrieved":
-          const clockInFor = document.querySelector("#clockInFor");
-          let clockInForOptions = `
-            <option value="">(Select)</option>
-            <option value="0">EASE</option>
-          `;
-          if (data.participants.length) {
-            data.participants.forEach((item) => {
-              const { participantid, firstname, lastname } = item;
-              clockInForOptions += `<option value="${participantid}">${firstname} ${lastname}</option>`;
-            });
-          }
-          clockInFor.innerHTML = clockInForOptions;
+          const { participants } = data;
+          populateParticipantsForTimeEntry(participants);
+          populateParticipantsForCaseManagement(participants);
           break;
       }
     })

@@ -25,7 +25,9 @@ exports.POST = (req, res) => {
     SELECT
       participantid,
       firstname,
-      lastname
+      lastname,
+      seekshousing,
+      seeksemployment
     FROM
       participants
     WHERE

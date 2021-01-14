@@ -1,3 +1,8 @@
 #timeEntries td {
   width: 50%;
 }
+
+.list-group .list-group-item:hover {
+  font-weight: 500;
+  color: #333;
+}

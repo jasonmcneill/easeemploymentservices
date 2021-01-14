@@ -4,7 +4,7 @@ const db = require("../../database");
 exports.POST = (req, res) => {
   // Enforce authorization
   const usertype = req.user.type;
-  const allowedUsertypes = ["sysadmin", "director"];
+  const allowedUsertypes = ["regular", "sysadmin", "director"];
   if (!allowedUsertypes.includes(usertype)) {
     console.log(`User (employeeid ${req.user.employeeid}) is not authorized.`);
     return res.status(401).send({
@@ -56,13 +56,11 @@ exports.POST = (req, res) => {
   db.query(sql, [timeZoneOffset, timeZoneOffset, homeid], (err, result) => {
     if (err) {
       console.log(err);
-      return res
-        .status(500)
-        .send({
-          msg: "unable to query for home",
-          msgType: "error",
-          error: err,
-        });
+      return res.status(500).send({
+        msg: "unable to query for home",
+        msgType: "error",
+        error: err,
+      });
     }
 
     return res

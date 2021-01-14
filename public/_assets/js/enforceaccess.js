@@ -61,13 +61,16 @@ async function enforceUserRoles(redirectUrl, allowedRoles) {
   const isAuthorized = allowedRoles.includes(userRole);
   if (!isAuthorized) window.location.href = redirectUrl;
   showAuthorizedContent(userRole);
+  window.addEventListener("load", () => {
+    showAuthorizedContent(userRole);
+  });
 }
 
 function showAuthorizedContent(userRole) {
   if (userRole === "regular") {
     document
       .querySelectorAll(
-        ".nav-link.employees, .nav-link.participants, .nav-link.employment"
+        ".nav-link.employees, .nav-link.participants, .hide-for-regular-employees"
       )
       .forEach((item) => {
         item.classList.add("d-none");
