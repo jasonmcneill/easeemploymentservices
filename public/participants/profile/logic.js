@@ -12,6 +12,8 @@ function renderData(data) {
     phonecountry,
     state,
     zip,
+    seeksemployment,
+    seekshousing,
   } = data;
   const phoneDigitsOnly = phone.replace(/\D/g, "");
 
@@ -22,6 +24,28 @@ function renderData(data) {
 
   const participantdataEl = document.querySelector("#participantdata");
   let html = "";
+
+  // Needs
+  let needsRows = 0;
+  if (seeksemployment === 1) needsRows += 1;
+  if (seekshousing === 1) needsRows += 1;
+  if (needsRows > 0) {
+    html += `
+      <tr>
+        <th>Needs:</th>
+        <td>
+          <ul class="m-0 pl-4">
+            <li ${
+              seeksemployment !== 1 && 'class="d-none"'
+            }><a href="../../employment/">Employment</a></li>
+            <li ${
+              seekshousing !== 1 && 'class="d-none"'
+            }><a href="../../housing/">Housing</a></li>
+          </ul>
+        </td>
+      </tr>
+    `;
+  }
 
   // Phone
   if (phone.length) {
@@ -100,6 +124,28 @@ function renderPlacements(data) {
 
   placementdata.innerHTML = html;
   placements.classList.remove("d-none");
+}
+
+function renderHousingPlacement(data) {
+  const housingplacement = document.querySelector("#housingplacement");
+  const housingplacementdata = document.querySelector("#housingplacementdata");
+
+  if (!data.length) return;
+
+  const { homeid, hometitle, companyname, address, city, state, zip } = data;
+  let html = "";
+  html += `
+    <a href="../../housing/profile/#${homeid}" class="list-group-item list-group-item-action">
+      <big><strong>${hometitle}</strong></big><br>
+      <div class="text-muted">${companyname}</div>
+      <div class="text-muted">${address}</div>
+      <div class="text-muted">${city}, ${state} ${zip}</div>
+    </a>
+  `;
+  html = `<div class="list-group">${html}</div>`;
+
+  housingplacementdata.innerHTML = html;
+  housingplacement.classList.remove("d-none");
 }
 
 async function getProfileData() {
@@ -278,6 +324,57 @@ async function getPlacementsData() {
     });
 }
 
+async function getHousingPlacementData() {
+  const participantid = getId();
+  const endpoint = "/api/housing-placement-of-participant";
+  const accessToken = await getAccessToken();
+
+  fetch(endpoint, {
+    mode: "cors",
+    method: "POST",
+    body: JSON.stringify({
+      participantid: participantid,
+    }),
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      switch (data.msg) {
+        case "user is not authorized for this action":
+          addToast(
+            "Your account does not have sufficient permissions to view a participant's housing placement.",
+            "Not Authorized",
+            "danger"
+          );
+          window.location.href = "/";
+          break;
+        case "invalid participant id":
+          addToast(
+            "The participant could not be viewed because the URL was malformed.",
+            "Invalid participant ID",
+            "danger"
+          );
+          window.location.href = "../";
+          break;
+        case "unable to query for participant id":
+          showError(
+            "There was a technical glitch preventing the housing placement for this participant from being displayed.  Please wait a moment then reload the page.",
+            "Database is Down"
+          );
+          break;
+        case "placement retrieved":
+          renderHousingPlacement(data.data);
+          break;
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
 function attachListeners() {
   document.querySelector("#btnEdit").addEventListener("click", onEdit);
   document.querySelector("#btnDelete").addEventListener("click", onDelete);
@@ -289,6 +386,7 @@ function attachListeners() {
 function init() {
   getProfileData();
   getPlacementsData();
+  getHousingPlacementData();
   attachListeners();
   showToasts();
 }

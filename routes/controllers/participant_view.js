@@ -40,6 +40,8 @@ exports.POST = (req, res) => {
       p.city,
       p.state,
       p.zip,
+      p.seekshousing,
+      p.seeksemployment,
       e.employeeid,
       e.firstname AS employeeFirstName,
       e.lastname AS employeeLastName

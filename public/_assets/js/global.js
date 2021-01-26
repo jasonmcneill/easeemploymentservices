@@ -271,6 +271,23 @@ function getId() {
   return parseInt(document.location.hash.split("#")[1]) || "";
 }
 
+function clearEverything() {
+  caches.keys().then(function (cacheNames) {
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("subscriptionToken");
+    sessionStorage.removeItem("accessToken");
+    return Promise.all(
+      cacheNames
+        .filter(function (cacheName) {
+          return true;
+        })
+        .map(function (cacheName) {
+          return caches.delete(cacheName);
+        })
+    );
+  });
+}
+
 function init() {
   registerSW();
   checkIfOffline();
