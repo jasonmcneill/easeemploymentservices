@@ -156,7 +156,7 @@ async function onSubmit(e) {
           break;
         case "notification e-mail could not be sent":
           addToast(
-            "The employee was added successfully, but a technical glitch prevented the e-mail from being sent to invite the employee to register. Please verify that your e-mail account is in good standing with your provider, SendGrid.",
+            "The employee was added successfully, but a technical glitch prevented the e-mail from being sent to invite the employee to register. Please inform the pertinent technical personnel.",
             "E-mail is Down",
             "warning",
             5000,
