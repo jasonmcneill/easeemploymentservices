@@ -140,7 +140,7 @@ exports.POST = (req, res) => {
 
         sendEmail(recipient, emailSenderText, subject, body)
           .then((result) => {
-            return res.status(result[0].statusCode || 200).send({
+            return res.status(200).send({
               msg: "notification e-mail sent",
               msgType: "success",
               result: result,
