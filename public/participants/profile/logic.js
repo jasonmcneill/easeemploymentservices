@@ -81,7 +81,7 @@ function renderData(data) {
   // Authorization Date
   html += `
     <tr>
-      <th>Authorized:</th>
+      <th>Authorization Date:</th>
       <td>
         ${strAuthorizationDate}
       </td>
