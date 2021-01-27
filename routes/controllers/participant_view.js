@@ -1,3 +1,4 @@
+const moment = require("moment");
 const db = require("../../database");
 
 exports.POST = (req, res) => {
@@ -40,6 +41,7 @@ exports.POST = (req, res) => {
       p.city,
       p.state,
       p.zip,
+      p.authorizationdate,
       p.seekshousing,
       p.seeksemployment,
       e.employeeid,

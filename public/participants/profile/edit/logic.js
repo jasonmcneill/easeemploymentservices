@@ -125,6 +125,9 @@ async function getParticipant() {
         phonecountry,
         state,
         zip,
+        authorizationdate,
+        seeksemployment,
+        seekshousing
       } = data.data;
 
       // Display full name where needed
@@ -166,6 +169,16 @@ async function getParticipant() {
       const zipEl = document.querySelector("#zip");
       zipEl.value = zip;
 
+      const needsEmploymentEl = document.querySelector("#needsEmployment");
+      needsEmploymentEl.checked = (seeksemployment === 1) ? true : false;
+
+      const needsHousingEl = document.querySelector("#needsHousing");
+      needsHousingEl.checked = (seekshousing === 1) ? true : false;
+
+      const authorizationdateEl = document.querySelector("#authorizationdate");
+      const isValidAuthorizationDate = moment(authorizationdate).isValid() || false;
+      if (isValidAuthorizationDate) authorizationdateEl.value = moment(authorizationdate).format("YYYY-MM-DD");
+
       const employeeidEl = document.querySelector("#employeeid");
       employeeidEl.value = employeeid;
     })
@@ -185,6 +198,9 @@ async function onSubmit(e) {
   const city = document.querySelector("#city");
   const state = document.querySelector("#state");
   const zip = document.querySelector("#zip");
+  const authorizationdate = document.querySelector("#authorizationdate");
+  const needsEmployment = document.querySelector("#needsEmployment").checked || false;
+  const needsHousing = document.querySelector("#needsHousing").checked || false;
   const employeeid = document.querySelector("#employeeid");
   const content = document.querySelector("#content");
   const spinner = document.querySelector("#spinner");
@@ -192,7 +208,6 @@ async function onSubmit(e) {
   const accessToken = await getAccessToken();
 
   showSpinner(content, spinner);
-  console.log("About to fetch");
   fetch(endpoint, {
     mode: "cors",
     method: "POST",
@@ -206,6 +221,9 @@ async function onSubmit(e) {
       city: city.value.trim(),
       state: state.value,
       zip: zip.value.trim(),
+      authorizationdate: authorizationdate.value.trim(),
+      needsEmployment: needsEmployment,
+      needsHousing: needsHousing,
       employeeid: employeeid.value,
     }),
     headers: new Headers({
@@ -257,6 +275,12 @@ async function onSubmit(e) {
             "Form Incomplete"
           );
           break;
+        case "missing authorization date":
+          showError("Please input the authorization date.", "Form Incomplete");
+          break;
+        case "invalid authorization date":
+          showError("Please check the authorization date for accuracy and proper formatting.");
+            break;
         case "invalid phone number":
           showError(
             "The phone number is invalid. Please check it for accuracy and proper formatting.",

@@ -12,6 +12,7 @@ function renderData(data) {
     phonecountry,
     state,
     zip,
+    authorizationdate,
     seeksemployment,
     seekshousing,
   } = data;
@@ -71,6 +72,16 @@ function renderData(data) {
       <td>
         <div>${address}</div>
         <div>${city}, ${state} ${zip}</div>
+      </td>
+    </tr>
+  `;
+
+  // Authorization Date
+  html += `
+    <tr>
+      <th>Authorized:</th>
+      <td>
+        ${moment(authorizationdate).format("MMMM D, YYYY")}
       </td>
     </tr>
   `;

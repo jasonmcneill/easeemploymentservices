@@ -24,6 +24,8 @@ exports.POST = (req, res) => {
   const zip = req.body.zip || "";
   const authorizationdate = req.body.authorizationdate || "";
   const employeeid = parseInt(req.body.employeeid) || null;
+  const needsEmployment = req.body.needsEmployment ? 1 : 0;
+  const needsHousing = req.body.needsHousing ? 1 : 0;
 
   // Validate
 
@@ -96,7 +98,9 @@ exports.POST = (req, res) => {
       city = ?,
       state = ?,
       zip = ?,
-      authorizationdate = ?
+      authorizationdate = ?,
+      seekshousing = ?,
+      seeksemployment = ?
     WHERE
       participantid = ?
     ;
@@ -113,7 +117,9 @@ exports.POST = (req, res) => {
       state,
       zip,
       moment(authorizationdate).format("YYYY-MM-DD"),
-      participantid,
+      needsHousing,
+      needsEmployment,
+      participantid
     ],
     (err, result) => {
       if (err) {
