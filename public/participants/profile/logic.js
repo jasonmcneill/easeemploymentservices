@@ -18,6 +18,8 @@ function renderData(data) {
   } = data;
   const phoneDigitsOnly = phone.replace(/\D/g, "");
 
+  const strAuthorizationDate = moment(authorizationdate).isValid() ? moment(authorizationdate).format("MMMM D, YYYY") : "N/A";
+
   // Populate full name
   document.querySelectorAll("[data-name]").forEach((item) => {
     item.innerHTML = `${firstname} ${lastname}`;
@@ -81,7 +83,7 @@ function renderData(data) {
     <tr>
       <th>Authorized:</th>
       <td>
-        ${moment(authorizationdate).format("MMMM D, YYYY")}
+        ${strAuthorizationDate}
       </td>
     </tr>
   `;
