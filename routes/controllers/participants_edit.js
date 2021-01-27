@@ -1,3 +1,4 @@
+const moment = require("moment");
 const db = require("../../database");
 
 exports.POST = (req, res) => {
@@ -21,6 +22,7 @@ exports.POST = (req, res) => {
   const city = req.body.city || "";
   const state = req.body.state || "";
   const zip = req.body.zip || "";
+  const authorizationdate = req.body.authorizationdate || "";
   const employeeid = parseInt(req.body.employeeid) || null;
 
   // Validate
@@ -50,6 +52,11 @@ exports.POST = (req, res) => {
   if (!state.length) {
     return res.send(400).send({ msg: "state is missing", msgType: "error" });
   }
+
+  // Validate authorization date
+  if (!authorizationdate.length) return res.status(400).send({ msg: "missing authorization date", msgType: "error" });
+  const isValidAuthorizationDate = moment(authorizationdate).isValid() || false;
+  if (!isValidAuthorizationDate) return res.status(400).send({ msg: "invalid authorization date", msgType: "error" });
 
   // Validate phone number
   const validatePhone = require("../utils").validatePhone;
@@ -88,7 +95,8 @@ exports.POST = (req, res) => {
       address = ?,
       city = ?,
       state = ?,
-      zip = ?
+      zip = ?,
+      authorizationdate = ?
     WHERE
       participantid = ?
     ;
@@ -104,6 +112,7 @@ exports.POST = (req, res) => {
       city,
       state,
       zip,
+      moment(authorizationdate).format("YYYY-MM-DD"),
       participantid,
     ],
     (err, result) => {

@@ -8,6 +8,7 @@ async function onSubmit(e) {
   const city = e.target[(id = "city")].value.trim();
   const state = e.target[(id = "state")].value;
   const zip = e.target[(id = "zip")].value.trim();
+  const authorizationdate = e.target[(id = "authorizationdate")].value.trim();
   const needsEmployment =
     e.target[(id = "needsEmployment")].value === "1" ? true : false;
   const needsHousing =
@@ -30,6 +31,7 @@ async function onSubmit(e) {
       city: city,
       state: state,
       zip: zip,
+      authorizationdate: authorizationdate,
       needsEmployment: needsEmployment,
       needsHousing: needsHousing,
       employeeid: employeeid,
@@ -62,6 +64,12 @@ async function onSubmit(e) {
         case "missing state":
           showError("Please select the state.", "Form Incomplete");
           break;
+        case "missing authorization date":
+          showError("Please input the authorization date.", "Form Incomplete");
+          break;
+        case "invalid authorization date":
+          showError("Please check the authorization date for accuracy and proper formatting.");
+            break;
         case "invalid phone number":
           showError(
             "The phone number is invalid. Please check it for accuracy and proper formatting.",

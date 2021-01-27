@@ -1,3 +1,4 @@
+const moment = require("moment");
 const db = require("../../database");
 
 exports.POST = (req, res) => {
@@ -20,6 +21,7 @@ exports.POST = (req, res) => {
   const city = req.body.city || "";
   const state = req.body.state || "";
   const zip = req.body.zip || "";
+  const authorizationdate = req.body.authorizationdate || "";
   const employeeid = req.body.employeeid || "";
   const needsEmployment = req.body.needsEmployment ? 1 : 0;
   const needsHousing = req.body.needsHousing ? 1 : 0;
@@ -39,6 +41,11 @@ exports.POST = (req, res) => {
 
   if (!state.length)
     return res.status(400).send({ msg: "missing state", msgType: "error" });
+
+  // Validate authorization date
+  if (!authorizationdate.length) return res.status(400).send({ msg: "missing authorization date", msgType: "error" });
+  const isValidAuthorizationDate = moment(authorizationdate).isValid() || false;
+  if (!isValidAuthorizationDate) return res.status(400).send({ msg: "invalid authorization date", msgType: "error" });
 
   // Validate phone number
   const validatePhone = require("../utils").validatePhone;
@@ -87,9 +94,9 @@ exports.POST = (req, res) => {
     // Insert the record
     const sql = `
       INSERT INTO participants(
-        firstname, lastname, phone, address, city, state, zip, seekshousing, seeksemployment, createdAt
+        firstname, lastname, phone, address, city, state, zip, authorizationdate, seekshousing, seeksemployment, createdAt
       ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, utc_timestamp()
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, utc_timestamp()
       );
     `;
     db.query(
@@ -102,6 +109,7 @@ exports.POST = (req, res) => {
         city,
         state,
         zip,
+        moment(authorizationdate).format("YYYY-MM-DD"),
         needsHousing,
         needsEmployment,
       ],
