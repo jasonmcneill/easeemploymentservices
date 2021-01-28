@@ -46,6 +46,7 @@ exports.GET = (req, res) => {
     AND
       hp.enddate IS NULL
     GROUP BY
+      p.participantid,
       hp.participantid
     ORDER BY
       hp.placementid DESC,
