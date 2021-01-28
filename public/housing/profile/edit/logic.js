@@ -534,7 +534,7 @@ async function updateHome(e) {
             "Home Updated",
             "success"
           );
-          window.location.href = `../#${homeid}`;
+          window.location.href = `../../../participants/profile/#${filledby}`;
           break;
         case "home deleted":
           addToast(
@@ -580,7 +580,7 @@ function noLongerOnTheMarket(e) {
 async function checkIfParticipantAlreadyPlaced(participantid) {
   const accessToken = await getAccessToken();
   return new Promise((resolve, reject) => {
-    const endpoint = "/api/home-placements-of-participant";
+    const endpoint = "/api/housing-placements-of-participant";
 
     fetch(endpoint, {
       mode: "cors",
@@ -619,7 +619,7 @@ async function checkIfParticipantAlreadyPlaced(participantid) {
             );
             reject("unable to query for participant id");
             break;
-          case "placements retrieved":
+          case "housing placements retrieved":
             const otherPlacements = data.data.filter(
               (item) => item.homeid !== homeid
             );
@@ -636,6 +636,23 @@ async function checkIfParticipantAlreadyPlaced(participantid) {
   });
 }
 
+function onVacancyFilled(e) {
+  e.preventDefault();
+  const participantid = e.target.selectedOptions[0].value;
+  const checkboxNoLongerOnTheMarket = document.querySelector("#status_no_longer_on_the_market");
+
+  if (participantid !== "") {
+    checkboxNoLongerOnTheMarket.checked = false;
+    checkboxNoLongerOnTheMarket.setAttribute("disabled", true);
+    checkboxNoLongerOnTheMarket.parentElement.classList.add("text-muted");
+    checkboxNoLongerOnTheMarket.parentElement.style.textDecoration = "line-through";
+  } else {
+    checkboxNoLongerOnTheMarket.removeAttribute("disabled");
+    checkboxNoLongerOnTheMarket.parentElement.classList.remove("text-muted");
+    checkboxNoLongerOnTheMarket.parentElement.style.textDecoration = null;
+  }
+}
+
 function attachListeners() {
   document.querySelector("#formEditHome").addEventListener("submit", onSubmit);
   document
@@ -644,6 +661,8 @@ function attachListeners() {
   document
     .querySelector("#btnConfirmOtherPlacement")
     .addEventListener("click", onConfirmedModal);
+
+  document.querySelector("#filledby").addEventListener("change", onVacancyFilled);
 }
 
 async function init() {

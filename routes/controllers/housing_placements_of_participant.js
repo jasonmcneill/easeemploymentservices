@@ -20,11 +20,13 @@ exports.POST = (req, res) => {
 
   const sql = `
     SELECT
-      pl.homeid,
+      hpl.homeid,
       h.hometitle,
+      h.address,
       h.city,
       h.state,
-      prov.employerid,
+      h.zip,
+      prov.providerid,
       prov.companyname
     FROM
       housingplacements hpl

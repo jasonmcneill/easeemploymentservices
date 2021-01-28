@@ -145,7 +145,7 @@ function renderHousingPlacement(data) {
 
   if (!data.length) return;
 
-  const { homeid, hometitle, companyname, address, city, state, zip } = data;
+  const { homeid, hometitle, companyname, address, city, state, zip } = data[0];
   let html = "";
   html += `
     <a href="../../housing/profile/#${homeid}" class="list-group-item list-group-item-action">
@@ -339,7 +339,7 @@ async function getPlacementsData() {
 
 async function getHousingPlacementData() {
   const participantid = getId();
-  const endpoint = "/api/housing-placement-of-participant";
+  const endpoint = "/api/housing-placements-of-participant";
   const accessToken = await getAccessToken();
 
   fetch(endpoint, {
@@ -378,7 +378,7 @@ async function getHousingPlacementData() {
             "Database is Down"
           );
           break;
-        case "placement retrieved":
+        case "housing placements retrieved":
           renderHousingPlacement(data.data);
           break;
       }

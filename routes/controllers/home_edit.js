@@ -304,7 +304,7 @@ exports.POST = (req, res) => {
                         .send({ msg: "home updated", msgType: "success" });
 
                     const sql = `
-                      INSERT INTO hosuingplacements (
+                      INSERT INTO housingplacements (
                         homeid,
                         participantid,
                         begindate,

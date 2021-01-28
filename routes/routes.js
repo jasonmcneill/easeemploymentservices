@@ -218,13 +218,22 @@ router.post("/api/home-delete", authenticateToken, home_delete.POST);
 const home_edit = require("./controllers/home_edit");
 router.post("/api/home-edit", authenticateToken, home_edit.POST);
 
-// PLACEMENTS
+// JOB PLACEMENTS
 
-const placements_of_participant = require("./controllers/job_placements_of_participant");
+const job_placements_of_participant = require("./controllers/job_placements_of_participant");
 router.post(
   "/api/job-placements-of-participant",
   authenticateToken,
-  placements_of_participant.POST
+  job_placements_of_participant.POST
+);
+
+// HOUSING PLACEMENTS
+
+const housing_placements_of_participant = require("./controllers/housing_placements_of_participant");
+router.post(
+  "/api/housing-placements-of-participant",
+  authenticateToken,
+  housing_placements_of_participant.POST
 );
 
 module.exports = router;
