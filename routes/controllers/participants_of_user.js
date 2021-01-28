@@ -47,7 +47,15 @@ exports.GET = (req, res) => {
       hp.enddate IS NULL
     GROUP BY
       p.participantid,
-      hp.participantid
+      p.employeeid,
+      p.firstname,
+      p.lastname,
+      p.seekshousing,
+      p.seeksemployment,
+      e.firstname,
+      e.lastname,
+      jp.placementid,
+      hp.placementid
     ORDER BY
       hp.placementid DESC,
       p.lastname,
