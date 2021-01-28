@@ -530,7 +530,7 @@ async function updateHome(e) {
           break;
         case "home updated":
           addToast(
-            "The home was updated successfully.",
+            "The home was assigned to the participant successfully.",
             "Home Updated",
             "success"
           );
