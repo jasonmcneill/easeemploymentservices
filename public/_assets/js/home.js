@@ -324,6 +324,26 @@ function populateParticipantsForTimeEntry(participants) {
   clockInFor.innerHTML = clockInForOptions;
 }
 
+function getParticipantBadges(seeksemployment, seekshousing, jobplacementid, housingplacementid) {
+  let badgeHtml = "";
+  
+  // Employment
+  if (typeof jobplacementid === "number") {
+    badgeHtml += `<span class="badge badge-success badge-pill ml-1">E</span>`;
+  } else {
+    if (seeksemployment) badgeHtml += `<span class="badge badge-warning badge-pill ml-1">E</span>`;
+  }
+
+  // Housing
+  if (typeof housingplacementid === "number") {
+    badgeHtml += `<span class="badge badge-success badge-pill ml-1">H</span>`
+  } else {
+    if (seekshousing) badgeHtml += `<span class="badge badge-warning badge-pill ml-1">H</span>`;
+  }
+
+  return badgeHtml;
+}
+
 function populateParticipantsForCaseManagement(participants) {
   const participantsEl = document.querySelector("#myparticipants");
   const participantsList = document.querySelector("#myparticipants_list");
@@ -338,21 +358,14 @@ function populateParticipantsForCaseManagement(participants) {
         lastname,
         seekshousing,
         seeksemployment,
+        jobplacementid="",
+        housingplacementid=""
       } = item;
       participantsContent += `
         <a href="participants/profile/#${participantid}" data-participantid="${participantid}" class="list-group-item list-group-item-light list-group-item-action">
           ${index + 1}. ${firstname} ${lastname}
           <div class="float-right">
-            ${
-              seeksemployment === 1
-                ? '<span class="badge badge-warning badge-pill">E</span>'
-                : ""
-            }
-            ${
-              seekshousing === 1
-                ? '<span class="badge badge-warning badge-pill">H</span>'
-                : ""
-            }
+            ${getParticipantBadges(seeksemployment, seekshousing, jobplacementid, housingplacementid)}
           </div>
         </a>
       `;
