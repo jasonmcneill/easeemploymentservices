@@ -24,16 +24,31 @@ exports.GET = (req, res) => {
       p.seekshousing,
       p.seeksemployment,
       e.firstname AS employeeFirstName,
-      e.lastname AS employeeLastName
+      e.lastname AS employeeLastName,
+      jp.placementid AS jobplacementid,
+      hp.placementid AS housingplacementid
     FROM
       participants p
     LEFT OUTER JOIN
       employees e
     ON
       p.employeeid = e.employeeid
+    LEFT OUTER JOIN
+      housingplacements hp
+    ON
+      p.participantid = hp.participantid
+    LEFT OUTER JOIN
+      jobplacements jp
+    ON
+      p.participantid = jp.participantid
     WHERE
       p.employeeid = ?
+    AND
+      hp.enddate IS NULL
+    GROUP BY
+      hp.participantid
     ORDER BY
+      hp.placementid DESC,
       p.lastname,
       p.firstname
     ;
