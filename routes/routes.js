@@ -236,4 +236,13 @@ router.post(
   housing_placements_of_participant.POST
 );
 
+// CASE NOTES
+
+const case_notes_view = require("./controllers/case_notes_view");
+router.post(
+  "/api/case-notes-view",
+  authenticateToken,
+  case_notes_view.POST
+);
+
 module.exports = router;
