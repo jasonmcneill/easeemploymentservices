@@ -5,7 +5,7 @@ exports.POST = (req, res) => {
   const usertype = req.user.type;
   const allowedUsertypes = ["director", "sysadmin"];
   if (!allowedUsertypes.includes(usertype)) {
-    console.log(`User (employeeid ${req.user.employeeid} is not authorized.`);
+    console.log(`User (employeeid ${req.user.employeeid}) is not authorized.`);
     return res.status(401).send({
       msg: "user is not authorized for this action",
       msgType: "error",
