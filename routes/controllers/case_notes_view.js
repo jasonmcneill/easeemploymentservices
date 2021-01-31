@@ -4,7 +4,7 @@ const db = require("../../database");
 exports.POST = (req, res) => {
   // Enforce authorization
   const usertype = req.user.type;
-  const allowedUsertypes = ["sysadmin", "director", "user"];
+  const allowedUsertypes = ["sysadmin", "director", "regular"];
   if (!allowedUsertypes.includes(usertype)) {
     console.log(`User (employeeid ${req.user.employeeid}) is not authorized.`);
     return res.status(401).send({
