@@ -223,26 +223,26 @@ exports.POST = (req, res) => {
                   );
                 `;
                 sqlVariables = [
-                  email,
+                  email.toLowerCase(),
                   smsphone,
                   smsphonecountry,
                   firstname,
                   lastname,
                   usertype,
-                  username,
+                  username.toLowerCase(),
                   hash,
                 ];
               } else {
                 sql = `
                   UPDATE employees
                   SET
-                    email = ?,
+                    email = LCASE(?),
                     smsphone = ?,
                     smsphonecountry = ?,
                     firstname = ?,
                     lastname = ?,
                     type = ?,
-                    username = ?,
+                    username = LCASE(?),
                     password = ?,
                     createdAt = utc_timestamp()
                   WHERE employeeid = ?;

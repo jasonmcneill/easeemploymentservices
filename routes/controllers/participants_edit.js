@@ -96,7 +96,7 @@ exports.POST = (req, res) => {
       phonecountry = ?,
       address = ?,
       city = ?,
-      state = ?,
+      state = UCASE(?),
       zip = ?,
       authorizationdate = ?,
       seekshousing = ?,

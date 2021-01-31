@@ -26,19 +26,22 @@ exports.POST = (req, res) => {
       msgType: "error",
     });
 
-  const sql = `SELECT 
+  const sql = `
+    SELECT 
       e.employeeid,
       e.firstname, 
       e.lastname, 
-      e.email,
-      e.username,
+      LCASE(e.email) AS email,
+      LCASE(e.username) AS username,
       t.token,
       t.expiry
     FROM employees e
     LEFT OUTER JOIN tokens t ON t.employeeid = e.employeeid
     WHERE e.email = ?
-    LIMIT 1;`;
-  db.query(sql, [email], (err, result) => {
+    LIMIT 1
+    ;
+  `;
+  db.query(sql, [email.toLowerCase()], (err, result) => {
     if (err) {
       console.log(err);
       return res

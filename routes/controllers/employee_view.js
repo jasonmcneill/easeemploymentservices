@@ -5,8 +5,8 @@ exports.GET = (req, res) => {
   const sql = `
     SELECT
       employeeid,
-      email,
-      email_personal,
+      LCASE(email) AS email,
+      LCASE(email_personal) AS email_personal,
       phone,
       smsphone,
       smsphonecountry,
@@ -14,7 +14,7 @@ exports.GET = (req, res) => {
       lastname,
       type,
       status,
-      username,
+      LCASE(username) AS username,
       passwordmustchange,
       startdate,
       enddate,

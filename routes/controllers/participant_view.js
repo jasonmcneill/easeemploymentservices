@@ -39,7 +39,7 @@ exports.POST = (req, res) => {
       p.phonecountry,
       p.address,
       p.city,
-      p.state,
+      UCASE(p.state) AS state,
       p.zip,
       p.authorizationdate,
       p.seekshousing,

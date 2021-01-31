@@ -13,7 +13,7 @@ exports.GET = (req, res) => {
   }
 
   const sql =
-    "SELECT employerid, companyname, city, state FROM employers ORDER BY companyname;";
+    "SELECT employerid, companyname, city, UCASE(state) AS state FROM employers ORDER BY companyname;";
   db.query(sql, [], (err, result) => {
     if (err) {
       console.log(err);

@@ -9,7 +9,7 @@ exports.POST = (req, res) => {
       h.homeid,
       h.hometitle,
       h.city,
-      h.state,
+      UCASE(h.state) AS state,
       convert_tz(h.createdAt, '+00:00', ?) AS createdAt,
       prov.companyname,
       par.firstname AS participantFirstName,

@@ -140,12 +140,12 @@ exports.POST = (req, res) => {
             employers
           SET
             companyname = ?,
-            website = ?,
+            website = LCASE(?),
             phone = ?,
             phonecountry = ?,
             address = ?,
             city = ?,
-            state = ?,
+            state = UCASE(?),
             zip = ?
           WHERE
             employerid = ?

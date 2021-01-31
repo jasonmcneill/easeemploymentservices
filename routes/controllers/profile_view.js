@@ -17,8 +17,8 @@ exports.POST = (req, res) => {
     SELECT
       firstname,
       lastname,
-      email,
-      email_personal,
+      LCASE(email) AS email,
+      LCASE(email_personal) AS email_personal,
       phone,
       smsphone,
       smsphonecountry,

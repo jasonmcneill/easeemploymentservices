@@ -139,10 +139,10 @@ exports.POST = (req, res) => {
           contactname = ?,
           contactphone = ?,
           contactphoneext = ?,
-          contactemail = ?,
+          contactemail = LCASE(?),
           address = ?,
           city = ?,
-          state = ?,
+          state = UCASE(?),
           zip = ?,
           hometitle = ?,
           homedescription = ?

@@ -94,7 +94,17 @@ exports.POST = (req, res) => {
     // Insert the record
     const sql = `
       INSERT INTO participants(
-        firstname, lastname, phone, address, city, state, zip, authorizationdate, seekshousing, seeksemployment, createdAt
+        firstname,
+        lastname,
+        phone,
+        address,
+        city,
+        state,
+        zip,
+        authorizationdate,
+        seekshousing,
+        seeksemployment,
+        createdAt
       ) VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, utc_timestamp()
       );
@@ -107,7 +117,7 @@ exports.POST = (req, res) => {
         phoneValidated,
         address,
         city,
-        state,
+        state.toUpperCase(),
         zip,
         moment(authorizationdate).format("YYYY-MM-DD"),
         needsHousing,

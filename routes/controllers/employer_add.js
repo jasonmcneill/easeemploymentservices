@@ -160,12 +160,12 @@ exports.POST = (req, res) => {
           sql,
           [
             companyname,
-            website,
+            website.toLowerCase(),
             nationalFormat,
             phonecountry,
             address,
             city,
-            state,
+            state.toUpperCase(),
             zip,
           ],
           (err, result) => {

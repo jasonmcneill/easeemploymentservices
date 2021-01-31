@@ -91,7 +91,7 @@ exports.POST = (req, res) => {
     `;
     db.query(
       sql,
-      [email, firstname, lastname, type, startdateSql, createdAt],
+      [email.toLowerCase(), firstname, lastname, type, startdateSql, createdAt],
       (err, result) => {
         if (err) {
           console.log(err);

@@ -1,150 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
 
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="../_assets/bootstrap-4.5.2-dist/css/bootstrap.min.css"
-    />
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <title>Register</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="../_assets/bootstrap-4.5.2-dist/css/bootstrap.min.css" />
 
-    <link href="./style.css" rel="stylesheet" />
-    <link href="../_assets/css/global.css" rel="stylesheet" />
-  </head>
-  <body>
-    <div class="spinner text-center d-none" id="registerSpinner"></div>
-    <div class="container-fluid" id="registerContent">
-      <div class="row">
-        <div class="col col-md-12">
-          <h1 class="h3 mb-4 text-center font-weight-normal">Register</h1>
-        </div>
+  <title>Register</title>
+
+  <link href="./style.css" rel="stylesheet" />
+  <link href="../_assets/css/global.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="spinner text-center d-none" id="registerSpinner"></div>
+  <div class="container-fluid" id="registerContent">
+    <div class="row">
+      <div class="col col-md-12">
+        <h1 class="h3 mb-4 text-center font-weight-normal">Register</h1>
       </div>
-
-      <div class="row">
-        <div class="col col-md-12">
-          <div id="alertMessage" class="col col-md-4 offset-md-4 d-none">
-            <div
-              data-alert-content
-              class="alert alert-danger border-danger"
-              role="alert"
-            ></div>
-          </div>
-        </div>
-      </div>
-
-      <form id="registerform" autocomplete="off" novalidate>
-        <div class="form-row my-3">
-          <div class="form-group col col-md-4 offset-md-4">
-            <label for="firstname"><strong>First name:</strong></label>
-            <input
-              type="text"
-              class="form-control"
-              id="firstname"
-              autocomplete="given-name"
-              required
-            />
-          </div>
-        </div>
-
-        <div class="form-row my-3">
-          <div class="form-group col col-md-4 offset-md-4">
-            <label for="lastname"><strong>Last name:</strong></label>
-            <input
-              type="text"
-              class="form-control"
-              id="lastname"
-              autocomplete="family-name"
-              required
-            />
-          </div>
-        </div>
-
-        <div class="form-row my-3">
-          <div class="form-group col col-md-4 offset-md-4">
-            <label for="email"><strong>E-mail:</strong></label>
-            <input
-              type="email"
-              class="form-control"
-              id="email"
-              autocomplete="email"
-              required
-            />
-          </div>
-        </div>
-
-        <div class="form-row my-3">
-          <div class="form-group col col-md-4 offset-md-4">
-            <label for="smsphone"><strong>Mobile phone number:</strong></label>
-            <input
-              type="tel"
-              class="form-control"
-              id="smsphone"
-              pattern="[0-9]"
-              autocomplete="mobile"
-            />
-          </div>
-        </div>
-
-        <div class="form-row my-3">
-          <div class="form-group col col-md-4 offset-md-4">
-            <label for="smsphonecountry">
-              <strong>Country for mobile phone:</strong>
-            </label>
-            <div>
-              <select class="form-control" id="smsphonecountry"></select>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-row my-3">
-          <div class="form-group col col-md-4 offset-md-4">
-            <label for="username"><strong>Username:</strong></label>
-            <input
-              type="text"
-              class="form-control"
-              id="username"
-              autocomplete="off"
-              autocapitalize="off"
-              required
-            />
-          </div>
-        </div>
-
-        <div class="form-row my-3">
-          <div class="form-group col col-md-4 offset-md-4">
-            <label for="password"><strong>Password:</strong></label>
-            <input
-              type="password"
-              class="form-control"
-              id="password"
-              autocomplete="new-password"
-              autocapitalize="off"
-              required
-            />
-          </div>
-        </div>
-
-        <div class="form-row my-3">
-          <div class="form-group col col-md-4 offset-md-4">
-            <button type="submit" class="btn btn-dark">Register</button>
-            <a href="/login/" class="ml-4">Sign In</a>
-          </div>
-        </div>
-      </form>
     </div>
 
-    <script src="../_assets/js/jquery-3.5.1.slim.min.js"></script>
-    <script src="../_assets/js/popper.min.js"></script>
-    <script src="../_assets/bootstrap-4.5.2-dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../_assets/js/global.js"></script>
-    <script src="./logic.js"></script>
-  </body>
+    <div class="row">
+      <div class="col col-md-12">
+        <div id="alertMessage" class="col col-md-4 offset-md-4 d-none">
+          <div data-alert-content class="alert alert-danger border-danger" role="alert"></div>
+        </div>
+      </div>
+    </div>
+
+    <form id="registerform" autocomplete="off" novalidate>
+      <div class="form-row my-3">
+        <div class="form-group col col-md-4 offset-md-4">
+          <label for="firstname"><strong>First name:</strong></label>
+          <input type="text" class="form-control" id="firstname" autocomplete="given-name" required />
+        </div>
+      </div>
+
+      <div class="form-row my-3">
+        <div class="form-group col col-md-4 offset-md-4">
+          <label for="lastname"><strong>Last name:</strong></label>
+          <input type="text" class="form-control" id="lastname" autocomplete="family-name" required />
+        </div>
+      </div>
+
+      <div class="form-row my-3">
+        <div class="form-group col col-md-4 offset-md-4">
+          <label for="email"><strong>E-mail:</strong></label>
+          <input type="email" class="form-control" id="email" autocomplete="email" autocapitalize="off" required />
+        </div>
+      </div>
+
+      <div class="form-row my-3">
+        <div class="form-group col col-md-4 offset-md-4">
+          <label for="smsphone"><strong>Mobile phone number:</strong></label>
+          <input type="tel" class="form-control" id="smsphone" pattern="[0-9]" autocomplete="mobile" />
+        </div>
+      </div>
+
+      <div class="form-row my-3">
+        <div class="form-group col col-md-4 offset-md-4">
+          <label for="smsphonecountry">
+            <strong>Country for mobile phone:</strong>
+          </label>
+          <div>
+            <select class="form-control" id="smsphonecountry"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row my-3">
+        <div class="form-group col col-md-4 offset-md-4">
+          <label for="username"><strong>Username:</strong></label>
+          <input type="text" class="form-control" id="username" autocomplete="off" autocapitalize="off" required />
+        </div>
+      </div>
+
+      <div class="form-row my-3">
+        <div class="form-group col col-md-4 offset-md-4">
+          <label for="password"><strong>Password:</strong></label>
+          <input type="password" class="form-control" id="password" autocomplete="new-password" autocapitalize="off"
+            required />
+        </div>
+      </div>
+
+      <div class="form-row my-3">
+        <div class="form-group col col-md-4 offset-md-4">
+          <button type="submit" class="btn btn-dark">Register</button>
+          <a href="/login/" class="ml-4">Sign In</a>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script src="../_assets/js/jquery-3.5.1.slim.min.js"></script>
+  <script src="../_assets/js/popper.min.js"></script>
+  <script src="../_assets/bootstrap-4.5.2-dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../_assets/js/global.js"></script>
+  <script src="./logic.js"></script>
+</body>
+
 </html>

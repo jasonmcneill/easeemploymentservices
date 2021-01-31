@@ -24,7 +24,7 @@ exports.POST = (req, res) => {
       h.hometitle,
       h.address,
       h.city,
-      h.state,
+      UCASE(h.state) AS state,
       h.zip,
       prov.providerid,
       prov.companyname

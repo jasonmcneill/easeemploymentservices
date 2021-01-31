@@ -23,7 +23,7 @@ exports.POST = (req, res) => {
       pl.jobid,
       j.jobtitle,
       j.city,
-      j.state,
+      UCASE(j.state) AS state,
       e.employerid,
       e.companyname
     FROM
