@@ -102,13 +102,15 @@ function emailViaAPI(recipient, emailSenderText, subject, body) {
 }
 
 exports.sendEmail = async (recipient, emailSenderText, subject, body) => {
-  try {
+  /* try {
     return await emailViaSMTP(recipient, emailSenderText, subject, body);
   } catch (error) {
     console.log(require("util").inspect(error, true, 7, true));
     console.log("Sending via SMTP failed. Attempting to send via API...");
     return await emailViaAPI(recipient, emailSenderText, subject, body);
-  }
+  } */
+
+  return await emailViaAPI(recipient, emailSenderText, subject, body);
 };
 
 /*
