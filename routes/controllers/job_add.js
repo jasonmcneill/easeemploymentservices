@@ -44,7 +44,11 @@ exports.POST = (req, res) => {
   if (!jobtitle.length)
     return res.status(400).send({ msg: "missing job title", msgType: "error" });
 
-  if (!["full time", "part time", "varies", "undetermined"].includes(hours))
+  if (
+    !["full time", "part time", "varies", "unpaid", "undetermined"].includes(
+      hours
+    )
+  )
     return res.status(400).send({ msg: "missing hours", msgType: "error" });
 
   if (!city.length)
