@@ -239,10 +239,24 @@ router.post(
 // CASE NOTES
 
 const case_notes_view = require("./controllers/case_notes_view");
+router.post("/api/case-notes-view", authenticateToken, case_notes_view.POST);
+
+// REPORTS
+
+const report_capacity_supported_employment = require("./controllers/report_capacity_supported_employment");
 router.post(
-  "/api/case-notes-view",
+  "/api/report_capacity_supported_employment",
   authenticateToken,
-  case_notes_view.POST
+  report_capacity_supported_employment.POST
 );
+
+const report_capacity_supportive_housing = require("./controllers/report_capacity_supportive_housing");
+router.post(
+  "/api/report_capacity_supportive_housing",
+  authenticateToken,
+  report_capacity_supportive_housing.POST
+);
+
+// EXPORT
 
 module.exports = router;

@@ -324,21 +324,28 @@ function populateParticipantsForTimeEntry(participants) {
   clockInFor.innerHTML = clockInForOptions;
 }
 
-function getParticipantBadges(seeksemployment, seekshousing, jobplacementid, housingplacementid) {
+function getParticipantBadges(
+  seeksemployment,
+  seekshousing,
+  jobplacementid,
+  housingplacementid
+) {
   let badgeHtml = "";
-  
+
   // Employment
   if (typeof jobplacementid === "number") {
     badgeHtml += `<span class="badge badge-success badge-pill ml-1">E</span>`;
   } else {
-    if (seeksemployment) badgeHtml += `<span class="badge badge-warning badge-pill ml-1">E</span>`;
+    if (seeksemployment)
+      badgeHtml += `<span class="badge badge-warning badge-pill ml-1">E</span>`;
   }
 
   // Housing
   if (typeof housingplacementid === "number") {
-    badgeHtml += `<span class="badge badge-success badge-pill ml-1">H</span>`
+    badgeHtml += `<span class="badge badge-success badge-pill ml-1">H</span>`;
   } else {
-    if (seekshousing) badgeHtml += `<span class="badge badge-warning badge-pill ml-1">H</span>`;
+    if (seekshousing)
+      badgeHtml += `<span class="badge badge-warning badge-pill ml-1">H</span>`;
   }
 
   return badgeHtml;
@@ -358,14 +365,19 @@ function populateParticipantsForCaseManagement(participants) {
         lastname,
         seekshousing,
         seeksemployment,
-        jobplacementid="",
-        housingplacementid=""
+        jobplacementid = "",
+        housingplacementid = "",
       } = item;
       participantsContent += `
         <a href="participants/profile/#${participantid}" data-participantid="${participantid}" class="list-group-item list-group-item-light list-group-item-action">
           ${index + 1}. ${firstname} ${lastname}
           <div class="float-right">
-            ${getParticipantBadges(seeksemployment, seekshousing, jobplacementid, housingplacementid)}
+            ${getParticipantBadges(
+              seeksemployment,
+              seekshousing,
+              jobplacementid,
+              housingplacementid
+            )}
           </div>
         </a>
       `;
@@ -414,6 +426,201 @@ async function getParticipantsOfEmployee() {
     });
 }
 
+function calculateEmploymentCaseLoad(employerid, data) {
+  let count = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    const isMatch = data[i].employerid === employerid ? true : false;
+    if (isMatch) {
+      count++;
+    } else {
+      continue;
+    }
+  }
+
+  return count;
+}
+
+function calculateHousingCaseLoad(homeid, data) {
+  let count = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    const isMatch = data[i].homeid === homeid ? true : false;
+    if (isMatch) {
+      count++;
+    } else {
+      continue;
+    }
+  }
+
+  return count;
+}
+
+function renderSupportedEmploymentReport(data) {
+  const capacityReport = document.querySelector("#capacityreport");
+  const spinner = document.querySelector("#supportedEmploymentReport_spinner");
+  const norecords = document.querySelector(
+    "#supportedEmploymentReport_norecords"
+  );
+  const table = document.querySelector("#supportedEmploymentReport_table");
+
+  if (!data.length) {
+    table.classList.add("d-none");
+    spinner.classList.add("d-none");
+    norecords.classList.remove("d-none");
+    capacityReport.classList.remove("d-none");
+    return;
+  }
+
+  let html = ``;
+  data.forEach((item) => {
+    const caseLoadCount = calculateEmploymentCaseLoad(item.employerid, data);
+    const rowHtml = `
+      <tr>
+        <td>${item.companyname}</td>
+        <td>${item.address}</td>
+        <td>${item.city}</td>
+        <td class="text-center">${caseLoadCount}</td>
+      </tr>
+    `;
+    return (html += rowHtml);
+  });
+  table.querySelector("tbody").innerHTML = html;
+
+  norecords.classList.add("d-none");
+  spinner.classList.add("d-none");
+  table.classList.remove("d-none");
+  capacityReport.classList.remove("d-none");
+}
+
+async function supportedEmploymentReport() {
+  const accessToken = await getAccessToken();
+  const endpoint = "/api/report_capacity_supported_employment";
+  const timezone = moment.tz.guess();
+
+  fetch(endpoint, {
+    method: "POST",
+    mode: "cors",
+    body: JSON.stringify({
+      timezone: timezone,
+    }),
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      switch (data.msg) {
+        case "user is not authorized for this action":
+          window.location.href = "/logout/";
+          break;
+        case "unable to query for supported employment":
+          showToast(
+            "Unable to retrieve data for supported employment",
+            "Database is Down",
+            "error"
+          );
+          break;
+        case "supported employment data retrieved":
+          renderSupportedEmploymentReport(data.data);
+          break;
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
+function renderSupportiveHousingReport(data) {
+  const capacityReport = document.querySelector("#capacityreport");
+  const spinner = document.querySelector("#supportiveHousing_spinner");
+  const norecords = document.querySelector("#supportiveHousing_norecords");
+  const table = document.querySelector("#supportiveHousingReport_table");
+
+  if (!data.length) {
+    table.classList.add("d-none");
+    spinner.classList.add("d-none");
+    norecords.classList.remove("d-none");
+    capacityReport.classList.remove("d-none");
+    return;
+  }
+
+  let html = ``;
+  const renderedHomes = [];
+  data.forEach((item) => {
+    if (renderedHomes.includes(item.homeid)) return;
+    const caseLoadCount = calculateHousingCaseLoad(item.homeid, data);
+    const rowHtml = `
+      <tr>
+        <td>${item.companyname}</td>
+        <td>${item.address}</td>
+        <td>${item.city}</td>
+        <td class="text-center">${caseLoadCount}</td>
+      </tr>
+    `;
+    renderedHomes.push(item.homeid);
+    return (html += rowHtml);
+  });
+  table.querySelector("tbody").innerHTML = html;
+
+  norecords.classList.add("d-none");
+  spinner.classList.add("d-none");
+  table.classList.remove("d-none");
+  capacityReport.classList.remove("d-none");
+}
+
+async function supportiveHousingReport() {
+  const accessToken = await getAccessToken();
+  const endpoint = "/api/report_capacity_supportive_housing";
+  const timezone = moment.tz.guess();
+
+  fetch(endpoint, {
+    method: "POST",
+    mode: "cors",
+    body: JSON.stringify({
+      timezone: timezone,
+    }),
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      switch (data.msg) {
+        case "user is not authorized for this action":
+          window.location.href = "/logout/";
+          break;
+        case "unable to query for supportive housing":
+          showToast(
+            "Unable to retrieve data for supportive housing",
+            "Database is Down",
+            "error"
+          );
+          break;
+        case "supportive housing data retrieved":
+          renderSupportiveHousingReport(data.data);
+          break;
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
+async function showReports() {
+  const accessToken = await getAccessToken();
+  const parsedToken = JSON.parse(atob(accessToken.split(".")[1]));
+  const hasAccess =
+    ["sysadmin", "director"].includes(parsedToken.type) || false;
+
+  if (!hasAccess) return;
+
+  supportedEmploymentReport();
+  supportiveHousingReport();
+}
+
 function attachListeners() {
   document
     .querySelector("#btnClockIn")
@@ -434,6 +641,7 @@ function init() {
   populateClockTime();
   getParticipantsOfEmployee();
   getTimeEntriesForToday();
+  showReports();
   showToasts();
 }
 
