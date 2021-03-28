@@ -153,7 +153,6 @@ async function showList() {
     let html = ``;
     data.forEach((item) => {
       const { participantid, employeeid, firstname, lastname } = item;
-      console.log(employeeid);
       if (typeof employeeid === "number") {
         html += `
           <a href="profile/#${participantid}" class="list-group-item list-group-item-action">
