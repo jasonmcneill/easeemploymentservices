@@ -292,17 +292,49 @@ function showManagedParticipants(participants) {
   let html = "";
 
   participants.forEach((item) => {
-    const { participantid, firstname, lastname } = item;
+    const {
+      participantid,
+      firstname,
+      lastname,
+      caseworkeremployment,
+      caseworkerhousing,
+    } = item;
+    const employeeid =
+      JSON.parse(atob(sessionStorage.getItem("accessToken").split(".")[1]))
+        .employeeid || "";
+
     html += `
       <a href="../../participants/profile/#${participantid}" class="list-group-item list-group-item-action">
         ${firstname} ${lastname}
+        <div class="float-right">
+          ${
+            caseworkeremployment === employeeid
+              ? '<span class="badge badge-info badge-pill ml-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Managed for employment">E</span>'
+              : ""
+          }
+          ${
+            caseworkerhousing === employeeid
+              ? '<span class="badge badge-info badge-pill ml-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Managed for housing">H</span>'
+              : ""
+          }
+        </div>
       </a>
     `;
   });
 
   html = `<div class="list-group">${html}</div>`;
   participantList.innerHTML = html;
+  enableTooltips();
   participantList_container.classList.remove("d-none");
+}
+
+function enableTooltips() {
+  var tooltipTriggerList = [].slice.call(
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  );
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
 }
 
 function attachListeners() {

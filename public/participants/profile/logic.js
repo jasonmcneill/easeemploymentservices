@@ -5,6 +5,8 @@ function renderData(data) {
     employeeFirstName,
     employeeLastName,
     employeeid,
+    caseworkeremployment,
+    caseworkerhousing,
     firstname,
     lastname,
     participantid,
@@ -18,7 +20,9 @@ function renderData(data) {
   } = data;
   const phoneDigitsOnly = phone.replace(/\D/g, "");
 
-  const strAuthorizationDate = moment(authorizationdate).isValid() ? moment(authorizationdate).format("MMMM D, YYYY") : "N/A";
+  const strAuthorizationDate = moment(authorizationdate).isValid()
+    ? moment(authorizationdate).format("MMMM D, YYYY")
+    : "N/A";
 
   // Populate full name
   document.querySelectorAll("[data-name]").forEach((item) => {
@@ -88,11 +92,32 @@ function renderData(data) {
     </tr>
   `;
 
-  // Assigned Employee
+  // Case Worker
   if (!employeeid) {
     html += `
+      <tr class="d-none">
+        <th>Case Worker:</th>
+        <td>
+          Unassigned
+        </td>
+      </tr>
+    `;
+  } else {
+    html += `
+    <tr class="d-none">
+      <th>Case Worker:</th>
+      <td>
+        <a href="../../employees/profile/#${employeeid}">${employeeFirstName} ${employeeLastName}</a>
+      </td>
+    </tr>
+  `;
+  }
+
+  // Employment Case Worker
+  if (!caseworkeremployment) {
+    html += `
       <tr>
-        <th>Assigned to:</th>
+        <th>Case Worker for Employment:</th>
         <td>
           Unassigned
         </td>
@@ -101,9 +126,30 @@ function renderData(data) {
   } else {
     html += `
     <tr>
-      <th>Assigned to:</th>
+      <th>Case Worker for Employment:</th>
       <td>
-        <a href="../../employees/profile/#${employeeid}">${employeeFirstName} ${employeeLastName}</a>
+        <a href="../../employees/profile/#${caseworkeremployment}">${employeeFirstName} ${employeeLastName}</a>
+      </td>
+    </tr>
+  `;
+  }
+
+  // Housing Case Worker
+  if (!caseworkerhousing) {
+    html += `
+      <tr>
+        <th>Case Worker for Housing:</th>
+        <td>
+          Unassigned
+        </td>
+      </tr>
+    `;
+  } else {
+    html += `
+    <tr>
+      <th>Case Worker for Housing:</th>
+      <td>
+        <a href="../../employees/profile/#${caseworkerhousing}">${employeeFirstName} ${employeeLastName}</a>
       </td>
     </tr>
   `;

@@ -44,6 +44,8 @@ exports.POST = (req, res) => {
       p.authorizationdate,
       p.seekshousing,
       p.seeksemployment,
+      p.caseworkeremployment,
+      p.caseworkerhousing,
       e.employeeid,
       e.firstname AS employeeFirstName,
       e.lastname AS employeeLastName

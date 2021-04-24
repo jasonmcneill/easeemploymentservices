@@ -14,6 +14,8 @@ async function onSubmit(e) {
   const needsHousing =
     e.target[(id = "needsHousing")].value === "1" ? true : false;
   const employeeid = e.target[(id = "employeeid")].value;
+  const caseworkeremployment = e.target[(id = "caseworkeremployment")].value;
+  const caseworkerhousing = e.target[(id = "caseworkerhousing")].value;
   const endpoint = "/api/participant-add";
   const accessToken = await getAccessToken();
 
@@ -35,6 +37,8 @@ async function onSubmit(e) {
       needsEmployment: needsEmployment,
       needsHousing: needsHousing,
       employeeid: employeeid,
+      caseworkeremployment: caseworkeremployment,
+      caseworkerhousing: caseworkerhousing,
     }),
     headers: new Headers({
       "Content-Type": "application/json",
@@ -68,8 +72,10 @@ async function onSubmit(e) {
           showError("Please input the authorization date.", "Form Incomplete");
           break;
         case "invalid authorization date":
-          showError("Please check the authorization date for accuracy and proper formatting.");
-            break;
+          showError(
+            "Please check the authorization date for accuracy and proper formatting."
+          );
+          break;
         case "invalid phone number":
           showError(
             "The phone number is invalid. Please check it for accuracy and proper formatting.",
@@ -204,6 +210,10 @@ function populateCountries() {
 
 async function populateEmployees() {
   const employeesEl = document.querySelector("#employeeid");
+  const caseWorkerEmploymentEl = document.querySelector(
+    "#caseworkeremployment"
+  );
+  const caseWorkerHousingEl = document.querySelector("#caseworkerhousing");
   const endpoint = "/api/employee/employees-list";
   const accessToken = await getAccessToken();
 
@@ -232,10 +242,16 @@ async function populateEmployees() {
       });
 
       employeesEl.innerHTML = options;
+      caseWorkerEmploymentEl.innerHTML = options;
+      caseWorkerHousingEl.innerHTML = options;
 
-      if (employees.length === 1) {
-        employeesEl[1].selected = true;
-      }
+      setTimeout(() => {
+        if (employees.length === 1) {
+          employeesEl[1].selected = true;
+          caseWorkerEmploymentEl[1].selected = true;
+          caseWorkerHousingEl[1].selected = true;
+        }
+      }, 300);
     })
     .catch((err) => {
       console.error(err);

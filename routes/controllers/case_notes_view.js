@@ -18,7 +18,10 @@ exports.POST = (req, res) => {
   const timeZoneOffset = moment.tz(timeZone).format("Z:00").slice(0, -3);
 
   // Validate
-  if (typeof participantid !== "number") return res.status(400).send({msg: "invalid participant id", msgType: "error"});
+  if (typeof participantid !== "number")
+    return res
+      .status(400)
+      .send({ msg: "invalid participant id", msgType: "error" });
 
   const sql = `
     SELECT
@@ -34,10 +37,15 @@ exports.POST = (req, res) => {
   db.query(sql, [participantid], (err, result) => {
     if (err) {
       console.log(err);
-      return res.status(400).send({ msg: "unable to query for participant", msgType: "error" });
+      return res
+        .status(400)
+        .send({ msg: "unable to query for participant", msgType: "error" });
     }
 
-    if (!result.length) return res.status(404).send({ msg: "participant not found", msgType: "error" });
+    if (!result.length)
+      return res
+        .status(404)
+        .send({ msg: "participant not found", msgType: "error" });
 
     const participantName = `${result[0].firstname} ${result[0].lastname}`;
 
@@ -45,50 +53,82 @@ exports.POST = (req, res) => {
       SELECT
         employeeid
       FROM
-        employees__participants
+        participants
       WHERE
-        employeeid = ?
-      AND
         participantid = ?
+      AND
+        (
+          caseworkeremployment = ?
+          OR
+          caseworkerhousing = ?
+        )
       LIMIT
         1
       ;
     `;
-    db.query(sql, [req.user.employeeid, participantid], (err, result) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).send({ msg: "unable to verify if employee has viewing permissions", msgType: "error" });
-      }
+    db.query(
+      sql,
+      [participantid, req.user.employeeid, req.user.employeeid],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).send({
+            msg: "unable to verify if employee has viewing permissions",
+            msgType: "error",
+          });
+        }
 
-      if (!result.length && req.user.type === "regular") return res.status(404).send({ msg: "participant not assigned to employee", msgType: "error" });
+        if (!result.length && req.user.type === "regular")
+          return res.status(404).send({
+            msg: "participant not assigned to employee",
+            msgType: "error",
+          });
 
-      const sql = `
+        const sql = `
         SELECT
           cn.casenoteid,
           date_format(convert_tz(cn.updatedAt, '+00:00', ?), "%Y-%m-%d %k:%i:%s") AS updatedAt
         FROM
           participants__casenotes cn
         INNER JOIN
-          employees__participants ep ON ep.participantid = cn.participantid
+          participants p ON p.participantid = cn.participantid
         WHERE
           cn.participantid = ?
         AND
-          ep.employeeid = ?
+          p.employeeid = ?
         ORDER BY
           cn.updatedAt DESC
         ;
       `;
 
-      db.query(sql, [timeZoneOffset, participantid, req.user.employeeid], (err, result) => {
-        if (err) {
-          console.log(err);
-          return res.status(500).send({ msg: "unable to query for case notes", msgType: "error" });
-        }
+        db.query(
+          sql,
+          [timeZoneOffset, participantid, req.user.employeeid],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+              return res.status(500).send({
+                msg: "unable to query for case notes",
+                msgType: "error",
+              });
+            }
 
-        if (!result.length) return res.status(404).send({ msg: "no case notes found", msgType: "error", participantName: participantName });
+            if (!result.length)
+              return res.status(404).send({
+                msg: "no case notes found",
+                msgType: "error",
+                participantName: participantName,
+              });
 
-        return res.status(200).send({ msg: "case notes retrieved", msgType: "success", participantName: participantName, data: result });
-      });
-    });
+            return res.status(200).send({
+              msg: "case notes retrieved",
+              msgType: "success",
+              participantName: participantName,
+              data: result,
+            });
+          }
+        );
+      }
+    );
   });
-}
+};

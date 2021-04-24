@@ -27,18 +27,22 @@ exports.POST = (req, res) => {
       firstname,
       lastname,
       seekshousing,
-      seeksemployment
+      seeksemployment,
+      caseworkeremployment,
+      caseworkerhousing
     FROM
       participants
     WHERE
-      employeeid = ?
+      caseworkeremployment = ?
+    OR
+      caseworkerhousing = ?
     ORDER BY
       lastname,
       firstname
     ;
   `;
 
-  db.query(sql, [employeeid], (err, result) => {
+  db.query(sql, [employeeid, employeeid, employeeid], (err, result) => {
     if (err) {
       console.log(err);
       return res.status(500).send({

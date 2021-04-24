@@ -22,7 +22,9 @@ exports.POST = (req, res) => {
   const state = req.body.state || "";
   const zip = req.body.zip || "";
   const authorizationdate = req.body.authorizationdate || "";
-  const employeeid = req.body.employeeid || "";
+  const employeeid = parseInt(req.body.employeeid) || "";
+  const caseworkeremployment = parseInt(req.body.caseworkeremployment) || "";
+  const caseworkerhousing = parseInt(req.body.caseworkerhousing) || "";
   const needsEmployment = req.body.needsEmployment ? 1 : 0;
   const needsHousing = req.body.needsHousing ? 1 : 0;
 
@@ -43,9 +45,15 @@ exports.POST = (req, res) => {
     return res.status(400).send({ msg: "missing state", msgType: "error" });
 
   // Validate authorization date
-  if (!authorizationdate.length) return res.status(400).send({ msg: "missing authorization date", msgType: "error" });
+  if (!authorizationdate.length)
+    return res
+      .status(400)
+      .send({ msg: "missing authorization date", msgType: "error" });
   const isValidAuthorizationDate = moment(authorizationdate).isValid() || false;
-  if (!isValidAuthorizationDate) return res.status(400).send({ msg: "invalid authorization date", msgType: "error" });
+  if (!isValidAuthorizationDate)
+    return res
+      .status(400)
+      .send({ msg: "invalid authorization date", msgType: "error" });
 
   // Validate phone number
   const validatePhone = require("../utils").validatePhone;
@@ -104,11 +112,19 @@ exports.POST = (req, res) => {
         authorizationdate,
         seekshousing,
         seeksemployment,
+        employeeid,
+        caseworkeremployment,
+        caseworkerhousing,
         createdAt
       ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, utc_timestamp()
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, utc_timestamp()
       );
     `;
+    const newEmployeeId = typeof employeeid === "number" ? employeeid : null;
+    const newCaseWorkerEmployment =
+      typeof caseworkeremployment === "number" ? caseworkeremployment : null;
+    const newCaseWorkerHousing =
+      typeof caseworkerhousing === "number" ? caseworkerhousing : null;
     db.query(
       sql,
       [
@@ -122,6 +138,9 @@ exports.POST = (req, res) => {
         moment(authorizationdate).format("YYYY-MM-DD"),
         needsHousing,
         needsEmployment,
+        newEmployeeId,
+        newCaseWorkerEmployment,
+        newCaseWorkerHousing,
       ],
       (err, result) => {
         if (err) {
@@ -133,65 +152,10 @@ exports.POST = (req, res) => {
 
         const participantid = result.insertId;
 
-        // If no employeeid was assigned, return.
-        if (employeeid === "") {
-          return res.status(200).send({
-            msg: "participant added",
-            msgType: "success",
-            participantid: participantid,
-          });
-        }
-
-        // Verify employeeid is valid
-        const sql = `SELECT employeeid FROM employees WHERE employeeid = ?;`;
-        db.query(sql, [employeeid], (err, result) => {
-          if (err) {
-            console.log(err);
-            return res.status(500).send({
-              msg: "participant added, but unable to query for employee",
-              msgType: "error",
-              participantid: participantid,
-              employeeid: employeeid,
-            });
-          }
-
-          if (!result.length) {
-            return res.status(200).send({
-              msg: "participant added, but employee not found",
-              msgType: "success",
-              participantid: participantid,
-              employeeid: employeeid,
-            });
-          }
-
-          // Associate participant with employee
-          const employeeidInt = parseInt(employeeid);
-          const sql = `
-            UPDATE
-              participants
-            SET
-              employeeid = ?
-            WHERE
-              participantid = ?
-            ;
-          `;
-          db.query(sql, [employeeidInt, participantid], (err, result) => {
-            if (err) {
-              console.log(err);
-              return res.status(200).send({
-                msg: "participant added, but unable to associate with employee",
-                msgType: "success",
-                participantid: participantid,
-                employeeid: employeeid,
-              });
-            }
-
-            return res.status(200).send({
-              msg: "participant added",
-              msgType: "success",
-              participantid: participantid,
-            });
-          });
+        return res.status(200).send({
+          msg: "participant added",
+          msgType: "success",
+          participantid: participantid,
         });
       }
     );

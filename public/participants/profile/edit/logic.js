@@ -49,6 +49,10 @@ function populateCountries() {
 
 async function populateEmployees() {
   const employeesEl = document.querySelector("#employeeid");
+  const caseWorkerEmploymentEl = document.querySelector(
+    "#caseworkeremployment"
+  );
+  const caseWorkerHousingEl = document.querySelector("#caseworkerhousing");
   const endpoint = "/api/employee/employees-list";
   const accessToken = await getAccessToken();
 
@@ -62,7 +66,7 @@ async function populateEmployees() {
   })
     .then((res) => res.json())
     .then((employees) => {
-      let options = `<option value="">(Select)</option>`;
+      let options = `<option value="">Unassigned</option>`;
       const defaultEmployee =
         localStorage.getItem("default_employeeid_for_participants") || "";
 
@@ -77,10 +81,8 @@ async function populateEmployees() {
       });
 
       employeesEl.innerHTML = options;
-
-      if (employees.length === 1) {
-        employeesEl[1].selected = true;
-      }
+      caseWorkerEmploymentEl.innerHTML = options;
+      caseWorkerHousingEl.innerHTML = options;
 
       getParticipant();
     })
@@ -118,6 +120,8 @@ async function getParticipant() {
         employeeFirstName,
         employeeLastName,
         employeeid,
+        caseworkeremployment,
+        caseworkerhousing,
         firstname,
         lastname,
         participantid,
@@ -127,7 +131,7 @@ async function getParticipant() {
         zip,
         authorizationdate,
         seeksemployment,
-        seekshousing
+        seekshousing,
       } = data.data;
 
       // Display full name where needed
@@ -170,17 +174,31 @@ async function getParticipant() {
       zipEl.value = zip;
 
       const needsEmploymentEl = document.querySelector("#needsEmployment");
-      needsEmploymentEl.checked = (seeksemployment === 1) ? true : false;
+      needsEmploymentEl.checked = seeksemployment === 1 ? true : false;
 
       const needsHousingEl = document.querySelector("#needsHousing");
-      needsHousingEl.checked = (seekshousing === 1) ? true : false;
+      needsHousingEl.checked = seekshousing === 1 ? true : false;
 
       const authorizationdateEl = document.querySelector("#authorizationdate");
-      const isValidAuthorizationDate = moment(authorizationdate).isValid() || false;
-      if (isValidAuthorizationDate) authorizationdateEl.value = moment(authorizationdate).format("YYYY-MM-DD");
+      const isValidAuthorizationDate =
+        moment(authorizationdate).isValid() || false;
+      if (isValidAuthorizationDate)
+        authorizationdateEl.value = moment(authorizationdate).format(
+          "YYYY-MM-DD"
+        );
 
       const employeeidEl = document.querySelector("#employeeid");
       employeeidEl.value = employeeid;
+
+      const caseWorkerEmploymentEl = document.querySelector(
+        "#caseworkeremployment"
+      );
+      if (caseworkeremployment !== null)
+        caseWorkerEmploymentEl.value = caseworkeremployment;
+
+      const caseWorkerHousingEl = document.querySelector("#caseworkerhousing");
+      if (caseworkerhousing !== null)
+        caseWorkerHousingEl.value = caseworkerhousing;
     })
     .catch((err) => {
       console.error(err);
@@ -199,9 +217,12 @@ async function onSubmit(e) {
   const state = document.querySelector("#state");
   const zip = document.querySelector("#zip");
   const authorizationdate = document.querySelector("#authorizationdate");
-  const needsEmployment = document.querySelector("#needsEmployment").checked || false;
+  const needsEmployment =
+    document.querySelector("#needsEmployment").checked || false;
   const needsHousing = document.querySelector("#needsHousing").checked || false;
   const employeeid = document.querySelector("#employeeid");
+  const caseworkeremployment = document.querySelector("#caseworkeremployment");
+  const caseworkerhousing = document.querySelector("#caseworkerhousing");
   const content = document.querySelector("#content");
   const spinner = document.querySelector("#spinner");
   const endpoint = "/api/participant-edit";
@@ -225,6 +246,8 @@ async function onSubmit(e) {
       needsEmployment: needsEmployment,
       needsHousing: needsHousing,
       employeeid: employeeid.value,
+      caseworkeremployment: caseworkeremployment.value,
+      caseworkerhousing: caseworkerhousing.value,
     }),
     headers: new Headers({
       "Content-Type": "application/json",
@@ -279,8 +302,10 @@ async function onSubmit(e) {
           showError("Please input the authorization date.", "Form Incomplete");
           break;
         case "invalid authorization date":
-          showError("Please check the authorization date for accuracy and proper formatting.");
-            break;
+          showError(
+            "Please check the authorization date for accuracy and proper formatting."
+          );
+          break;
         case "invalid phone number":
           showError(
             "The phone number is invalid. Please check it for accuracy and proper formatting.",

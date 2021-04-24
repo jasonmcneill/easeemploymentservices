@@ -34,6 +34,10 @@ exports.GET = (req, res) => {
         participants
       WHERE
         employeeid IS NULL
+      AND
+        caseworkeremployment IS NULL
+      AND
+        caseworkerhousing IS NULL
       ORDER BY
         lastname, firstname
       ;

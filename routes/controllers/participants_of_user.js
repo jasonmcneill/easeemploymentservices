@@ -42,7 +42,13 @@ exports.GET = (req, res) => {
     ON
       p.participantid = jp.participantid
     WHERE
-      p.employeeid = ?
+      (
+        p.employeeid = ?
+      OR
+        p.caseworkeremployment = ?
+      OR
+        p.caseworkerhousing = ?
+      )
     AND
       hp.enddate IS NULL
     GROUP BY
@@ -63,7 +69,7 @@ exports.GET = (req, res) => {
     ;
   `;
 
-  db.query(sql, [employeeid], (err, result) => {
+  db.query(sql, [employeeid, employeeid, employeeid], (err, result) => {
     if (err) {
       console.log(err);
       return res.status(500).send({

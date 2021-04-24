@@ -24,6 +24,8 @@ exports.POST = (req, res) => {
   const zip = req.body.zip || "";
   const authorizationdate = req.body.authorizationdate || "";
   const employeeid = parseInt(req.body.employeeid) || null;
+  const caseworkeremployment = parseInt(req.body.caseworkeremployment) || null;
+  const caseworkerhousing = parseInt(req.body.caseworkerhousing) || null;
   const needsEmployment = req.body.needsEmployment ? 1 : 0;
   const needsHousing = req.body.needsHousing ? 1 : 0;
 
@@ -56,9 +58,15 @@ exports.POST = (req, res) => {
   }
 
   // Validate authorization date
-  if (!authorizationdate.length) return res.status(400).send({ msg: "missing authorization date", msgType: "error" });
+  if (!authorizationdate.length)
+    return res
+      .status(400)
+      .send({ msg: "missing authorization date", msgType: "error" });
   const isValidAuthorizationDate = moment(authorizationdate).isValid() || false;
-  if (!isValidAuthorizationDate) return res.status(400).send({ msg: "invalid authorization date", msgType: "error" });
+  if (!isValidAuthorizationDate)
+    return res
+      .status(400)
+      .send({ msg: "invalid authorization date", msgType: "error" });
 
   // Validate phone number
   const validatePhone = require("../utils").validatePhone;
@@ -100,11 +108,19 @@ exports.POST = (req, res) => {
       zip = ?,
       authorizationdate = ?,
       seekshousing = ?,
-      seeksemployment = ?
+      seeksemployment = ?,
+      employeeid = ?,
+      caseworkeremployment = ?,
+      caseworkerhousing = ?
     WHERE
       participantid = ?
     ;
   `;
+  const updatedEmployeeId = typeof employeeid === "number" ? employeeid : null;
+  const updatedCaseWorkerEmployment =
+    typeof caseworkeremployment === "number" ? caseworkeremployment : null;
+  const updatedCaseWorkerHousing =
+    typeof caseworkerhousing === "number" ? caseworkerhousing : null;
   db.query(
     sql,
     [
@@ -119,7 +135,10 @@ exports.POST = (req, res) => {
       moment(authorizationdate).format("YYYY-MM-DD"),
       needsHousing,
       needsEmployment,
-      participantid
+      updatedEmployeeId,
+      updatedCaseWorkerEmployment,
+      updatedCaseWorkerHousing,
+      participantid,
     ],
     (err, result) => {
       if (err) {
@@ -128,29 +147,9 @@ exports.POST = (req, res) => {
           .status(500)
           .send({ msg: "unable to update participant", msgType: "error" });
       }
-
-      let sql = "";
-      let sqlArray = [];
-      if (typeof employeeid === "number") {
-        sql = `UPDATE participants SET employeeid = ? WHERE participantid = ?;`;
-        sqlArray = [employeeid, participantid];
-      } else {
-        sql = `UPDATE participants SET employee = NULL WHERE participantid = ?;`;
-        sqlArray = [participantid];
-      }
-      db.query(sql, sqlArray, (err, result) => {
-        if (err) {
-          console.log(err);
-          return res.status(500).send({
-            msg: "participant updated, but unable to update employee",
-            msgType: "error",
-          });
-        }
-
-        return res
-          .status(200)
-          .send({ msg: "participant updated", msgType: "success" });
-      });
+      return res
+        .status(200)
+        .send({ msg: "participant updated", msgType: "success" });
     }
   );
 };
