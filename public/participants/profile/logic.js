@@ -17,6 +17,7 @@ function renderData(data) {
     authorizationdate,
     seeksemployment,
     seekshousing,
+    status,
   } = data;
   const phoneDigitsOnly = phone.replace(/\D/g, "");
 
@@ -31,6 +32,16 @@ function renderData(data) {
 
   const participantdataEl = document.querySelector("#participantdata");
   let html = "";
+
+  // Status
+  html += `
+    <tr>
+      <th>Status:</th>
+      <td>
+        ${status === "archived" ? "Archived" : "Active"}
+      </td>
+    </tr>
+  `;
 
   // Needs
   let needsRows = 0;

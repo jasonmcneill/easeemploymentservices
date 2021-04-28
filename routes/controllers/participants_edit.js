@@ -28,6 +28,7 @@ exports.POST = (req, res) => {
   const caseworkerhousing = parseInt(req.body.caseworkerhousing) || null;
   const needsEmployment = req.body.needsEmployment ? 1 : 0;
   const needsHousing = req.body.needsHousing ? 1 : 0;
+  const status = req.body.status === "archived" ? "archived" : "active";
 
   // Validate
 
@@ -109,6 +110,7 @@ exports.POST = (req, res) => {
       authorizationdate = ?,
       seekshousing = ?,
       seeksemployment = ?,
+      status = ?,
       employeeid = ?,
       caseworkeremployment = ?,
       caseworkerhousing = ?
@@ -135,6 +137,7 @@ exports.POST = (req, res) => {
       moment(authorizationdate).format("YYYY-MM-DD"),
       needsHousing,
       needsEmployment,
+      status,
       updatedEmployeeId,
       updatedCaseWorkerEmployment,
       updatedCaseWorkerHousing,
