@@ -33,13 +33,9 @@ exports.POST = (req, res) => {
     FROM
       participants
     WHERE
-      (
-        caseworkeremployment = ?
-      OR
-        caseworkerhousing = ?
-      )
-    AND
-      status = 'active'
+      caseworkeremployment = ?
+    OR
+      caseworkerhousing = ?
     ORDER BY
       lastname,
       firstname

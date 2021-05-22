@@ -22,7 +22,7 @@ exports.POST = (req, res) => {
 
   const sql = `
     SELECT
-      participantid, firstname, lastname, status
+      participantid, firstname, lastname
     FROM
       participants
     WHERE

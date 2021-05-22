@@ -132,7 +132,6 @@ async function getParticipant() {
         authorizationdate,
         seeksemployment,
         seekshousing,
-        status,
       } = data.data;
 
       // Display full name where needed
@@ -200,11 +199,6 @@ async function getParticipant() {
       const caseWorkerHousingEl = document.querySelector("#caseworkerhousing");
       if (caseworkerhousing !== null)
         caseWorkerHousingEl.value = caseworkerhousing;
-
-      const statusEl = document.querySelector(
-        "input[type=radio][name=status]:checked"
-      );
-      statusEl.value = status === "archived" ? "archived" : "active";
     })
     .catch((err) => {
       console.error(err);
@@ -226,11 +220,6 @@ async function onSubmit(e) {
   const needsEmployment =
     document.querySelector("#needsEmployment").checked || false;
   const needsHousing = document.querySelector("#needsHousing").checked || false;
-  const status =
-    document.querySelector("input[type=radio][name=status]:checked").value ===
-    "archived"
-      ? "archived"
-      : "active";
   const employeeid = document.querySelector("#employeeid");
   const caseworkeremployment = document.querySelector("#caseworkeremployment");
   const caseworkerhousing = document.querySelector("#caseworkerhousing");
@@ -256,7 +245,6 @@ async function onSubmit(e) {
       authorizationdate: authorizationdate.value.trim(),
       needsEmployment: needsEmployment,
       needsHousing: needsHousing,
-      status: status,
       employeeid: employeeid.value,
       caseworkeremployment: caseworkeremployment.value,
       caseworkerhousing: caseworkerhousing.value,

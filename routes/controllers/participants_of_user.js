@@ -51,8 +51,6 @@ exports.GET = (req, res) => {
       )
     AND
       hp.enddate IS NULL
-    AND
-      p.status = 'active'
     GROUP BY
       p.participantid,
       p.employeeid,

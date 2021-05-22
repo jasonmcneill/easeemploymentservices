@@ -68,15 +68,10 @@ function showSearchResults(searchterm, data) {
 
   let htmlItems = "";
   data.forEach((item) => {
-    const status = item.status;
-    const statusClass = status === "archived" ? "bg-light" : "";
     const name = `${item.firstname} ${item.lastname}`;
     htmlItems += `
-      <a href="profile/#${
-        item.participantid
-      }" class="list-group-item list-group-item-action ${statusClass}">
+      <a href="profile/#${item.participantid}" class="list-group-item list-group-item-action">
         ${name}
-        <div><small>${status === "archived" ? "Archived" : ""}</small></div>
       </a>
     `;
   });
@@ -157,31 +152,18 @@ async function showList() {
   function renderList(data) {
     let html = ``;
     data.forEach((item) => {
-      const {
-        participantid,
-        caseworkerhousing,
-        caseworkeremployment,
-        firstname,
-        lastname,
-        status,
-      } = item;
-      let isAssigned = false;
-      const statusClass = status === "archived" ? "bg-light" : "";
-      if (typeof caseworkerhousing === "number") isAssigned = true;
-      if (typeof caseworkeremployment === "number") isAssigned = true;
-      if (isAssigned) {
+      const { participantid, employeeid, firstname, lastname } = item;
+      if (typeof employeeid === "number") {
         html += `
-          <a href="profile/#${participantid}" class="list-group-item list-group-item-action ${statusClass}">
+          <a href="profile/#${participantid}" class="list-group-item list-group-item-action">
             ${firstname} ${lastname}
-            <div><small>${status === "archived" ? "Archived" : ""}</small></div>
           </a>
         `;
       } else {
         html += `
-          <a href="profile/#${participantid}" class="list-group-item list-group-item-action ${statusClass}">
+          <a href="profile/#${participantid}" class="list-group-item list-group-item-action">
             ${firstname} ${lastname}
             <span class="badge badge-secondary float-right ml-2">Unassigned</span>
-            <div><small>${status === "archived" ? "Archived" : ""}</small></div>
           </a>
         `;
       }
