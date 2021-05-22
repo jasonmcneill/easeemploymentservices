@@ -9,7 +9,7 @@ exports.POST = (req, res) => {
   const username = req.body.username || "";
   const passwordmustchange = req.body.passwordmustchange == 1 ? 1 : 0;
   const email = req.body.email || "";
-  const email_personal = req.body.email_personal || "";
+  let email_personal = req.body.email_personal || "";
   let smsphone = req.body.smsphone || "";
   const smsphonecountry = req.body.smsphonecountry || "";
   let phone = req.body.phone || "";
@@ -62,10 +62,15 @@ exports.POST = (req, res) => {
   if (!emailValidator.validate(email))
     return res.status(400).send({ msg: "email invalid", msgType: "error" });
 
-  if (email_personal.length && !emailValidator.validate(email_personal))
+  if (email_personal.length && !emailValidator.validate(email_personal)) {
     return res
       .status(400)
       .send({ msg: "personal email invalid", msgType: "error" });
+  } else if (email_personal.length === 0) {
+    email_personal = null;
+  } else {
+    email_personal = email_personal.trim().toLowerCase();
+  }
 
   if (!smsphonecountry.length)
     return res
@@ -124,7 +129,7 @@ exports.POST = (req, res) => {
       username = LCASE(?),
       passwordmustchange = ?,
       email = LCASE(?),
-      email_personal = LCASE(?),
+      email_personal = ?,
       smsphone = ?,
       smsphonecountry = ?,
       phone = ?,
