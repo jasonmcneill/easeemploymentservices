@@ -13,7 +13,7 @@ async function onSubmit(e) {
     e.target[(id = "needsEmployment")].value === "1" ? true : false;
   const needsHousing =
     e.target[(id = "needsHousing")].value === "1" ? true : false;
-  const employeeid = e.target[(id = "employeeid")].value;
+  // const employeeid = e.target[(id = "employeeid")].value;
   const caseworkeremployment = e.target[(id = "caseworkeremployment")].value;
   const caseworkerhousing = e.target[(id = "caseworkerhousing")].value;
   const endpoint = "/api/participant-add";
@@ -36,7 +36,6 @@ async function onSubmit(e) {
       authorizationdate: authorizationdate,
       needsEmployment: needsEmployment,
       needsHousing: needsHousing,
-      employeeid: employeeid,
       caseworkeremployment: caseworkeremployment,
       caseworkerhousing: caseworkerhousing,
     }),
@@ -112,7 +111,7 @@ async function onSubmit(e) {
             "Database is Down"
           );
           break;
-        case "participant added, but unable to query for employee":
+        /* case "participant added, but unable to query for employee":
           addToast(
             `The participant was added successfully. However, the <a href="../../employees/profile/#${data.employeeid}" class="alert-link">selected employee</a> could not be assigned to the participant.`,
             "Participant Added",
@@ -121,8 +120,8 @@ async function onSubmit(e) {
             false
           );
           window.location.href = `../profile/#${data.participantid}`;
-          break;
-        case "participant added, but employee not found":
+          break; */
+        /* case "participant added, but employee not found":
           addToast(
             `The participant was added successfully. However, the selected employee no longer exists in the system.`,
             "Participant Added",
@@ -131,8 +130,8 @@ async function onSubmit(e) {
             false
           );
           window.location.href = `../profile/#${data.participantid}`;
-          break;
-        case "participant added, but unable to associate with employee":
+          break; */
+        /* case "participant added, but unable to associate with employee":
           addToast(
             `The participant was added successfully. However, the <a href="../../employees/profile/#${data.employeeid}" class="alert-link">selected employee</a> could not be assigned to the participant.`,
             "Participant Added",
@@ -141,7 +140,7 @@ async function onSubmit(e) {
             false
           );
           window.location.href = `../profile/#${data.participantid}`;
-          break;
+          break; */
         case "participant added":
           addToast(
             `The participant was added successfully.`,
