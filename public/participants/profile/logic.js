@@ -6,7 +6,9 @@ function renderData(data) {
     employeeLastName,
     employeeid,
     caseworkeremployment,
+    caseworkeremploymentname,
     caseworkerhousing,
+    caseworkerhousingname,
     firstname,
     lastname,
     participantid,
@@ -92,27 +94,6 @@ function renderData(data) {
     </tr>
   `;
 
-  // Case Worker
-  if (!employeeid) {
-    html += `
-      <tr class="d-none">
-        <th>Case Worker:</th>
-        <td>
-          Unassigned
-        </td>
-      </tr>
-    `;
-  } else {
-    html += `
-    <tr class="d-none">
-      <th>Case Worker:</th>
-      <td>
-        <a href="../../employees/profile/#${employeeid}">${employeeFirstName} ${employeeLastName}</a>
-      </td>
-    </tr>
-  `;
-  }
-
   // Employment Case Worker
   if (!caseworkeremployment) {
     html += `
@@ -128,7 +109,7 @@ function renderData(data) {
     <tr>
       <th>Case Worker for Employment:</th>
       <td>
-        <a href="../../employees/profile/#${caseworkeremployment}">${employeeFirstName} ${employeeLastName}</a>
+        <a href="../../employees/profile/#${caseworkeremployment}">${caseworkeremploymentname}</a>
       </td>
     </tr>
   `;
@@ -149,7 +130,7 @@ function renderData(data) {
     <tr>
       <th>Case Worker for Housing:</th>
       <td>
-        <a href="../../employees/profile/#${caseworkerhousing}">${employeeFirstName} ${employeeLastName}</a>
+        <a href="../../employees/profile/#${caseworkerhousing}">${caseworkerhousingname}</a>
       </td>
     </tr>
   `;

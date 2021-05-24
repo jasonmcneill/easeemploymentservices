@@ -31,50 +31,53 @@ exports.POST = (req, res) => {
 
   const sql = `
     SELECT
-      p.participantid,
-      p.employeeid,
-      p.firstname,
-      p.lastname,
-      p.phone,
-      p.phonecountry,
-      p.address,
-      p.city,
-      UCASE(p.state) AS state,
-      p.zip,
-      p.authorizationdate,
-      p.seekshousing,
-      p.seeksemployment,
-      p.caseworkeremployment,
-      p.caseworkerhousing,
-      e.employeeid,
-      e.firstname AS employeeFirstName,
-      e.lastname AS employeeLastName
+      participantid,
+      caseworkerhousing,
+      caseworkeremployment,
+      firstname,
+      lastname,
+      phone,
+      phonecountry,
+      address,
+      city,
+      UCASE(state) AS state,
+      zip,
+      authorizationdate,
+      seekshousing,
+      seeksemployment,
+      caseworkeremployment,
+      caseworkerhousing,
+      (SELECT CONCAT(firstname, " ", lastname) AS caseworkeremploymentname FROM employees WHERE employeeid = (SELECT caseworkeremployment FROM participants WHERE participantid = ?)) AS caseworkeremploymentname,
+      (SELECT CONCAT(firstname, " ", lastname) AS caseworkerhousingname FROM employees WHERE employeeid = (SELECT caseworkerhousing FROM participants WHERE participantid = ?)) AS caseworkerhousingname
     FROM
-      participants p
-    LEFT OUTER JOIN employees e ON p.employeeid = e.employeeid
+      participants
     WHERE
-      p.participantid = ?
+      participantid = ?
     LIMIT 1
     ;
   `;
-  db.query(sql, [participantid], (err, result) => {
-    if (err) {
-      console.log(err);
-      return res
-        .status(500)
-        .send({ msg: "unable to query for participant", msgType: "error" });
-    }
+  db.query(
+    sql,
+    [participantid, participantid, participantid],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        return res
+          .status(500)
+          .send({ msg: "unable to query for participant", msgType: "error" });
+      }
 
-    if (!result.length) {
-      return res
-        .status(404)
-        .send({ msg: "no record of participant", msgType: "error" });
-    }
+      if (!result.length) {
+        return res
+          .status(404)
+          .send({ msg: "no record of participant", msgType: "error" });
+      }
 
-    return res.status(200).send({
-      msg: "participant retrieved",
-      msgType: "success",
-      data: result[0],
-    });
-  });
+      return res.status(200).send({
+        msg: "participant retrieved",
+        msgType: "success",
+        data: result[0],
+      });
+    }
+  );
 };

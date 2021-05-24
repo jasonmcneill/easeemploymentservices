@@ -22,7 +22,6 @@ exports.POST = (req, res) => {
   const state = req.body.state || "";
   const zip = req.body.zip || "";
   const authorizationdate = req.body.authorizationdate || "";
-  const employeeid = parseInt(req.body.employeeid) || "";
   const caseworkeremployment = parseInt(req.body.caseworkeremployment) || "";
   const caseworkerhousing = parseInt(req.body.caseworkerhousing) || "";
   const needsEmployment = req.body.needsEmployment ? 1 : 0;
@@ -112,15 +111,13 @@ exports.POST = (req, res) => {
         authorizationdate,
         seekshousing,
         seeksemployment,
-        employeeid,
         caseworkeremployment,
         caseworkerhousing,
         createdAt
       ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, utc_timestamp()
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, utc_timestamp()
       );
     `;
-    const newEmployeeId = typeof employeeid === "number" ? employeeid : null;
     const newCaseWorkerEmployment =
       typeof caseworkeremployment === "number" ? caseworkeremployment : null;
     const newCaseWorkerHousing =
@@ -138,7 +135,6 @@ exports.POST = (req, res) => {
         moment(authorizationdate).format("YYYY-MM-DD"),
         needsHousing,
         needsEmployment,
-        newEmployeeId,
         newCaseWorkerEmployment,
         newCaseWorkerHousing,
       ],
