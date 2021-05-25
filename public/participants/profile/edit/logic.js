@@ -48,7 +48,6 @@ function populateCountries() {
 }
 
 async function populateEmployees() {
-  const employeesEl = document.querySelector("#employeeid");
   const caseWorkerEmploymentEl = document.querySelector(
     "#caseworkeremployment"
   );
@@ -67,20 +66,11 @@ async function populateEmployees() {
     .then((res) => res.json())
     .then((employees) => {
       let options = `<option value="">Unassigned</option>`;
-      const defaultEmployee =
-        localStorage.getItem("default_employeeid_for_participants") || "";
-
       employees.forEach((employee) => {
         const { employeeid, firstname, lastname, status } = employee;
-
-        if (employeeid == defaultEmployee) {
-          options += `<option value="${employeeid}" selected>${firstname} ${lastname}</option>`;
-        } else {
-          options += `<option value="${employeeid}">${firstname} ${lastname}</option>`;
-        }
+        options += `<option value="${employeeid}">${firstname} ${lastname}</option>`;
       });
 
-      employeesEl.innerHTML = options;
       caseWorkerEmploymentEl.innerHTML = options;
       caseWorkerHousingEl.innerHTML = options;
 
@@ -183,9 +173,8 @@ async function getParticipant() {
       const isValidAuthorizationDate =
         moment(authorizationdate).isValid() || false;
       if (isValidAuthorizationDate)
-        authorizationdateEl.value = moment(authorizationdate).format(
-          "YYYY-MM-DD"
-        );
+        authorizationdateEl.value =
+          moment(authorizationdate).format("YYYY-MM-DD");
 
       const employeeidEl = document.querySelector("#employeeid");
       employeeidEl.value = employeeid;

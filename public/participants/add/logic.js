@@ -208,7 +208,6 @@ function populateCountries() {
 }
 
 async function populateEmployees() {
-  const employeesEl = document.querySelector("#employeeid");
   const caseWorkerEmploymentEl = document.querySelector(
     "#caseworkeremployment"
   );
@@ -227,30 +226,14 @@ async function populateEmployees() {
     .then((res) => res.json())
     .then((employees) => {
       let options = `<option value="">(Select)</option>`;
-      const defaultEmployee =
-        localStorage.getItem("default_employeeid_for_participants") || "";
 
       employees.forEach((employee) => {
         const { employeeid, firstname, lastname, status } = employee;
-
-        if (employeeid == defaultEmployee) {
-          options += `<option value="${employeeid}" selected>${firstname} ${lastname}</option>`;
-        } else {
-          options += `<option value="${employeeid}">${firstname} ${lastname}</option>`;
-        }
+        options += `<option value="${employeeid}">${firstname} ${lastname}</option>`;
       });
 
-      employeesEl.innerHTML = options;
       caseWorkerEmploymentEl.innerHTML = options;
       caseWorkerHousingEl.innerHTML = options;
-
-      setTimeout(() => {
-        if (employees.length === 1) {
-          employeesEl[1].selected = true;
-          caseWorkerEmploymentEl[1].selected = true;
-          caseWorkerHousingEl[1].selected = true;
-        }
-      }, 300);
     })
     .catch((err) => {
       console.error(err);
