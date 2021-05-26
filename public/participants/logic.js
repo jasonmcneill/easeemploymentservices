@@ -152,8 +152,22 @@ async function showList() {
   function renderList(data) {
     let html = ``;
     data.forEach((item) => {
-      const { participantid, employeeid, firstname, lastname } = item;
-      if (typeof employeeid === "number") {
+      const {
+        participantid,
+        caseworkerhousing,
+        caseworkeremployment,
+        firstname,
+        lastname,
+      } = item;
+      let isUnassigned = false;
+      if (
+        typeof caseworkeremployment !== "number" &&
+        typeof caseworkerhousing !== "number"
+      ) {
+        isUnassigned = true;
+      }
+
+      if (!isUnassigned) {
         html += `
           <a href="profile/#${participantid}" class="list-group-item list-group-item-action">
             ${firstname} ${lastname}

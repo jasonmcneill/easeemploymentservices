@@ -13,7 +13,7 @@ exports.GET = (req, res) => {
   }
 
   const sql =
-    "SELECT participantid, employeeid, firstname, lastname FROM participants ORDER BY lastname, firstname;";
+    "SELECT participantid, caseworkeremployment, caseworkerhousing, firstname, lastname FROM participants ORDER BY lastname, firstname;";
 
   db.query(sql, [], (err, result) => {
     if (err) {
