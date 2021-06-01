@@ -212,6 +212,8 @@ function showToasts(samePageToasts) {
     .on("hidden.bs.toast", () => {
       toastContainer.innerHTML = "";
     });
+
+  toastContainer.scrollIntoView();
 }
 
 function showToast(
