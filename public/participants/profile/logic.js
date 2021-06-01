@@ -415,12 +415,70 @@ async function getHousingPlacementData() {
     });
 }
 
+async function onUpload(evt) {
+  const uploadform = document.querySelector("#uploadcasenotes");
+  const uploadinput = document.querySelector("#casenotesfile");
+  const accessToken = await getAccessToken();
+  const data = new FormData();
+  const participantid = getId();
+
+  evt.preventDefault();
+
+  // Validate file
+  const uploadFilePath = uploadinput.value.trim();
+  if (uploadFilePath === "") {
+    return showToast(
+      "Please choose a file to upload.",
+      "File missing",
+      "danger"
+    );
+  }
+
+  data.append("file", uploadinput.files[0]);
+  data.append("participantid", participantid);
+
+  fetch("/api/case_notes_upload", {
+    method: "POST",
+    body: data,
+    headers: new Headers({
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      switch (data.msg) {
+        case "upload successful":
+          const label = document.querySelector("label[for='casenotesfile']");
+          uploadform.reset();
+          label.innerText = "Choose file";
+          showToast(
+            "Case notes uploaded successfully.",
+            "Upload successful",
+            "success"
+          );
+          break;
+      }
+    });
+}
+
+function onFileSelected(evt) {
+  const uploadFilePath = evt.target.files[0].name;
+  const label = document.querySelector("label[for='casenotesfile']");
+  label.innerText = uploadFilePath;
+}
+
 function attachListeners() {
   document.querySelector("#btnEdit").addEventListener("click", onEdit);
   document.querySelector("#btnDelete").addEventListener("click", onDelete);
   document
     .querySelector("#btnConfirmDelete")
     .addEventListener("click", onConfirmDelete);
+  document
+    .querySelector("#uploadcasenotes")
+    .addEventListener("submit", onUpload);
+  document
+    .querySelector("#casenotesfile")
+    .addEventListener("change", onFileSelected);
 }
 
 function init() {

@@ -1,4 +1,6 @@
 const express = require("express");
+const multer = require("multer");
+const path = require("path");
 const router = express.Router();
 const utils = require("./utils");
 const authenticateToken = utils.authenticateToken;
@@ -237,9 +239,18 @@ router.post(
 );
 
 // CASE NOTES
+const uploadDir = path.join(__dirname, "../casenotes");
+const upload = multer({ dest: uploadDir });
 
 const case_notes_view = require("./controllers/case_notes_view");
 router.post("/api/case-notes-view", authenticateToken, case_notes_view.POST);
+
+const case_notes_upload = require("./controllers/case_notes_upload");
+router.post(
+  "/api/case_notes_upload",
+  [authenticateToken, upload.single("file")],
+  case_notes_upload.POST
+);
 
 // REPORTS
 

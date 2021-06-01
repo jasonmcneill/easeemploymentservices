@@ -128,7 +128,8 @@ exports.sendEmail = async (recipient, emailSenderText, subject, body) => {
 */
 exports.validatePhone = (number, countryCode) => {
   const PNF = require("google-libphonenumber").PhoneNumberFormat;
-  const phoneUtil = require("google-libphonenumber").PhoneNumberUtil.getInstance();
+  const phoneUtil =
+    require("google-libphonenumber").PhoneNumberUtil.getInstance();
   const phoneNumber = phoneUtil.parse(number, countryCode);
   const isValidForRegion = phoneUtil.isValidNumberForRegion(
     phoneNumber,
