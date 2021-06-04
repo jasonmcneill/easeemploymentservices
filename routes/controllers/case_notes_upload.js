@@ -101,6 +101,11 @@ exports.POST = async (req, res) => {
             )
           : null;
         fs.unlink(fileToDelete, (err) => {
+          if (err) {
+            return res
+              .status(200)
+              .send({ msg: "upload successful", msgType: "success", err: err });
+          }
           return res
             .status(200)
             .send({ msg: "upload successful", msgType: "success" });
