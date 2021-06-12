@@ -95,13 +95,19 @@ exports.POST = async (req, res) => {
 
         // Delete old file (if it exists). Otherwise "fs.unlink" will silently error out.
         const fileToDelete = result1.length
-          ? path.join(__dirname, `../../casenotes/${req.file.filename}`)
+          ? path.join(__dirname, `../../../casenotes/${req.file.filename}`)
           : null;
+
+        if (!fileToDelete)
+          return res
+            .status(200)
+            .send({ msg: "upload successful", msgType: "success" });
+
         fs.unlink(fileToDelete, (err) => {
           if (err) {
             return res.status(404).send({
-              msg: "old file not found",
-              msgType: "success",
+              msg: "cannot delete file",
+              msgType: "error",
               err: err,
             });
           }
