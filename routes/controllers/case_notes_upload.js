@@ -98,6 +98,8 @@ exports.POST = async (req, res) => {
           ? path.join(__dirname, `../../../casenotes/${req.file.filename}`)
           : null;
 
+        console.log(`fileToDelete: ${fileToDelete}`);
+
         if (!fileToDelete)
           return res
             .status(200)
