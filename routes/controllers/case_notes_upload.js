@@ -110,6 +110,7 @@ exports.POST = async (req, res) => {
         const fileToDelete = result1.length
           ? path.join(__dirname, `../../../casenotes/${req.file.filename}`)
           : null;
+        console.log(`fileToDelete: ${fileToDelete}`);
 
         if (!fileToDelete)
           return res
@@ -124,12 +125,10 @@ exports.POST = async (req, res) => {
               err: err,
             });
           }
-          return res
-            .status(200)
-            .send({
-              msg: "upload successful, previous file replaced",
-              msgType: "success",
-            });
+          return res.status(200).send({
+            msg: "upload successful, previous file replaced",
+            msgType: "success",
+          });
         });
       }
     );
