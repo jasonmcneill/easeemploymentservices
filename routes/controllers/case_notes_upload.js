@@ -106,6 +106,7 @@ exports.POST = async (req, res) => {
           });
         }
 
+        console.log(require("util").inspect(result1, true, 7, true));
         if (!result1.length) {
           return res
             .status(200)
@@ -116,7 +117,6 @@ exports.POST = async (req, res) => {
             __dirname,
             `../../../casenotes/${result1[0].case_notes_filename}`
           );
-          console.log(require("util").inspect(result1, true, 7, true));
           console.log(`fileToDelete: ${fileToDelete}`);
 
           fs.unlink(fileToDelete, (err) => {
@@ -128,7 +128,7 @@ exports.POST = async (req, res) => {
               });
             }
             return res.status(200).send({
-              msg: "upload successful, previous file replaced",
+              msg: "upload successful",
               msgType: "success",
             });
           });
