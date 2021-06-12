@@ -106,16 +106,17 @@ exports.POST = async (req, res) => {
           });
         }
 
-        // Delete old file (if it exists). Otherwise "fs.unlink" will silently error out.
-        const fileToDelete = result1.length
-          ? path.join(__dirname, `../../../casenotes/${req.file.filename}`)
-          : null;
-        console.log(`fileToDelete: ${fileToDelete}`);
-
-        if (!fileToDelete)
+        if (!result1.length)
           return res
             .status(200)
             .send({ msg: "upload successful", msgType: "success" });
+
+        // Delete old file (if it exists). Otherwise "fs.unlink" will silently error out.
+        const fileToDelete = path.join(
+          __dirname,
+          `../../../casenotes/${result1[0].case_notes_filename}`
+        );
+        console.log(`fileToDelete: ${fileToDelete}`);
 
         fs.unlink(fileToDelete, (err) => {
           if (err) {
