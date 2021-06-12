@@ -110,33 +110,31 @@ exports.POST = async (req, res) => {
           });
         }
 
-        console.log(require("util").inspect(result1, true, 7, true));
         if (!result1.length) {
           return res
             .status(200)
             .send({ msg: "upload successful", msgType: "success" });
-        } else {
-          // Delete old file (if it exists). Otherwise "fs.unlink" will silently error out.
-          const fileToDelete = path.join(
-            __dirname,
-            `../../../casenotes/${result1[0].case_notes_filename}`
-          );
-          console.log(`fileToDelete: ${fileToDelete}`);
-
-          fs.unlink(fileToDelete, (err) => {
-            if (err) {
-              return res.status(500).send({
-                msg: "cannot delete file",
-                msgType: "error",
-                err: err,
-              });
-            }
-            return res.status(200).send({
-              msg: "upload successful",
-              msgType: "success",
-            });
-          });
         }
+
+        // Delete old file (if it exists). Otherwise "fs.unlink" will silently error out.
+        const fileToDelete = path.join(
+          __dirname,
+          `../../../casenotes/${result1[0].case_notes_filename}`
+        );
+
+        fs.unlink(fileToDelete, (err) => {
+          if (err) {
+            return res.status(500).send({
+              msg: "cannot delete file",
+              msgType: "error",
+              err: err,
+            });
+          }
+          return res.status(200).send({
+            msg: "upload successful",
+            msgType: "success",
+          });
+        });
       }
     );
   });
