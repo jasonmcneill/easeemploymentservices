@@ -32,6 +32,8 @@ exports.POST = async (req, res) => {
     WHERE
       participantid = ?
     AND
+      case_notes_filename IS NOT NULL
+    AND
     (
       caseworkerhousing = ?
       OR
@@ -50,7 +52,7 @@ exports.POST = async (req, res) => {
     WHERE
       participantid = ?
     AND
-      case_notes_filename NOT NULL
+      case_notes_filename IS NOT NULL
     LIMIT
       1
     ;
