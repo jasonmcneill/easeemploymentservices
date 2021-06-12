@@ -111,9 +111,6 @@ exports.POST = async (req, res) => {
           ? path.join(__dirname, `../../../casenotes/${req.file.filename}`)
           : null;
 
-        console.log(require("util").inspect(result1, true, 7, true));
-        console.log(`fileToDelete: ${fileToDelete}`);
-
         if (!fileToDelete)
           return res
             .status(200)
@@ -121,7 +118,7 @@ exports.POST = async (req, res) => {
 
         fs.unlink(fileToDelete, (err) => {
           if (err) {
-            return res.status(404).send({
+            return res.status(500).send({
               msg: "cannot delete file",
               msgType: "error",
               err: err,
