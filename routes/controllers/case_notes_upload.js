@@ -24,7 +24,7 @@ exports.POST = async (req, res) => {
     });
   }
 
-  const sql = `
+  let sql = `
     SELECT
       case_notes_filename
     FROM
@@ -41,6 +41,19 @@ exports.POST = async (req, res) => {
       1
     ;
   `;
+  if (["sysadmin", "director"].includes(usertype)) {
+    sql = `
+    SELECT
+      case_notes_filename
+    FROM
+      participants
+    WHERE
+      participantid = ?
+    LIMIT
+      1
+    ;
+    `;
+  }
   db.query(sql, [participantid, employeeid, employeeid], (err, result1) => {
     if (err) {
       console.log(err);
