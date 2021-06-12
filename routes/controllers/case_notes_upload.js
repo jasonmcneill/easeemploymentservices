@@ -126,7 +126,10 @@ exports.POST = async (req, res) => {
           }
           return res
             .status(200)
-            .send({ msg: "upload successful", msgType: "success" });
+            .send({
+              msg: "upload successful, previous file replaced",
+              msgType: "success",
+            });
         });
       }
     );
