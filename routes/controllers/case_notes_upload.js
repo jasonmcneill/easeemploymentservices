@@ -49,6 +49,8 @@ exports.POST = async (req, res) => {
       participants
     WHERE
       participantid = ?
+    AND
+      case_notes_filename NOT NULL
     LIMIT
       1
     ;
