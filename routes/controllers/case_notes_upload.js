@@ -17,6 +17,7 @@ exports.POST = async (req, res) => {
   const employeeid = req.user.employeeid;
   const participantid = parseInt(Math.abs(req.body.participantid)) || "";
 
+  // Validate
   if (typeof participantid !== "number") {
     return res.status(400).send({
       msg: "participant id in the form must be an integer",
@@ -24,118 +25,134 @@ exports.POST = async (req, res) => {
     });
   }
 
-  let sql = `
+  // Enforce eligibility to upload case notes
+  let mayUploadCaseNotes = false;
+  const hasElevatedPermissions = ["sysadmin", "director"].includes(usertype);
+  const sql = `
     SELECT
-      case_notes_filename
+      caseworkerhousing,
+      caseworkeremployment
     FROM
       participants
     WHERE
       participantid = ?
     AND
-      case_notes_filename IS NOT NULL
-    AND
-    (
-      caseworkerhousing = ?
-      OR
-      caseworkeremployment = ?
-    )
-    LIMIT
-      1
+      (
+        caseworkerhousing = ?
+        OR
+        caseworkeremployment = ?
+      )
+    LIMIT 1
     ;
   `;
-  if (["sysadmin", "director"].includes(usertype)) {
-    sql = `
-    SELECT
-      case_notes_filename
-    FROM
-      participants
-    WHERE
-      participantid = ?
-    AND
-      case_notes_filename IS NOT NULL
-    LIMIT
-      1
-    ;
-    `;
-  }
-  db.query(sql, [participantid, employeeid, employeeid], (err, result1) => {
+  db.query(sql, [participantid, employeeid, employeeid], (err, result) => {
     if (err) {
       console.log(err);
-      return res.status(400).send({
-        msg: "unable to query to verify eligibility to upload case notes",
+      return res.status(500).send({
+        msg: "unable to query to determine eligiblity to upload",
         msgType: "error",
       });
     }
 
-    const usertype = req.user.type;
-    const hasElevatedPermissions =
-      ["sysadmin", "director"].includes(usertype) || false;
+    if (result.length === 1) mayUploadCaseNotes = true;
+    if (hasElevatedPermissions) mayUploadCaseNotes = true;
 
-    if (result1.length !== 1 && !hasElevatedPermissions) {
-      return res.status(403).send({
-        msg: "user is not authorized to upload case notes for this participant",
-        msgType: "error",
+    if (!mayUploadCaseNotes) {
+      const fileToDelete = path.join(
+        __dirname,
+        `../../uploads/${req.file.filename}`
+      );
+
+      fs.unlink(fileToDelete, (err) => {
+        if (err) {
+          console.log(err);
+        }
+        return res.status(200).send({
+          msg: "not eligible to upload case notes for this participant",
+          msgType: "error",
+        });
       });
     }
 
-    // Update database about uploaded file
-    const sql = `
-      UPDATE
-        participants
-      SET
-        case_notes_filename = ?,
-        case_notes_filename_original = ?,
-        case_notes_mimetype = ?,
-        case_notes_filesize = ?
-      WHERE
-        participantid = ?
-      ;
-    `;
-    db.query(
-      sql,
-      [
-        req.file.filename,
-        req.file.originalname,
-        req.file.mimetype,
-        req.file.size,
-        participantid,
-      ],
-      (err, result2) => {
+    const caseNotesDirectory = path.join(
+      __dirname,
+      `../../casenotes/${participantid}`
+    );
+
+    // Delete old directory for case notes
+    fs.rmdir(caseNotesDirectory, { recursive: true }, (err) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({
+          msg: "unable to delete old case notes file",
+          msgType: "error",
+        });
+      }
+
+      // Create new directory for case notes
+      fs.mkdir(caseNotesDirectory, { recursive: true }, (err) => {
         if (err) {
           console.log(err);
           return res.status(500).send({
-            msg: "unable to update database about uploaded file",
+            msg: "unable to create directory",
             msgType: "error",
-            err: err,
           });
         }
 
-        if (!result1.length) {
-          return res
-            .status(200)
-            .send({ msg: "upload successful", msgType: "success" });
-        }
-
-        // Delete old file (if it exists). Otherwise "fs.unlink" will silently error out.
-        const fileToDelete = path.join(
+        // Move uploaded file from uploads directory to new directory
+        const uploadsFilePath = path.join(
           __dirname,
-          `../../../casenotes/${result1[0].case_notes_filename}`
+          `../../uploads/${req.file.filename}`
         );
-
-        fs.unlink(fileToDelete, (err) => {
+        const caseNotesFilePath = path.join(
+          __dirname,
+          `../../casenotes/${participantid}/${req.file.originalname}`
+        );
+        fs.rename(uploadsFilePath, caseNotesFilePath, (err) => {
           if (err) {
+            console.log(err);
             return res.status(500).send({
-              msg: "cannot delete file",
+              msg: "unable to move uploaded file",
               msgType: "error",
-              err: err,
             });
           }
-          return res.status(200).send({
-            msg: "upload successful",
-            msgType: "success",
-          });
+
+          // Update database
+          const sql = `
+            UPDATE
+              participants
+            SET
+              case_notes_filename = ?,
+              case_notes_mimetype = ?,
+              case_notes_filesize = ?
+            WHERE
+              participantid = ?
+            ;
+          `;
+          db.query(
+            sql,
+            [
+              req.file.originalname,
+              req.file.mimetype,
+              req.file.size,
+              participantid,
+            ],
+            (err, result) => {
+              if (err) {
+                console.log(err);
+                return res.status(500).send({
+                  msg: "unable to update database for uploaded file",
+                  msgType: "error",
+                });
+              }
+
+              return res
+                .status(200)
+                .send({ msg: "upload successful", msgType: "success" });
+            }
+          );
         });
-      }
-    );
+      });
+    });
   });
 };
