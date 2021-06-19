@@ -19,6 +19,8 @@ function renderData(data) {
     authorizationdate,
     seeksemployment,
     seekshousing,
+    case_notes_filename,
+    case_notes_filesize,
   } = data;
   const phoneDigitsOnly = phone.replace(/\D/g, "");
 
@@ -141,6 +143,25 @@ function renderData(data) {
 
   const actionButtons = document.querySelector("#actionButtons");
   actionButtons.classList.remove("d-none");
+
+  // Case notes download button
+  if (case_notes_filename.length) {
+    const casenotesdownload = document.querySelector("#casenotesdownload");
+    const casenotesdownloadcontainer = document.querySelector(
+      "#casenotesdownloadcontainer"
+    );
+    const casenotesdownloadsize = document.querySelector(
+      "#casenotesdownloadsize"
+    );
+    const kb = Math.round(parseInt(case_notes_filesize) / 1024);
+    let sizeUnit = "kb";
+
+    if (kb >= 1000) sizeUnit = "mb";
+
+    casenotesdownload.setAttribute("download", case_notes_filename);
+    casenotesdownloadsize.innerHTML = `Size: ${kb}${sizeUnit}`;
+    casenotesdownloadcontainer.classList.remove("d-none");
+  }
 }
 
 function renderPlacements(data) {
@@ -467,6 +488,41 @@ function onFileSelected(evt) {
   label.innerText = uploadFilePath;
 }
 
+async function onDownload(evt) {
+  evt.preventDefault();
+  const endpoint = "/api/case_notes_download";
+  const participantid = getId();
+  const accessToken = await getAccessToken();
+
+  fetch(endpoint, {
+    mode: "cors",
+    method: "POST",
+    body: JSON.stringify({
+      participantid: participantid,
+    }),
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.blob())
+    .then((blob) => {
+      const casenotesdownload = document.querySelector("#casenotesdownload");
+      const a = document.createElement("a");
+      a.style = "display: none";
+      // const blob = new Blob(data, { type: "application/octet-stream" });
+      const url = window.URL.createObjectURL(blob);
+      a.href = url;
+      a.download = casenotesdownload.getAttribute("download");
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      }, 100);
+    });
+}
+
 function attachListeners() {
   document.querySelector("#btnEdit").addEventListener("click", onEdit);
   document.querySelector("#btnDelete").addEventListener("click", onDelete);
@@ -479,6 +535,9 @@ function attachListeners() {
   document
     .querySelector("#casenotesfile")
     .addEventListener("change", onFileSelected);
+  document
+    .querySelector("#casenotesdownload")
+    .addEventListener("click", onDownload);
 }
 
 function init() {

@@ -252,6 +252,13 @@ router.post(
   case_notes_upload.POST
 );
 
+const case_notes_download = require("./controllers/case_notes_download");
+router.post(
+  "/api/case_notes_download",
+  [authenticateToken],
+  case_notes_download.POST
+);
+
 // REPORTS
 
 const report_capacity_supported_employment = require("./controllers/report_capacity_supported_employment");
