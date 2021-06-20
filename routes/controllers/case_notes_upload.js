@@ -60,7 +60,7 @@ exports.POST = async (req, res) => {
     if (!mayUploadCaseNotes) {
       const fileToDelete = path.join(
         __dirname,
-        `../../uploads/${req.file.filename}`
+        `../../../uploads/${req.file.filename}`
       );
 
       fs.unlink(fileToDelete, (err) => {
@@ -76,7 +76,7 @@ exports.POST = async (req, res) => {
 
     const caseNotesDirectory = path.join(
       __dirname,
-      `../../casenotes/${participantid}`
+      `../../../casenotes/${participantid}`
     );
 
     // Delete old directory for case notes
@@ -102,11 +102,11 @@ exports.POST = async (req, res) => {
         // Move uploaded file from uploads directory to new directory
         const uploadsFilePath = path.join(
           __dirname,
-          `../../uploads/${req.file.filename}`
+          `../../../uploads/${req.file.filename}`
         );
         const caseNotesFilePath = path.join(
           __dirname,
-          `../../casenotes/${participantid}/${req.file.originalname}`
+          `../../../casenotes/${participantid}/${req.file.originalname}`
         );
         fs.rename(uploadsFilePath, caseNotesFilePath, (err) => {
           if (err) {

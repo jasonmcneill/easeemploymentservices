@@ -1,6 +1,6 @@
 {
   "watch": ["server", "client"],
-  "ignore_watch": ["node_modules", "casenotes", "uploads"],
+  "ignore_watch": ["node_modules"],
   "watch_options": {
     "followSymlinks": false
   }

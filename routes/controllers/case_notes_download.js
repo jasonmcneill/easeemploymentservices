@@ -74,7 +74,7 @@ exports.POST = async (req, res) => {
 
     const caseNotesFilePath = path.join(
       __dirname,
-      `../../casenotes/${participantid}/${case_notes_filename}`
+      `../../../casenotes/${participantid}/${case_notes_filename}`
     );
 
     return res.download(caseNotesFilePath, (err) => {
