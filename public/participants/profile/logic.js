@@ -507,6 +507,24 @@ async function onUpload(evt) {
             "success"
           );
           break;
+        case "user is not authorized for this action":
+          addToast(
+            "You do not have sufficient permissions to upload case notes for this participant.",
+            "Upload failed",
+            "danger",
+            5000,
+            true
+          );
+          window.location.href = "../";
+          break;
+        default:
+          showToast(
+            "There was a technical glitch preventing the file from being uploaded. Please try again.",
+            "Upload failed",
+            "danger",
+            5000,
+            true
+          );
       }
     })
     .catch((err) => {
@@ -549,6 +567,39 @@ async function onDownload(evt) {
   })
     .then((res) => res.blob())
     .then((blob) => {
+      if (!blob instanceof Blob) {
+        switch (blob.msg) {
+          case "unable to query for participant":
+            showToast(
+              "An unknown error occurred. Please check your internet connection, then try again.",
+              "Download failed",
+              "danger",
+              5000,
+              true
+            );
+            break;
+          case "participant not found":
+            addToast(
+              "Participant is no longer in the system.",
+              "Download failed",
+              "danger",
+              5000,
+              false
+            );
+            window.location.href = "../";
+            break;
+          case "not eligible to download case notes for this participant":
+            showToast(
+              "You do not have sufficient permissions to download case notes for this participant.",
+              "Download failed",
+              "danger",
+              5000,
+              true
+            );
+            break;
+        }
+      }
+
       const casenotesdownload = document.querySelector("#casenotesdownload");
       const a = document.createElement("a");
       a.style = "display: none";

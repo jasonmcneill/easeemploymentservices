@@ -19,7 +19,7 @@ exports.POST = async (req, res) => {
   // Enforce eligibility to download case notes
   let mayDownloadCaseNotes = false;
   const hasElevatedPermissions = ["sysadmin", "director"].includes(usertype);
-  const sql = `
+  let sql = `
     SELECT
       caseworkerhousing,
       caseworkeremployment,
@@ -39,6 +39,22 @@ exports.POST = async (req, res) => {
     LIMIT 1
     ;
   `;
+  if (hasElevatedPermissions) {
+    sql = `
+    SELECT
+      caseworkerhousing,
+      caseworkeremployment,
+      case_notes_filename,
+      case_notes_mimetype,
+      case_notes_filesize
+    FROM
+      participants
+    WHERE
+      participantid = ?
+    LIMIT 1
+    ;
+  `;
+  }
   db.query(sql, [participantid, employeeid, employeeid], (err, result) => {
     if (err) {
       console.log(err);
