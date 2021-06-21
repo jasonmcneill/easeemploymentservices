@@ -1,6 +1,4 @@
 const db = require("../../database");
-const fs = require("fs");
-const path = require("path");
 
 exports.POST = async (req, res) => {
   // Enforce authorization
@@ -57,106 +55,45 @@ exports.POST = async (req, res) => {
     if (result.length === 1) mayUploadCaseNotes = true;
     if (hasElevatedPermissions) mayUploadCaseNotes = true;
 
-    if (!mayUploadCaseNotes) {
-      const fileToDelete = path.join(
-        __dirname,
-        `../../../uploads/${req.file.filename}`
-      );
-
-      fs.unlink(fileToDelete, (err) => {
-        if (err) {
-          console.log(err);
-        }
-        return res.status(200).send({
-          msg: "not eligible to upload case notes for this participant",
-          msgType: "error",
-        });
-      });
-    }
-
-    const caseNotesDirectory = path.join(
-      __dirname,
-      `../../../casenotes/${participantid}`
-    );
-
-    // Delete old directory for case notes
-    fs.rmdir(caseNotesDirectory, { recursive: true }, (err) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).send({
-          msg: "unable to delete old case notes file",
-          msgType: "error",
-        });
-      }
-
-      // Create new directory for case notes
-      fs.mkdir(caseNotesDirectory, { recursive: true }, (err) => {
+    // Update database
+    const sql = `
+      UPDATE
+        participants
+      SET
+        case_notes_blob = ?,
+        case_notes_filename = ?,
+        case_notes_mimetype = ?,
+        case_notes_filesize = ?
+      WHERE
+        participantid = ?
+      ;
+    `;
+    return console.log(require("util").inspect(req.file, true, 7, true));
+    var buffer = new Buffer(getFilesizeInBytes(req.file.buffer));
+    db.query(
+      sql,
+      [
+        req.file.buffer,
+        req.file.originalname,
+        req.file.mimetype,
+        req.file.size,
+        participantid,
+      ],
+      (err, result) => {
         if (err) {
           console.log(err);
           return res.status(500).send({
-            msg: "unable to create directory",
+            msg: "unable to update database for uploaded file",
             msgType: "error",
           });
         }
 
-        // Move uploaded file from uploads directory to new directory
-        const uploadsFilePath = path.join(
-          __dirname,
-          `../../../uploads/${req.file.filename}`
-        );
-        const caseNotesFilePath = path.join(
-          __dirname,
-          `../../../casenotes/${participantid}/${req.file.originalname}`
-        );
-        fs.rename(uploadsFilePath, caseNotesFilePath, (err) => {
-          if (err) {
-            console.log(err);
-            return res.status(500).send({
-              msg: "unable to move uploaded file",
-              msgType: "error",
-            });
-          }
-
-          // Update database
-          const sql = `
-            UPDATE
-              participants
-            SET
-              case_notes_filename = ?,
-              case_notes_mimetype = ?,
-              case_notes_filesize = ?
-            WHERE
-              participantid = ?
-            ;
-          `;
-          db.query(
-            sql,
-            [
-              req.file.originalname,
-              req.file.mimetype,
-              req.file.size,
-              participantid,
-            ],
-            (err, result) => {
-              if (err) {
-                console.log(err);
-                return res.status(500).send({
-                  msg: "unable to update database for uploaded file",
-                  msgType: "error",
-                });
-              }
-
-              return res
-                .status(200)
-                .send({
-                  msg: "upload successful",
-                  msgType: "success",
-                  filesize: req.file.size,
-                });
-            }
-          );
+        return res.status(200).send({
+          msg: "upload successful",
+          msgType: "success",
+          filesize: req.file.size,
         });
-      });
-    });
+      }
+    );
   });
 };

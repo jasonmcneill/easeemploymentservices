@@ -239,8 +239,7 @@ router.post(
 );
 
 // CASE NOTES
-const uploadDir = path.join(__dirname, "../../uploads");
-const upload = multer({ dest: uploadDir });
+const upload = multer();
 
 const case_notes_view = require("./controllers/case_notes_view");
 router.post("/api/case-notes-view", authenticateToken, case_notes_view.POST);

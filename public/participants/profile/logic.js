@@ -565,47 +565,46 @@ async function onDownload(evt) {
       authorization: `Bearer ${accessToken}`,
     }),
   })
-    .then((res) => res.blob())
-    .then((blob) => {
-      if (!blob instanceof Blob) {
-        switch (blob.msg) {
-          case "unable to query for participant":
-            showToast(
-              "An unknown error occurred. Please check your internet connection, then try again.",
-              "Download failed",
-              "danger",
-              5000,
-              true
-            );
-            break;
-          case "participant not found":
-            addToast(
-              "Participant is no longer in the system.",
-              "Download failed",
-              "danger",
-              5000,
-              false
-            );
-            window.location.href = "../";
-            break;
-          case "not eligible to download case notes for this participant":
-            showToast(
-              "You do not have sufficient permissions to download case notes for this participant.",
-              "Download failed",
-              "danger",
-              5000,
-              true
-            );
-            break;
-        }
+    .then((res) => res.json())
+    .then((data) => {
+      switch (data.msg) {
+        case "unable to query for participant":
+          showToast(
+            "An unknown error occurred. Please check your internet connection, then try again.",
+            "Download failed",
+            "danger",
+            5000,
+            true
+          );
+          break;
+        case "participant not found":
+          addToast(
+            "Participant is no longer in the system.",
+            "Download failed",
+            "danger",
+            5000,
+            false
+          );
+          window.location.href = "../";
+          break;
+        case "not eligible to download case notes for this participant":
+          showToast(
+            "You do not have sufficient permissions to download case notes for this participant.",
+            "Download failed",
+            "danger",
+            5000,
+            true
+          );
+          break;
       }
 
-      const casenotesdownload = document.querySelector("#casenotesdownload");
       const a = document.createElement("a");
+      const url = window.URL.createObjectURL(
+        new Blob(data.blob.data, { type: data.mimetype })
+      );
       a.style = "display: none";
-      const url = window.URL.createObjectURL(blob);
       a.href = url;
-      a.download = casenotesdownload.getAttribute("download");
+      a.download = data.filename;
       document.body.appendChild(a);
       a.click();
 

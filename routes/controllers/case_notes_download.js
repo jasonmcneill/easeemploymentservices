@@ -23,9 +23,10 @@ exports.POST = async (req, res) => {
     SELECT
       caseworkerhousing,
       caseworkeremployment,
+      case_notes_blob,
+      case_notes_filesize,
       case_notes_filename,
-      case_notes_mimetype,
-      case_notes_filesize
+      case_notes_mimetype
     FROM
       participants
     WHERE
@@ -44,9 +45,10 @@ exports.POST = async (req, res) => {
     SELECT
       caseworkerhousing,
       caseworkeremployment,
+      case_notes_blob,
+      case_notes_filesize,
       case_notes_filename,
-      case_notes_mimetype,
-      case_notes_filesize
+      case_notes_mimetype
     FROM
       participants
     WHERE
@@ -72,9 +74,10 @@ exports.POST = async (req, res) => {
     const {
       caseworkerhousing,
       caseworkeremployment,
+      case_notes_blob,
+      case_notes_filesize,
       case_notes_filename,
       case_notes_mimetype,
-      case_notes_filesize,
     } = result[0];
     if (employeeid === caseworkerhousing || employee === caseworkeremployment) {
       mayDownloadCaseNotes = true;
@@ -88,13 +91,13 @@ exports.POST = async (req, res) => {
       });
     }
 
-    const caseNotesFilePath = path.join(
-      __dirname,
-      `../../../casenotes/${participantid}/${case_notes_filename}`
-    );
-
-    return res.download(caseNotesFilePath, (err) => {
-      console.log(err);
+    return res.status(200).send({
+      msg: "file retrieved",
+      msgType: "success",
+      blob: case_notes_blob,
+      filesize: case_notes_filesize,
+      filename: case_notes_filename,
+      mimetype: case_notes_mimetype,
     });
   });
 };
