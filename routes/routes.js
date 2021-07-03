@@ -1,5 +1,6 @@
 const express = require("express");
 const multer = require("multer");
+const fs = require("fs");
 const path = require("path");
 const router = express.Router();
 const utils = require("./utils");
@@ -239,12 +240,28 @@ router.post(
 );
 
 // CASE NOTES
-const upload = multer();
 
 const case_notes_view = require("./controllers/case_notes_view");
 router.post("/api/case-notes-view", authenticateToken, case_notes_view.POST);
 
 const case_notes_upload = require("./controllers/case_notes_upload");
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const upload_directory = path.join(__dirname, '../../ease_uploads');
+    fs.mkdir(upload_directory, { recursive: true }, (err) => {
+      if (err) {
+        console.log(require('util').inspect(err, true, 7, true));
+        throw err;
+      }
+      cb(null, upload_directory)
+    });
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, file.fieldname + '-' + uniqueSuffix)
+  }
+})
+const upload = multer({ storage: storage });
 router.post(
   "/api/case_notes_upload",
   [authenticateToken, upload.single("file")],

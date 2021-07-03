@@ -60,7 +60,6 @@ exports.POST = async (req, res) => {
       UPDATE
         participants
       SET
-        case_notes_blob = ?,
         case_notes_filename = ?,
         case_notes_mimetype = ?,
         case_notes_filesize = ?
@@ -68,12 +67,9 @@ exports.POST = async (req, res) => {
         participantid = ?
       ;
     `;
-    return console.log(require("util").inspect(req.file, true, 7, true));
-    var buffer = new Buffer(getFilesizeInBytes(req.file.buffer));
     db.query(
       sql,
       [
-        req.file.buffer,
         req.file.originalname,
         req.file.mimetype,
         req.file.size,
@@ -91,7 +87,9 @@ exports.POST = async (req, res) => {
         return res.status(200).send({
           msg: "upload successful",
           msgType: "success",
+          filename: req.file.originalname,
           filesize: req.file.size,
+          mimetype: req.file.mimetype,
         });
       }
     );
