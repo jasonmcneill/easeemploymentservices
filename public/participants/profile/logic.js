@@ -151,8 +151,8 @@ function renderData(data) {
       "#casenotesdownloadcontainer"
     );
 
-    const casenotesdownloadsize = document.querySelector(
-      "#casenotesdownloadsize"
+    const casenotesdownloaddetails = document.querySelector(
+      "#casenotesdownloaddetails"
     );
     const kb = Math.round(parseInt(case_notes_filesize) / 1024);
     let sizeUnit = "kb";
@@ -163,7 +163,7 @@ function renderData(data) {
     }
 
     casenotesdownload.setAttribute("download", case_notes_filename);
-    casenotesdownloadsize.innerHTML = `Size: ${sizeText}`;
+    casenotesdownloaddetails.innerHTML = `<code>${case_notes_filename}</code><br><code>${sizeText}</code>`;
     casenotesdownloadcontainer.classList.remove("d-none");
   }
 }
@@ -489,9 +489,11 @@ async function onUpload(evt) {
           uploadbutton.classList.remove("btn-secondary");
 
           const case_notes_filesize = data.filesize;
-          const casenotesdownloadsize = document.querySelector(
-            "#casenotesdownloadsize"
+          const case_notes_filename = data.filename;
+          const casenotesdownloaddetails = document.querySelector(
+            "#casenotesdownloaddetails"
           );
+          const casenotesdownloadcontainer = document.querySelector("#casenotesdownloadcontainer");
           const kb = Math.round(parseInt(case_notes_filesize) / 1024);
           let sizeUnit = "kb";
           if (kb >= 1000) sizeUnit = "mb";
@@ -499,7 +501,8 @@ async function onUpload(evt) {
           if (case_notes_filesize < 1024) {
             sizeText = "Less than 1 kb";
           }
-          casenotesdownloadsize.innerHTML = `Size: ${sizeText}`;
+          casenotesdownloaddetails.innerHTML = `<code>${case_notes_filename}</code><br><code>${sizeText}</code>`;
+          casenotesdownloadcontainer.classList.remove("d-none");
 
           showToast(
             "Case notes uploaded successfully.",
