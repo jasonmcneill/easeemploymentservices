@@ -61,6 +61,7 @@ exports.POST = async (req, res) => {
         participants
       SET
         case_notes_filename = ?,
+        case_notes_filename_original = ?,
         case_notes_mimetype = ?,
         case_notes_filesize = ?
       WHERE
@@ -70,6 +71,7 @@ exports.POST = async (req, res) => {
     db.query(
       sql,
       [
+        req.file.filename,
         req.file.originalname,
         req.file.mimetype,
         req.file.size,

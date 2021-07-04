@@ -1,5 +1,10 @@
-const db = require("../../database");
+const fs = require("fs");
 const path = require("path");
+const { 
+  v1: uuidv1,
+  v4: uuidv4,
+} = require('uuid');
+const db = require("../../database");
 
 exports.POST = async (req, res) => {
   // Enforce authorization
@@ -23,9 +28,9 @@ exports.POST = async (req, res) => {
     SELECT
       caseworkerhousing,
       caseworkeremployment,
-      case_notes_blob,
       case_notes_filesize,
       case_notes_filename,
+      case_notes_filename_original,
       case_notes_mimetype
     FROM
       participants
@@ -45,9 +50,9 @@ exports.POST = async (req, res) => {
     SELECT
       caseworkerhousing,
       caseworkeremployment,
-      case_notes_blob,
       case_notes_filesize,
       case_notes_filename,
+      case_notes_filename_original,
       case_notes_mimetype
     FROM
       participants
@@ -71,14 +76,11 @@ exports.POST = async (req, res) => {
         .send({ msg: "participant not found", msgType: "error" });
     }
 
-    const {
-      caseworkerhousing,
-      caseworkeremployment,
-      case_notes_blob,
-      case_notes_filesize,
-      case_notes_filename,
-      case_notes_mimetype,
-    } = result[0];
+    const caseworkerhousing = result[0].caseworkerhousing;
+    const caseworkeremployment = result[0].caseworkeremployment;
+    const case_notes_filename = result[0].case_notes_filename;
+    const case_notes_filename_original = result[0].case_notes_filename_original;
+
     if (employeeid === caseworkerhousing || employee === caseworkeremployment) {
       mayDownloadCaseNotes = true;
     }
@@ -91,13 +93,28 @@ exports.POST = async (req, res) => {
       });
     }
 
-    return res.status(200).send({
-      msg: "file retrieved",
-      msgType: "success",
-      blob: case_notes_blob,
-      filesize: case_notes_filesize,
-      filename: case_notes_filename,
-      mimetype: case_notes_mimetype,
+    const uuid = uuidv4();
+    const dirPathDownloads = path.join(__dirname, `../../../ease_downloads/${uuid}`);
+    const uploadedFile = path.join(__dirname, `../../../ease_uploads/${case_notes_filename}`);
+    const downloadFile = path.join(__dirname, `../../../ease_downloads/${uuid}/${case_notes_filename}`);
+    const downloadFileRenamed = path.join(__dirname, `../../../ease_downloads/${uuid}/${case_notes_filename_original}`);
+
+    fs.mkdir(dirPathDownloads, { recursive: true }, (err) => {
+      if (err) {
+        console.log(err);
+      }
+      fs.copyFile(uploadedFile, downloadFile, (err) => {
+        if (err) {
+          console.log(err);
+        }
+        fs.rename(downloadFile, downloadFileRenamed, () => {
+          console.log(`Downloading ${downloadFileRenamed}`);
+          res.download(downloadFileRenamed, case_notes_filename_original, (err) => {
+            if (err) console.log(err);
+            fs.rmdir(dirPathDownloads, { recursive: true }, () => {});
+          });
+        })
+      });  
     });
   });
 };
