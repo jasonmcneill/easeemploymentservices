@@ -110,7 +110,7 @@ exports.POST = async (req, res) => {
         fs.rename(downloadFile, downloadFileRenamed, () => {
           res.download(downloadFileRenamed, case_notes_filename_original, (err) => {
             if (err) console.log(err);
-            fs.rmdir(dirPathDownloads, { recursive: true }, () => {});
+            /* fs.rmdir(dirPathDownloads, { recursive: true }, () => {}); */
           });
         })
       });  
