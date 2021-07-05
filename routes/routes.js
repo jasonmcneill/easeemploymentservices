@@ -244,8 +244,10 @@ router.post(
 const case_notes_view = require("./controllers/case_notes_view");
 router.post("/api/case-notes-view", authenticateToken, case_notes_view.POST);
 
-const case_notes_upload = require("./controllers/case_notes_upload");
-const storage = multer.diskStorage({
+// FILE-BASED CASE NOTES:  EMPLOYMENT
+
+const case_notes_employment_upload = require("./controllers/case_notes_employment_upload");
+const storage_employment = multer.diskStorage({
   destination: function (req, file, cb) {
     const upload_directory = path.join(__dirname, '../../ease_uploads');
     fs.mkdir(upload_directory, { recursive: true }, (err) => {
@@ -253,18 +255,43 @@ const storage = multer.diskStorage({
     });
   }
 })
-const upload = multer({ storage: storage });
+const upload_employment = multer({ storage: storage_employment });
 router.post(
-  "/api/case_notes_upload",
-  [authenticateToken, upload.single("file")],
-  case_notes_upload.POST
+  "/api/case_notes_employment_upload",
+  [authenticateToken, upload_employment.single("file")],
+  case_notes_employment_upload.POST
 );
 
-const case_notes_download = require("./controllers/case_notes_download");
+const case_notes_employment_download = require("./controllers/case_notes_employment_download");
 router.post(
-  "/api/case_notes_download",
+  "/api/case_notes_employment_download",
   [authenticateToken],
-  case_notes_download.POST
+  case_notes_employment_download.POST
+);
+
+// FILE-BASED CASE NOTES:  HOUSING
+
+const case_notes_housing_upload = require("./controllers/case_notes_housing_upload");
+const storage_housing = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const upload_directory = path.join(__dirname, '../../ease_uploads');
+    fs.mkdir(upload_directory, { recursive: true }, (err) => {
+      cb(null, upload_directory)
+    });
+  }
+})
+const upload_housing = multer({ storage: storage_housing });
+router.post(
+  "/api/case_notes_housing_upload",
+  [authenticateToken, upload_housing.single("file")],
+  case_notes_housing_upload.POST
+);
+
+const case_notes_housing_download = require("./controllers/case_notes_housing_download");
+router.post(
+  "/api/case_notes_housing_download",
+  [authenticateToken],
+  case_notes_housing_download.POST
 );
 
 // REPORTS

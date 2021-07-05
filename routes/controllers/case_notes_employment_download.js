@@ -23,10 +23,10 @@ exports.POST = async (req, res) => {
     SELECT
       caseworkerhousing,
       caseworkeremployment,
-      case_notes_filesize,
-      case_notes_filename,
-      case_notes_filename_original,
-      case_notes_mimetype
+      case_notes_employment_filesize,
+      case_notes_employment_filename,
+      case_notes_employment_filename_original,
+      case_notes_employment_mimetype
     FROM
       participants
     WHERE
@@ -45,10 +45,10 @@ exports.POST = async (req, res) => {
     SELECT
       caseworkerhousing,
       caseworkeremployment,
-      case_notes_filesize,
-      case_notes_filename,
-      case_notes_filename_original,
-      case_notes_mimetype
+      case_notes_employment_filesize,
+      case_notes_employment_filename,
+      case_notes_employment_filename_original,
+      case_notes_employment_mimetype
     FROM
       participants
     WHERE
@@ -73,9 +73,9 @@ exports.POST = async (req, res) => {
 
     const caseworkerhousing = result[0].caseworkerhousing;
     const caseworkeremployment = result[0].caseworkeremployment;
-    const case_notes_filename = result[0].case_notes_filename;
-    const case_notes_filepath = path.join(__dirname, `../../../ease_uploads/${case_notes_filename}`)
-    const case_notes_filename_original = result[0].case_notes_filename_original;
+    const case_notes_employment_filename = result[0].case_notes_employment_filename;
+    const case_notes_employment_filepath = path.join(__dirname, `../../../ease_uploads/${case_notes_employment_filename}`)
+    const case_notes_employment_filename_original = result[0].case_notes_employment_filename_original;
 
     if (employeeid === caseworkerhousing || employeeid === caseworkeremployment) {
       mayDownloadCaseNotes = true;
@@ -89,7 +89,7 @@ exports.POST = async (req, res) => {
       });
     }
 
-    res.download(case_notes_filepath, case_notes_filename_original, (err) => {
+    res.download(case_notes_employment_filepath, case_notes_employment_filename_original, (err) => {
       if (err) console.log(err);
     });
   });

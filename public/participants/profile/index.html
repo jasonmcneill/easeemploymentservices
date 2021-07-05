@@ -147,30 +147,32 @@
         </div>
       </div>
 
-      <!-- Case Notes -->
-      <div id="casenotes" class="mt-5 mb-4">
+      <hr>
+
+      <!-- Case Notes:  Employment -->
+      <div id="casenotesemployment" class="mt-5 mb-4">
         <div class="row">
           <div class="col col-md-4 offset-md-4">
-            <h2 class="h4 text-center font-weight-normal">Case Notes</h2>
+            <h2 class="h4 text-center font-weight-normal">Case Notes: &nbsp;Employment</h2>
           </div>
         </div>
-        <div class="row mt-2 mb-4 d-none" id="casenotesdownloadcontainer">
+        <div class="row mt-2 mb-4 d-none" id="casenotesdownloademploymentcontainer">
           <div class="col col-md-4 offset-md-4 text-center">
-            <a class="btn btn-primary" id="casenotesdownload">Download</a>
-            <div id="casenotesdownloaddetails"></div>
+            <a class="btn btn-primary" id="casenotesemploymentdownload">Download</a>
+            <div id="casenotesemploymentdownloaddetails"></div>
           </div>
         </div>
         <div class="row">
           <div class="col col-md-4 offset-md-4">
-            <form id="uploadcasenotes">
+            <form id="uploademploymentcasenotes">
               <div class="input-group">
                 <div class="custom-file">
                   <input
                     type="file"
                     class="custom-file-input"
-                    id="casenotesfile"
+                    id="casenotesemploymentfile"
                   />
-                  <label class="custom-file-label" for="casenotesfile">
+                  <label class="custom-file-label" for="casenotesemploymentfile">
                     Choose file
                   </label>
                 </div>
@@ -179,7 +181,7 @@
                 <button
                   type="submit"
                   class="btn btn-primary mb-2"
-                  id="casenotesupload"
+                  id="casenotesemploymentupload"
                 >
                   Upload
                 </button>
@@ -188,6 +190,52 @@
           </div>
         </div>
       </div>
+
+      <hr>
+
+      <!-- Case Notes:  Housing -->
+      <div id="casenoteshousing" class="mt-5 mb-4">
+        <div class="row">
+          <div class="col col-md-4 offset-md-4">
+            <h2 class="h4 text-center font-weight-normal">Case Notes: &nbsp;Housing</h2>
+          </div>
+        </div>
+        <div class="row mt-2 mb-4 d-none" id="casenotesdownloadhousingcontainer">
+          <div class="col col-md-4 offset-md-4 text-center">
+            <a class="btn btn-primary" id="casenoteshousingdownload">Download</a>
+            <div id="casenoteshousingdownloaddetails"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-md-4 offset-md-4">
+            <form id="uploadhousingcasenotes">
+              <div class="input-group">
+                <div class="custom-file">
+                  <input
+                    type="file"
+                    class="custom-file-input"
+                    id="casenoteshousingfile"
+                  />
+                  <label class="custom-file-label" for="casenoteshousingfile">
+                    Choose file
+                  </label>
+                </div>
+              </div>
+              <p class="mt-2 mb-0 text-center">
+                <button
+                  type="submit"
+                  class="btn btn-primary mb-2"
+                  id="casenoteshousingupload"
+                >
+                  Upload
+                </button>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <hr>
 
       <!-- Job Placements -->
       <div id="placements" class="d-none mt-5 mb-4">
@@ -204,6 +252,8 @@
           </div>
         </div>
       </div>
+
+      <hr>
 
       <!-- Housing Placement -->
       <div id="housingplacement" class="d-none mt-5 mb-4">

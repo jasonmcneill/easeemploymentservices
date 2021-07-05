@@ -49,8 +49,10 @@ exports.POST = (req, res) => {
       caseworkerhousing,
       (SELECT CONCAT(firstname, " ", lastname) AS caseworkeremploymentname FROM employees WHERE employeeid = (SELECT caseworkeremployment FROM participants WHERE participantid = ?)) AS caseworkeremploymentname,
       (SELECT CONCAT(firstname, " ", lastname) AS caseworkerhousingname FROM employees WHERE employeeid = (SELECT caseworkerhousing FROM participants WHERE participantid = ?)) AS caseworkerhousingname,
-      case_notes_filename_original,
-      case_notes_filesize
+      case_notes_employment_filename_original,
+      case_notes_employment_filesize,
+      case_notes_housing_filename_original,
+      case_notes_housing_filesize
     FROM
       participants
     WHERE

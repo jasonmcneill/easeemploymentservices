@@ -60,10 +60,10 @@ exports.POST = async (req, res) => {
       UPDATE
         participants
       SET
-        case_notes_filename = ?,
-        case_notes_filename_original = ?,
-        case_notes_mimetype = ?,
-        case_notes_filesize = ?
+        case_notes_housing_filename = ?,
+        case_notes_housing_filename_original = ?,
+        case_notes_housing_mimetype = ?,
+        case_notes_housing_filesize = ?
       WHERE
         participantid = ?
       ;

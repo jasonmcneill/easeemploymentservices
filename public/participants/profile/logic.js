@@ -19,8 +19,10 @@ function renderData(data) {
     authorizationdate,
     seeksemployment,
     seekshousing,
-    case_notes_filename_original,
-    case_notes_filesize,
+    case_notes_employment_filename_original = "",
+    case_notes_employment_filesize = 0,
+    case_notes_housing_filename_original = "",
+    case_notes_housing_filesize = 0
   } = data;
   const phoneDigitsOnly = phone.replace(/\D/g, "");
 
@@ -144,27 +146,50 @@ function renderData(data) {
   const actionButtons = document.querySelector("#actionButtons");
   actionButtons.classList.remove("d-none");
 
-  // Case notes download button
-  if (case_notes_filename_original.length) {
-    const casenotesdownload = document.querySelector("#casenotesdownload");
-    const casenotesdownloadcontainer = document.querySelector(
-      "#casenotesdownloadcontainer"
+  // Case notes for employment: download button
+  if (case_notes_employment_filename_original !== null) {
+    const casenotesemploymentdownload = document.querySelector("#casenotesemploymentdownload");
+    const casenotesemploymentdownloadcontainer = document.querySelector(
+      "#casenotesdownloademploymentcontainer"
     );
 
-    const casenotesdownloaddetails = document.querySelector(
-      "#casenotesdownloaddetails"
+    const casenotesemploymentdownloaddetails = document.querySelector(
+      "#casenotesemploymentdownloaddetails"
     );
-    const kb = Math.round(parseInt(case_notes_filesize) / 1024);
-    let sizeUnit = "kb";
-    if (kb >= 1000) sizeUnit = "mb";
-    let sizeText = `${kb} ${sizeUnit}`;
-    if (case_notes_filesize < 1024) {
-      sizeText = "Less than 1 kb";
+    const kbEmployment = Math.round(parseInt(case_notes_employment_filesize) / 1024);
+    let sizeEmploymentUnit = "kb";
+    if (kbEmployment >= 1000) sizeEmploymentUnit = "mb";
+    let sizeEmploymentText = `${kbEmployment} ${sizeEmploymentUnit}`;
+    if (case_notes_employment_filesize < 1024) {
+      sizeEmploymentUnit = "Less than 1 kb";
     }
 
-    casenotesdownload.setAttribute("download", case_notes_filename_original);
-    casenotesdownloaddetails.innerHTML = `<code>${case_notes_filename_original}</code><br><code>${sizeText}</code>`;
-    casenotesdownloadcontainer.classList.remove("d-none");
+    casenotesemploymentdownload.setAttribute("download", case_notes_employment_filename_original);
+    casenotesemploymentdownloaddetails.innerHTML = `<code>${case_notes_employment_filename_original}</code><br><code>${sizeEmploymentText}</code>`;
+    casenotesemploymentdownloadcontainer.classList.remove("d-none");
+  }
+
+  // Case notes for housing: download button
+  if (case_notes_housing_filename_original !== null) {
+    const casenoteshousingdownload = document.querySelector("#casenoteshousingdownload");
+    const casenoteshousingdownloadcontainer = document.querySelector(
+      "#casenotesdownloadhousingcontainer"
+    );
+
+    const casenoteshousingdownloaddetails = document.querySelector(
+      "#casenoteshousingdownloaddetails"
+    );
+    const kbHousing = Math.round(parseInt(case_notes_housing_filesize) / 1024);
+    let sizeHousingUnit = "kb";
+    if (kbHousing >= 1000) sizeHousingUnit = "mb";
+    let sizeHousingText = `${kbHousing} ${sizeHousingUnit}`;
+    if (case_notes_housing_filesize < 1024) {
+      sizeHousingUnit = "Less than 1 kb";
+    }
+
+    casenoteshousingdownload.setAttribute("download", case_notes_housing_filename_original);
+    casenoteshousingdownloaddetails.innerHTML = `<code>${case_notes_housing_filename_original}</code><br><code>${sizeHousingText}</code>`;
+    casenoteshousingdownloadcontainer.classList.remove("d-none");
   }
 }
 
@@ -440,10 +465,10 @@ async function getHousingPlacementData() {
     });
 }
 
-async function onUpload(evt) {
-  const uploadform = document.querySelector("#uploadcasenotes");
-  const uploadinput = document.querySelector("#casenotesfile");
-  const uploadbutton = document.querySelector("#casenotesupload");
+async function onUploadEmployment(evt) {
+  const uploadform = document.querySelector("#uploademploymentcasenotes");
+  const uploadinput = document.querySelector("#casenotesemploymentfile");
+  const uploadbutton = document.querySelector("#casenotesemploymentupload");
   const accessToken = await getAccessToken();
   const data = new FormData();
   const participantid = getId();
@@ -468,7 +493,7 @@ async function onUpload(evt) {
   uploadbutton.classList.remove("btn-primary");
   uploadbutton.classList.add("btn-secondary");
 
-  fetch("/api/case_notes_upload", {
+  fetch("/api/case_notes_employment_upload", {
     method: "POST",
     body: data,
     headers: new Headers({
@@ -479,7 +504,7 @@ async function onUpload(evt) {
     .then((data) => {
       switch (data.msg) {
         case "upload successful":
-          const label = document.querySelector("label[for='casenotesfile']");
+          const label = document.querySelector("label[for='casenotesemploymentfile']");
           uploadform.reset();
           label.innerText = "Choose file";
 
@@ -492,9 +517,9 @@ async function onUpload(evt) {
           const case_notes_filename = data.filename;
           const case_notes_mimetype = data.case_notes_mimetype;
           const casenotesdownloaddetails = document.querySelector(
-            "#casenotesdownloaddetails"
+            "#casenotesemploymentdownloaddetails"
           );
-          const casenotesdownloadcontainer = document.querySelector("#casenotesdownloadcontainer");
+          const casenotesdownloadcontainer = document.querySelector("#casenotesdownloademploymentcontainer");
           const kb = Math.round(parseInt(case_notes_filesize) / 1024);
           let sizeUnit = "kb";
           if (kb >= 1000) sizeUnit = "mb";
@@ -513,7 +538,7 @@ async function onUpload(evt) {
           break;
         case "user is not authorized for this action":
           addToast(
-            "You do not have sufficient permissions to upload case notes for this participant.",
+            "You do not have sufficient permissions to upload employment case notes for this participant.",
             "Upload failed",
             "danger",
             5000,
@@ -540,18 +565,176 @@ async function onUpload(evt) {
     });
 }
 
-function onFileSelected(evt) {
+function onFileSelectedEmployment(evt) {
   const uploadFilePath = evt.target.files[0].name;
-  const label = document.querySelector("label[for='casenotesfile']");
+  const label = document.querySelector("label[for='casenotesemploymentfile']");
   label.innerText = uploadFilePath;
 }
 
-async function onDownload(evt) {
+async function onDownloadEmployment(evt) {
   evt.preventDefault();
-  const endpoint = "/api/case_notes_download";
+  const endpoint = "/api/case_notes_employment_download";
   const participantid = getId();
   const accessToken = await getAccessToken();
-  const downloadbutton = document.querySelector("#casenotesdownload");
+  const downloadbutton = document.querySelector("#casenotesemploymentdownload");
+
+  downloadbutton.setAttribute("disabled", true);
+  downloadbutton.innerText = "Downloading...";
+  downloadbutton.classList.remove("btn-primary");
+  downloadbutton.classList.add("btn-secondary");
+
+  fetch(endpoint, {
+    mode: "cors",
+    method: "POST",
+    body: JSON.stringify({
+      participantid: participantid,
+    }),
+    headers: new Headers({
+      "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.blob())
+    .then((blob) => {      
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = downloadbutton.getAttribute("download");
+      document.body.appendChild(a);
+      a.style = "display: none";
+      a.click();
+
+      downloadbutton.removeAttribute("disabled");
+      downloadbutton.innerText = "Download";
+      downloadbutton.classList.add("btn-primary");
+      downloadbutton.classList.remove("btn-secondary");
+
+      setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      }, 100);
+    })
+    .catch((err) => {
+      console.error(err);
+      downloadbutton.removeAttribute("disabled");
+      downloadbutton.innerText = "Download";
+      downloadbutton.classList.add("btn-primary");
+      downloadbutton.classList.remove("btn-secondary");
+    });
+}
+
+async function onUploadHousing(evt) {
+  const uploadform = document.querySelector("#uploadhousingcasenotes");
+  const uploadinput = document.querySelector("#casenoteshousingfile");
+  const uploadbutton = document.querySelector("#casenoteshousingupload");
+  const accessToken = await getAccessToken();
+  const data = new FormData();
+  const participantid = getId();
+
+  evt.preventDefault();
+
+  // Validate file
+  const uploadFilePath = uploadinput.value.trim();
+  if (uploadFilePath === "") {
+    return showToast(
+      "Please choose a file to upload.",
+      "File missing",
+      "danger"
+    );
+  }
+
+  data.append("file", uploadinput.files[0]);
+  data.append("participantid", participantid);
+
+  uploadbutton.setAttribute("disabled", true);
+  uploadbutton.innerText = "Uploading...";
+  uploadbutton.classList.remove("btn-primary");
+  uploadbutton.classList.add("btn-secondary");
+
+  fetch("/api/case_notes_housing_upload", {
+    method: "POST",
+    body: data,
+    headers: new Headers({
+      authorization: `Bearer ${accessToken}`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      switch (data.msg) {
+        case "upload successful":
+          const label = document.querySelector("label[for='casenoteshousingfile']");
+          uploadform.reset();
+          label.innerText = "Choose file";
+
+          uploadbutton.removeAttribute("disabled");
+          uploadbutton.innerText = "Upload";
+          uploadbutton.classList.add("btn-primary");
+          uploadbutton.classList.remove("btn-secondary");
+
+          const case_notes_filesize = data.filesize;
+          const case_notes_filename = data.filename;
+          const case_notes_mimetype = data.case_notes_mimetype;
+          const casenotesdownloaddetails = document.querySelector(
+            "#casenoteshousingdownloaddetails"
+          );
+          const casenotesdownloadcontainer = document.querySelector("#casenotesdownloadhousingcontainer");
+          const kb = Math.round(parseInt(case_notes_filesize) / 1024);
+          let sizeUnit = "kb";
+          if (kb >= 1000) sizeUnit = "mb";
+          let sizeText = `${kb} ${sizeUnit}`;
+          if (case_notes_filesize < 1024) {
+            sizeText = "Less than 1 kb";
+          }
+          casenotesdownloaddetails.innerHTML = `<code>${case_notes_filename}</code><br><code>${sizeText}</code>`;
+          casenotesdownloadcontainer.classList.remove("d-none");
+
+          showToast(
+            "Case notes uploaded successfully.",
+            "Upload successful",
+            "success"
+          );
+          break;
+        case "user is not authorized for this action":
+          addToast(
+            "You do not have sufficient permissions to upload housing case notes for this participant.",
+            "Upload failed",
+            "danger",
+            5000,
+            true
+          );
+          window.location.href = "../";
+          break;
+        default:
+          showToast(
+            "There was a technical glitch preventing the file from being uploaded. Please try again.",
+            "Upload failed",
+            "danger",
+            5000,
+            true
+          );
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      uploadbutton.removeAttribute("disabled");
+      uploadbutton.innerText = "Upload";
+      uploadbutton.classList.add("btn-primary");
+      uploadbutton.classList.remove("btn-secondary");
+    });
+}
+
+function onFileSelectedHousing(evt) {
+  const uploadFilePath = evt.target.files[0].name;
+  const label = document.querySelector("label[for='casenoteshousingfile']");
+  label.innerText = uploadFilePath;
+}
+
+async function onDownloadHousing(evt) {
+  evt.preventDefault();
+  const endpoint = "/api/case_notes_housing_download";
+  const participantid = getId();
+  const accessToken = await getAccessToken();
+  const downloadbutton = document.querySelector("#casenoteshousingdownload");
 
   downloadbutton.setAttribute("disabled", true);
   downloadbutton.innerText = "Downloading...";
@@ -605,14 +788,23 @@ function attachListeners() {
     .querySelector("#btnConfirmDelete")
     .addEventListener("click", onConfirmDelete);
   document
-    .querySelector("#uploadcasenotes")
-    .addEventListener("submit", onUpload);
+    .querySelector("#uploademploymentcasenotes")
+    .addEventListener("submit", onUploadEmployment);
   document
-    .querySelector("#casenotesfile")
-    .addEventListener("change", onFileSelected);
+    .querySelector("#casenotesemploymentfile")
+    .addEventListener("change", onFileSelectedEmployment);
   document
-    .querySelector("#casenotesdownload")
-    .addEventListener("click", onDownload);
+    .querySelector("#casenotesemploymentdownload")
+    .addEventListener("click", onDownloadEmployment);
+    document
+    .querySelector("#uploadhousingcasenotes")
+    .addEventListener("submit", onUploadHousing);
+  document
+    .querySelector("#casenoteshousingfile")
+    .addEventListener("change", onFileSelectedHousing);
+  document
+    .querySelector("#casenoteshousingdownload")
+    .addEventListener("click", onDownloadHousing);
 }
 
 function init() {
