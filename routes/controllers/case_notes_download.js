@@ -81,7 +81,7 @@ exports.POST = async (req, res) => {
     const case_notes_filename = result[0].case_notes_filename;
     const case_notes_filename_original = result[0].case_notes_filename_original;
 
-    if (employeeid === caseworkerhousing || employee === caseworkeremployment) {
+    if (employeeid === caseworkerhousing || employeeid === caseworkeremployment) {
       mayDownloadCaseNotes = true;
     }
     if (hasElevatedPermissions) mayDownloadCaseNotes = true;
