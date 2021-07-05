@@ -1,4 +1,6 @@
 const db = require("../../database");
+const fs = require("fs");
+const path = require("path");
 
 exports.POST = async (req, res) => {
   // Enforce authorization
@@ -29,7 +31,8 @@ exports.POST = async (req, res) => {
   const sql = `
     SELECT
       caseworkerhousing,
-      caseworkeremployment
+      caseworkeremployment,
+      case_notes_housing_filename
     FROM
       participants
     WHERE
@@ -54,6 +57,7 @@ exports.POST = async (req, res) => {
 
     if (result.length === 1) mayUploadCaseNotes = true;
     if (hasElevatedPermissions) mayUploadCaseNotes = true;
+    const case_notes_housing_filename = result[0].case_notes_housing_filename;
 
     // Update database
     const sql = `
@@ -86,13 +90,33 @@ exports.POST = async (req, res) => {
           });
         }
 
-        return res.status(200).send({
-          msg: "upload successful",
-          msgType: "success",
-          filename: req.file.originalname,
-          filesize: req.file.size,
-          mimetype: req.file.mimetype,
-        });
+        // Delete old file
+        if (case_notes_housing_filename !== null) {
+          const pathToOldFile = path.join(__dirname, `../../../ease_uploads/${case_notes_housing_filename}`);
+          fs.unlink(pathToOldFile, (err) => {
+            if (err) {
+              console.log(`Unable to delete old file for housing case notes: ${case_notes_housing_filename}`);
+            }
+  
+            // Return
+            res.status(200).send({
+              msg: "upload successful",
+              msgType: "success",
+              filename: req.file.originalname,
+              filesize: req.file.size,
+              mimetype: req.file.mimetype,
+            });
+          });
+        } else {
+          // Return
+          res.status(200).send({
+            msg: "upload successful",
+            msgType: "success",
+            filename: req.file.originalname,
+            filesize: req.file.size,
+            mimetype: req.file.mimetype,
+          });
+        }
       }
     );
   });
