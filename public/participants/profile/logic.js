@@ -469,6 +469,7 @@ async function onUploadEmployment(evt) {
   const uploadform = document.querySelector("#uploademploymentcasenotes");
   const uploadinput = document.querySelector("#casenotesemploymentfile");
   const uploadbutton = document.querySelector("#casenotesemploymentupload");
+  const downloadbutton = document.querySelector("#casenotesemploymentdownload");
   const accessToken = await getAccessToken();
   const data = new FormData();
   const participantid = getId();
@@ -529,6 +530,7 @@ async function onUploadEmployment(evt) {
           }
           casenotesdownloaddetails.innerHTML = `<code>${case_notes_filename}</code><br><code>${sizeText}</code>`;
           casenotesdownloadcontainer.classList.remove("d-none");
+          downloadbutton.setAttribute("download", case_notes_filename);
 
           showToast(
             "Case notes uploaded successfully.",
@@ -627,6 +629,7 @@ async function onUploadHousing(evt) {
   const uploadform = document.querySelector("#uploadhousingcasenotes");
   const uploadinput = document.querySelector("#casenoteshousingfile");
   const uploadbutton = document.querySelector("#casenoteshousingupload");
+  const downloadbutton = document.querySelector("#casenoteshousingdownload");
   const accessToken = await getAccessToken();
   const data = new FormData();
   const participantid = getId();
@@ -687,6 +690,7 @@ async function onUploadHousing(evt) {
           }
           casenotesdownloaddetails.innerHTML = `<code>${case_notes_filename}</code><br><code>${sizeText}</code>`;
           casenotesdownloadcontainer.classList.remove("d-none");
+          downloadbutton.setAttribute("download", case_notes_filename);
 
           showToast(
             "Case notes uploaded successfully.",
