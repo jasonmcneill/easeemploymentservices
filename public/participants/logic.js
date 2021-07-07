@@ -38,14 +38,6 @@ async function getOverview() {
             formSearch.classList.remove("d-none");
             participantList.classList.remove("d-none");
           }
-
-          participantList_showall.innerHTML = `
-            ${
-              numParticipants === 1
-                ? "Show 1 participant"
-                : "List all " + numParticipants + " participants"
-            }
-          `;
           break;
       }
     });
@@ -244,15 +236,12 @@ function attachListeners() {
   document
     .querySelector("#formSearch")
     .addEventListener("submit", onSearchSubmitted);
-
-  document
-    .querySelector("#participantList_showall")
-    .addEventListener("click", showList);
 }
 
 function init() {
   getOverview();
   attachListeners();
+  showList();
   showToasts();
 }
 
