@@ -5,10 +5,10 @@
   "scripts": {
     "start": "node app.js",
     "start:dev": "nodemon app.js",
-    "ssh:staging": "ssh root@grindstonewebdev.com -i ../../../.ssh/grindstone/id_rsa",
-    "ssh:prod": "ssh root@access.easeemploymentservices.com -i ../../../.ssh/ease/id_rsa",
-    "deploy:staging": "ssh root@grindstonewebdev.com -i ../../../.ssh/grindstone/id_rsa \"cd /var/www/staging-access.easeemploymentservices.com; ./pull.sh\"",
-    "deploy:prod": "ssh root@access.easeemploymentservices.com -i ../../../.ssh/ease/id_rsa \"cd /var/www/access.easeemploymentservices.com; ./pull.sh\""
+    "ssh:staging": "ssh root@grindstonewebdev.com -i ~/.ssh/grindstone/id_rsa",
+    "ssh:prod": "ssh root@access.easeemploymentservices.com -i ~/.ssh/ease/id_rsa",
+    "deploy:staging": "ssh root@grindstonewebdev.com -i ~/.ssh/grindstone/id_rsa \"cd /var/www/staging-access.easeemploymentservices.com; ./pull.sh\"",
+    "deploy:prod": "ssh root@access.easeemploymentservices.com -i ~/.ssh/ease/id_rsa \"cd /var/www/access.easeemploymentservices.com; ./pull.sh\""
   },
   "dependencies": {
     "@mysql/xdevapi": "^8.0.22",
