@@ -10,6 +10,7 @@ function onSubmit(e) {
   const endpoint = "/register";
   const spinner = document.querySelector("#registerSpinner");
   const content = document.querySelector("#registerContent");
+  const token = (window.location.hash.length) ? window.location.hash.substring(1, window.location.hash.length) : "";
 
   if (smsphone.length && !smsphonecountry.length) {
     return showError(
@@ -30,6 +31,7 @@ function onSubmit(e) {
       smsphonecountry: smsphonecountry,
       username: username,
       password: password,
+      token: token
     }),
     headers: new Headers({
       "Content-Type": "application/json",

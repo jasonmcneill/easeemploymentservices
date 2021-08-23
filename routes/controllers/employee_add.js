@@ -108,52 +108,74 @@ exports.POST = (req, res) => {
           });
         }
 
-        const sendEmail = require("../utils").sendEmail;
-        let registerUrl = "https://access.easeemploymentservices.com/register/";
-        if (process.env.ENV === "staging")
-          registerUrl =
-            "https://staging-access.easeemploymentservices.com/register/";
-        if (process.env.ENV === "development")
-          registerUrl = "http://localhost:3000/register/";
-        const emailSenderText = "E.A.S.E.";
-        const recipient = `${firstname} ${lastname} <${email}>`;
-        const subject = "You may now register";
-        const body = `
-          <p>
-            This message is for ${firstname} ${lastname}. You have just been authorized to register your employee account with E.A.S.E.
-          </p>
-
-          <p>
-            To register, please click on the following link and complete the form:
-          </p>
-
-          <p style="margin: 30px 0"><strong><big><a href="${registerUrl}" style="text-decoration: underline">Register</a></big></strong></p>
-          
-          <p>E.A.S.E. Employment Services</p>
-          <div style="margin: 40px 0 20px 0">
-            <small><small style="color: #ccc">
-              <hr size="1" color="#ccc" />
-              Message ID: ${require("uuid").v4().toUpperCase()}
-            </small></small>
-          </div>
+        const newEmployeeId = result.insertId;
+        const token = require("crypto").randomBytes(32).toString("hex");
+        const expiry = moment()
+          .add(15, "days")
+          .format("YYYY-MM-DD HH:mm:ss");
+        const sql = `
+          INSERT INTO tokens(
+            token,
+            expiry,
+            purpose,
+            employeeid,
+            createdAt
+          ) VALUES (
+            ?,
+            ?,
+            "preregistration",
+            ?,
+            utc_timestamp()
+          );
         `;
+        db.query(sql, [token, expiry, newEmployeeId], (err, result) => {
+          const sendEmail = require("../utils").sendEmail;
+          let registerUrl = `https://access.easeemploymentservices.com/register/#${token}`;
+          if (process.env.ENV === "staging")
+            registerUrl =
+              `https://staging-access.easeemploymentservices.com/register/#${token}`;
+          if (process.env.ENV === "development")
+            registerUrl = `http://localhost:3000/register/#${token}`;
+          const emailSenderText = "E.A.S.E.";
+          const recipient = `${firstname} ${lastname} <${email}>`;
+          const subject = "You may now register";
+          const body = `
+            <p>
+              This message is for ${firstname} ${lastname}. You have just been authorized to register your employee account with E.A.S.E.
+            </p>
 
-        sendEmail(recipient, emailSenderText, subject, body)
-          .then((result) => {
-            return res.status(200).send({
-              msg: "notification e-mail sent",
-              msgType: "success",
-              result: result,
+            <p>
+              To register, please click on the following link and complete the form:
+            </p>
+
+            <p style="margin: 30px 0"><strong><big><a href="${registerUrl}" style="text-decoration: underline">Register</a></big></strong></p>
+            
+            <p>E.A.S.E. Employment Services</p>
+            <div style="margin: 40px 0 20px 0">
+              <small><small style="color: #ccc">
+                <hr size="1" color="#ccc" />
+                Message ID: ${require("uuid").v4().toUpperCase()}
+              </small></small>
+            </div>
+          `;
+
+          sendEmail(recipient, emailSenderText, subject, body)
+            .then((result) => {
+              return res.status(200).send({
+                msg: "notification e-mail sent",
+                msgType: "success",
+                result: result,
+              });
+            })
+            .catch((error) => {
+              console.log(require("util").inspect(error, true, 7, true));
+              return res.status(500).send({
+                msg: "notification e-mail could not be sent",
+                msgType: "error",
+                error: error,
+              });
             });
-          })
-          .catch((error) => {
-            console.log(require("util").inspect(error, true, 7, true));
-            return res.status(500).send({
-              msg: "notification e-mail could not be sent",
-              msgType: "error",
-              error: error,
-            });
-          });
+        });
       }
     );
   });

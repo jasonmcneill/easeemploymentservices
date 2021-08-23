@@ -1,4 +1,5 @@
 exports.POST = (req, res) => {
+  const moment = require("moment");
   const db = require("../../database");
   const defaultUsers = require("../../defaults.json");
   const firstname = req.body.firstname || "";
@@ -8,6 +9,7 @@ exports.POST = (req, res) => {
   const smsphonecountry = req.body.smsphonecountry;
   const username = req.body.username || "";
   const password = req.body.password || "";
+  const token = req.body.token || "";
   let protocol;
   let host;
 
@@ -41,9 +43,22 @@ exports.POST = (req, res) => {
     return res.status(400).send({ msg: "missing password", msgType: "error" });
 
   // Check eligibility to register (key on e-mail address)
-  const sql =
-    "SELECT employeeid FROM employees WHERE email = ? AND status = 'pending' LIMIT 1;";
-  db.query(sql, [email, firstname, lastname], (err, result) => {
+  const sql = `
+    SELECT 
+      token, 
+      expiry,
+      employeeid
+    FROM 
+      tokens 
+    WHERE 
+      token = ? 
+    AND 
+      expiry > utc_timestamp() 
+    LIMIT 
+      1
+    ;
+  `;
+  db.query(sql, [token], (err, result) => {
     if (err) {
       console.log(err);
       return res.status(500).send({
@@ -54,27 +69,14 @@ exports.POST = (req, res) => {
     }
 
     if (!result.length) {
-      let isEligibleToRegister = false;
-
-      // No records in database; check default users
-      defaultUsers.users.sysadmins.forEach((user) => {
-        if (user.email == email) isEligibleToRegister = true;
-      });
-
-      defaultUsers.users.directors.forEach((user) => {
-        if (user.email == email) isEligibleToRegister = true;
-      });
-
-      // No records in default users, so return.
-      if (!isEligibleToRegister) {
-        return res
-          .status(400)
-          .send({ msg: "not eligible to register", msgType: "error" });
-      }
+      return res
+        .status(400)
+        .send({ msg: "not eligible to register", msgType: "error" });
     }
 
+    const employeeid = result[0].employeeid;
+
     // Check if e-mail is already in use by another user
-    const employeeid = result.length ? result[0].employeeid : 0;
     const sql =
       "SELECT employeeid FROM employees WHERE email = ? AND employeeid <> ?;";
 
@@ -200,92 +202,103 @@ exports.POST = (req, res) => {
                 });
               }
 
-              // Insert the new record
-              const moment = require("moment");
-              let sql = "";
-              let sqlVariables = [];
-              let insertedEmployeeId = 0;
+              const sql = `
+                SELECT
+                  employeeid
+                FROM
+                  employees
+                WHERE
+                  email = ?
+                LIMIT
+                  1
+                ;
+              `;
 
-              if (isDefaultUser) {
-                sql = `
-                  INSERT INTO employees(
-                    email,
+              db.query(sql, [email], (err, result) => {
+                if (err) {
+                  console.log(err);
+                  return res.status(500).send({ msg: "unable to check for existing record based on e-mail address", msgType: "error" });
+                }
+
+                let sql;
+                let sqlVariables;
+                let insertedEmployeeId = 0;
+
+                if (result.length) {
+                  insertedEmployeeId = result[0].employeeid;
+                  sql = `
+                    UPDATE employees
+                    SET
+                      email = ?,
+                      smsphone = ?,
+                      smsphonecountry = ?,
+                      firstname = ?,
+                      lastname = ?,
+                      type = ?,
+                      username = LCASE(?),
+                      password = ?,
+                      createdAt = utc_timestamp()
+                    WHERE employeeid = ?;
+                    ;
+                  `;
+                  sqlVariables = [
+                    email.toLowerCase(),
                     smsphone,
                     smsphonecountry,
                     firstname,
                     lastname,
-                    type,
-                    username,
-                    password,
-                    createdAt
-                  ) VALUES(
-                    ?, ?, ?, ?, ?, ?, ?, ?, utc_timestamp()
-                  );
-                `;
-                sqlVariables = [
-                  email.toLowerCase(),
-                  smsphone,
-                  smsphonecountry,
-                  firstname,
-                  lastname,
-                  usertype,
-                  username.toLowerCase(),
-                  hash,
-                ];
-              } else {
-                sql = `
-                  UPDATE employees
-                  SET
-                    email = LCASE(?),
-                    smsphone = ?,
-                    smsphonecountry = ?,
-                    firstname = ?,
-                    lastname = ?,
-                    type = ?,
-                    username = LCASE(?),
-                    password = ?,
-                    createdAt = utc_timestamp()
-                  WHERE employeeid = ?;
-                ;`;
-                sqlVariables = [
-                  email,
-                  smsphone,
-                  smsphonecountry,
-                  firstname,
-                  lastname,
-                  usertype,
-                  username,
-                  hash,
-                  employeeid,
-                ];
-                insertedEmployeeId = employeeid;
-              }
-
-              db.query(sql, sqlVariables, (err, result) => {
-                if (err) {
-                  console.log(err);
-                  return res.status(500).send({
-                    msg: "unable to insert new user",
-                    msgType: "error",
-                    error: err,
-                  });
+                    usertype,
+                    username.toLowerCase(),
+                    hash,
+                    insertedEmployeeId
+                  ];
+                } else {
+                  sql = `
+                    INSERT INTO employees(
+                      email,
+                      smsphone,
+                      smsphonecountry,
+                      firstname,
+                      lastname,
+                      type,
+                      username,
+                      password,
+                      createdAt
+                    ) VALUES(
+                      ?, ?, ?, ?, ?, ?, ?, ?, utc_timestamp()
+                    );
+                  `;
+                  sqlVariables = [
+                    email.toLowerCase(),
+                    smsphone,
+                    smsphonecountry,
+                    firstname,
+                    lastname,
+                    usertype,
+                    username.toLowerCase(),
+                    hash,
+                  ];
                 }
 
-                if (isDefaultUser) {
-                  insertedEmployeeId = result.insertId;
-                }
+                db.query(sql, sqlVariables, (err, result) => {
+                  if (err) {
+                    console.log(err);
+                    return res.status(500).send({ msg: "unable to insert new user", msgType: "error" });
+                  }
 
-                const registrationToken = require("crypto")
-                  .randomBytes(32)
-                  .toString("hex");
+                  if (isDefaultUser) {
+                    insertedEmployeeId = result.insertId;
+                  }
 
-                const expiry = moment()
-                  .add(15, "days")
-                  .format("YYYY-MM-DD HH:mm:ss");
+                  const registrationToken = require("crypto")
+                    .randomBytes(32)
+                    .toString("hex");
 
-                const createdAt = moment().format("YYYY-MM-DD HH:mm:ss");
+                  const expiry = moment()
+                    .add(15, "days")
+                    .format("YYYY-MM-DD HH:mm:ss");
 
-                const sql = `
+                  const sql = `
                     INSERT INTO tokens(
                       token,
                       expiry,
@@ -294,67 +307,69 @@ exports.POST = (req, res) => {
                       createdAt
                     ) VALUES (
                       ?, ?, 'registration', ?, utc_timestamp()
-                    );`;
-                db.query(
-                  sql,
-                  [registrationToken, expiry, insertedEmployeeId, createdAt],
-                  (err, result) => {
-                    if (err) {
-                      console.log(err);
-                      return res.status(500).send({
-                        msg: "unable to insert registration token",
-                        msgType: "error",
-                        error: err,
-                      });
-                    }
-
-                    const utils = require("../utils");
-                    const sendEmail = utils.sendEmail;
-                    const messageID = require("uuid").v4();
-                    const confirmationUrl = `${protocol}//${host}/register-confirm/#token=${registrationToken}`;
-                    const recipient = `${firstname} ${lastname} <${email}>`;
-                    const emailSenderText = "E.A.S.E.";
-                    const subject = "Confirm your registration";
-                    const body = `
-                  <p>
-                    This message is for ${firstname} ${lastname}. In order to complete your registration, please click on the link below:
-                  </p>
-                  <p style="margin: 30px 0">
-                    <strong><big>
-                      <a href="${confirmationUrl}" style="text-decoration: underline">
-                        Confirm my registration
-                      </a>
-                    </big></strong>
-                  </p>
-                  <p>E.A.S.E. Employment Services</p>
-                  <div style="margin: 40px 0 20px 0">
-                    <small><small style="color: #ccc">
-                      <hr size="1" color="#ccc" />
-                      Message ID: ${messageID.toUpperCase()}
-                    </small></small>
-                  </div>
-              `;
-
-                    sendEmail(recipient, emailSenderText, subject, body)
-                      .then((result) => {
-                        return res.status(200).send({
-                          msg: "confirmation e-mail sent",
-                          msgType: "success",
-                          result: result,
-                        });
-                      })
-                      .catch((error) => {
-                        console.log(
-                          require("util").inspect(error, true, 7, true)
-                        );
+                    );
+                  `;
+                  db.query(
+                    sql,
+                    [registrationToken, expiry, insertedEmployeeId],
+                    (err, result) => {
+                      if (err) {
+                        console.log(err);
                         return res.status(500).send({
-                          msg: "confirmation e-mail could not be sent",
+                          msg: "unable to insert registration token",
                           msgType: "error",
-                          error: error,
+                          error: err,
                         });
-                      });
-                  }
-                );
+                      }
+
+                      const utils = require("../utils");
+                      const sendEmail = utils.sendEmail;
+                      const messageID = require("uuid").v4();
+                      const confirmationUrl = `${protocol}//${host}/register-confirm/#token=${registrationToken}`;
+                      const recipient = `${firstname} ${lastname} <${email}>`;
+                      const emailSenderText = "E.A.S.E.";
+                      const subject = "Confirm your registration";
+                      const body = `
+                          <p>
+                            This message is for ${firstname} ${lastname}. In order to complete your registration, please click on the link below:
+                          </p>
+                          <p style="margin: 30px 0">
+                            <strong><big>
+                              <a href="${confirmationUrl}" style="text-decoration: underline">
+                                Confirm my registration
+                              </a>
+                            </big></strong>
+                          </p>
+                          <p>E.A.S.E. Employment Services</p>
+                          <div style="margin: 40px 0 20px 0">
+                            <small><small style="color: #ccc">
+                              <hr size="1" color="#ccc" />
+                              Message ID: ${messageID.toUpperCase()}
+                            </small></small>
+                          </div>
+                      `;
+
+                      sendEmail(recipient, emailSenderText, subject, body)
+                        .then((result) => {
+                          return res.status(200).send({
+                            msg: "confirmation e-mail sent",
+                            msgType: "success",
+                            result: result,
+                          });
+                        })
+                        .catch((error) => {
+                          console.log(
+                            require("util").inspect(error, true, 7, true)
+                          );
+                          return res.status(500).send({
+                            msg: "confirmation e-mail could not be sent",
+                            msgType: "error",
+                            error: error,
+                          });
+                        });
+                    }
+                  );
+                });
               });
             });
           });
