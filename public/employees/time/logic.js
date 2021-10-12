@@ -30,15 +30,8 @@ async function populateContent(scrollAfterFetch = false) {
   })
     .then((res) => res.json())
     .then((data) => {
-      const {
-        firstname,
-        lastname,
-        type,
-        status,
-        entries,
-        fromdate,
-        todate,
-      } = data;
+      const { firstname, lastname, type, status, entries, fromdate, todate } =
+        data;
 
       document.title = `Time Entries for ${firstname} ${lastname}`;
       breadcrumbProfileLink.innerText = `${data.firstname} ${data.lastname}`;
@@ -279,8 +272,9 @@ async function onUpdateTimeEntry(e) {
     "input[name='revisedType']:checked"
   ).value;
   const revisedTimeAlt = document.querySelector("#revisedtime_alt").value;
-  const revisedTimeAltAmPm = document.querySelector("#revisedtime_alt_ampm")
-    .value;
+  const revisedTimeAltAmPm = document.querySelector(
+    "#revisedtime_alt_ampm"
+  ).value;
   let date = revisedDate;
   let time = revisedTime;
   if (revisedTimeAlt.length) {

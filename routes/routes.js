@@ -92,6 +92,9 @@ router.post("/api/timeentry-delete", authenticateToken, timeentry_delete.POST);
 const timeentry_update = require("./controllers/timeentry_update");
 router.post("/api/timeentry-update", authenticateToken, timeentry_update.POST);
 
+const timesummary = require("./controllers/timesummary");
+router.post("/api/timesummary", authenticateToken, timesummary.POST);
+
 // PARTICIPANTS
 
 const participant_view = require("./controllers/participant_view");
@@ -249,12 +252,12 @@ router.post("/api/case-notes-view", authenticateToken, case_notes_view.POST);
 const case_notes_employment_upload = require("./controllers/case_notes_employment_upload");
 const storage_employment = multer.diskStorage({
   destination: function (req, file, cb) {
-    const upload_directory = path.join(__dirname, '../../ease_uploads');
+    const upload_directory = path.join(__dirname, "../../ease_uploads");
     fs.mkdir(upload_directory, { recursive: true }, (err) => {
-      cb(null, upload_directory)
+      cb(null, upload_directory);
     });
-  }
-})
+  },
+});
 const upload_employment = multer({ storage: storage_employment });
 router.post(
   "/api/case_notes_employment_upload",
@@ -274,12 +277,12 @@ router.post(
 const case_notes_housing_upload = require("./controllers/case_notes_housing_upload");
 const storage_housing = multer.diskStorage({
   destination: function (req, file, cb) {
-    const upload_directory = path.join(__dirname, '../../ease_uploads');
+    const upload_directory = path.join(__dirname, "../../ease_uploads");
     fs.mkdir(upload_directory, { recursive: true }, (err) => {
-      cb(null, upload_directory)
+      cb(null, upload_directory);
     });
-  }
-})
+  },
+});
 const upload_housing = multer({ storage: storage_housing });
 router.post(
   "/api/case_notes_housing_upload",
