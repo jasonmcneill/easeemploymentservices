@@ -1,5 +1,6 @@
 function buildTable(data) {
   let rows = "";
+  let participantid;
   let hours = 0;
   let fromTime;
   let toTime;
@@ -7,46 +8,67 @@ function buildTable(data) {
     const factorOfTen = Math.pow(10, decimalPlaces);
     return Math.round(number * factorOfTen) / factorOfTen;
   };
+
+  // Calculate hours:
+
+  const hoursTally = {};
+
   data.forEach((item) => {
-    const { entry, type, participantid, firstname, lastname } = item;
-    const name =
-      participantid === 0
-        ? "EASE"
-        : `<a href="/participants/profile/#${participantid}">${firstname} ${lastname}</a>`;
+    const {
+      entry,
+      type,
+      participantid: itemParticipant,
+      firstname,
+      lastname,
+    } = item;
+    const name = participantid === 0 ? "EASE" : `${firstname} ${lastname}`;
+
     if (type === "in") {
       hours = 0;
       fromTime = entry;
       toTime = entry;
+      participantid = itemParticipant;
     }
+
     if (type === "out") {
+      if (participantid !== itemParticipant) return;
+      if (!hoursTally.hasOwnProperty("participantid")) {
+        hoursTally[participantid] = {
+          participantid: 0,
+          hours: 0,
+          name: "",
+        };
+      }
       toTime = entry;
       hours = moment(toTime).diff(fromTime, "hours", true);
-      const rowHtml = `
-        <tr>
-          <td>${name}</td>
-          <td class="text-nowrap">${moment(toTime)
-            .tz("America/Los_Angeles")
-            .format("YYYY-MM-DD")}
-          <td class="text-nowrap">${moment(fromTime)
-            .tz("America/Los_Angeles")
-            .format("h:mm:ss A")}</td>
-          <td class="text-nowrap">${moment(toTime)
-            .tz("America/Los_Angeles")
-            .format("h:mm:ss A")}</td>
-          <td class="text-nowrap">${round(hours, 4)}</td>
-        </tr>
-      `;
-      rows += rowHtml;
+      hoursTally[participantid].participantid = participantid;
+      hoursTally[participantid].hours += hours;
+      hoursTally[participantid].name = name;
     }
   });
+
+  // Build HTML:
+
+  for (let i in hoursTally) {
+    const { participantid, hours, name } = hoursTally[i];
+    const decoratedName =
+      participantid === 0
+        ? "EASE"
+        : `<a href="/participants/profile/#${participantid}">${name}</a>`;
+
+    rows += `
+      <tr>
+        <td>${decoratedName}</td>
+        <td>${round(hours, 4)}</td>
+      </tr>
+    `;
+  }
+
   const html = `
-  <table class="table table-responsive-md">
+  <table class="table">
     <thead>
       <tr>
         <th>For</th>
-        <th>Date</th>
-        <th>From</th>
-        <th>To</th>
         <th>Hours</th>
       </tr>
     </thead>
@@ -157,6 +179,7 @@ async function populateContent() {
             "No time records were found for the current pay period.";
           break;
         case "records retrieved":
+          showPayPeriod(data.payperiod);
           buildTable(data.data);
           break;
       }
@@ -166,8 +189,27 @@ async function populateContent() {
     });
 }
 
+function showPayPeriod(payperiod) {
+  const payPeriodContainer = document.querySelector("#payperiod");
+  const { from, to } = payperiod;
+  const fromDate = moment(from).tz("America/Los_Angeles").format("D");
+  const toDate = moment(to).tz("America/Los_Angeles").format("D");
+  const fromMonth = moment(from).tz("America/Los_Angeles").format("MMMM");
+  const toMonth = moment(to).tz("America/Los_Angeles").format("MMMM");
+
+  let dates = `${fromMonth} ${fromDate} - ${toDate}`;
+  let datesHTML = `Pay Period: ${dates}`;
+
+  if (fromMonth !== toMonth) {
+    dates = `${fromMonth} ${fromDate} - ${toMonth} ${toDate}`;
+    datesHTML = `Pay Period:<br />${dates}`;
+  } else {
+  }
+
+  payPeriodContainer.innerHTML = datesHTML;
+}
+
 function init() {
-  /* attachListeners(); */
   populateBreadcrumbs();
   populateContent();
   showToasts();

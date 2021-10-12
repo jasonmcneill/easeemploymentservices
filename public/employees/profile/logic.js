@@ -87,6 +87,9 @@ function showEmployee() {
 
     const linkTimeEntries = document.querySelector("#linkTimeEntries");
     linkTimeEntries.setAttribute("href", `../time/#${employeeid}`);
+
+    const linkHoursSummary = document.querySelector("#linkHoursSummary");
+    linkHoursSummary.setAttribute("href", `../time/summary/#${employeeid}`);
   }
 
   async function getContent() {

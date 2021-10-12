@@ -107,7 +107,12 @@ exports.POST = async (req, res) => {
       } else {
         res
           .status(200)
-          .send({ msg: "records retrieved", msgType: "success", data: result });
+          .send({
+            msg: "records retrieved",
+            msgType: "success",
+            data: result,
+            payperiod: { from: fromPayPeriodDate, to: toPayPeriodDate },
+          });
       }
     }
   );
