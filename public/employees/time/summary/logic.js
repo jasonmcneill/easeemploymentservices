@@ -47,6 +47,10 @@ function buildTable(data) {
     }
   });
 
+  const easeTotalHoursAsDecimal = round(hoursTally[0].hours, 4);
+  const easeTotalHoursAsTime = parseHoursAsTime(easeTotalHoursAsDecimal);
+  let nonEaseHoursAsDecimal = 0;
+  let nonEaseHoursAsTime = "";
   let totalHoursAsDecimal = 0;
   let totalHoursAsTime = "";
 
@@ -71,6 +75,8 @@ function buildTable(data) {
     `;
   }
 
+  nonEaseHoursAsDecimal = totalHoursAsDecimal - easeTotalHoursAsDecimal;
+  nonEaseHoursAsTime = parseHoursAsTime(nonEaseHoursAsDecimal);
   totalHoursAsTime = parseHoursAsTime(totalHoursAsDecimal);
 
   const html = `
@@ -97,7 +103,20 @@ function buildTable(data) {
     </tbody>
     <tfoot>
       <tr>
-        <th class="bg-light text-right border">TOTAL:</th>
+        <th class="bg-light text-right">EASE</th>
+        <th class="bg-light text-right">${round(
+          easeTotalHoursAsDecimal,
+          4
+        )}</th>
+        <th class="bg-light text-right">${easeTotalHoursAsTime}</th>
+      </tr>
+      <tr>
+        <th class="bg-light text-right">Non-EASE</th>
+        <th class="bg-light text-right">${round(nonEaseHoursAsDecimal, 4)}</th>
+        <th class="bg-light text-right">${nonEaseHoursAsTime}</th>
+      </tr>
+      <tr>
+        <th class="bg-light text-right">TOTAL:</th>
         <th class="bg-light text-right">${round(totalHoursAsDecimal, 4)}</th>
         <th class="bg-light text-right">${totalHoursAsTime}</th>
       </tr>
