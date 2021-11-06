@@ -83,14 +83,14 @@ function buildTable(data) {
   <table class="table table-bordered">
     <thead>
       <tr>
-        <th width="50%" class="align-middle text-center bg-light">For</th>
-        <th width="25%" class="bg-light">
+        <th width="50%" class="align-middle text-center bg-dark text-white">For</th>
+        <th width="25%" class="bg-dark text-white">
           Hours
           <div class="text-nowrap">
             <small>as Decimal</small>
           </div>
         </th>
-        <th width="25%" class="bg-light">
+        <th width="25%" class="bg-dark text-white">
           Hours
           <div class="text-nowrap">
             <small>as Time</small>
@@ -103,12 +103,12 @@ function buildTable(data) {
     </tbody>
     <tfoot>
       <tr>
-        <th class="bg-light text-right">EASE:</th>
-        <th class="bg-light text-right">${round(
+        <th class="bg-light text-right subtotalTop">EASE:</th>
+        <th class="bg-light text-right subtotalTop">${round(
           easeTotalHoursAsDecimal,
           4
         )}</th>
-        <th class="bg-light text-right">${easeTotalHoursAsTime}</th>
+        <th class="bg-light text-right subtotalTop">${easeTotalHoursAsTime}</th>
       </tr>
       <tr>
         <th class="bg-light text-right">Non-EASE:</th>
@@ -116,9 +116,12 @@ function buildTable(data) {
         <th class="bg-light text-right">${nonEaseHoursAsTime}</th>
       </tr>
       <tr>
-        <th class="bg-light text-right">TOTAL:</th>
-        <th class="bg-light text-right">${round(totalHoursAsDecimal, 4)}</th>
-        <th class="bg-light text-right">${totalHoursAsTime}</th>
+        <th class="bg-dark text-white text-right">TOTAL:</th>
+        <th class="bg-dark text-white text-right">${round(
+          totalHoursAsDecimal,
+          4
+        )}</th>
+        <th class="bg-dark text-white text-right">${totalHoursAsTime}</th>
       </tr>
     </tfoot>
   </table>`;
