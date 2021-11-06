@@ -47,10 +47,16 @@ function buildTable(data) {
     }
   });
 
+  let totalHoursAsDecimal = 0;
+  let totalHoursAsTime = "";
+
   // Build HTML:
 
   for (let i in hoursTally) {
     const { participantid, hours, name } = hoursTally[i];
+    const hoursAsDecimal = round(hours, 4);
+    totalHoursAsDecimal += hoursAsDecimal;
+    const hoursAsTime = parseHoursAsTime(hoursAsDecimal);
     const decoratedName =
       participantid === 0
         ? "EASE"
@@ -58,26 +64,52 @@ function buildTable(data) {
 
     rows += `
       <tr>
-        <td>${decoratedName}</td>
-        <td>${round(hours, 4)}</td>
+        <td class="text-left">${decoratedName}</td>
+        <td class="text-right">${hoursAsDecimal}</td>
+        <td class="text-right">${hoursAsTime}</td>
       </tr>
     `;
   }
 
+  totalHoursAsTime = parseHoursAsTime(totalHoursAsDecimal);
+
   const html = `
-  <table class="table">
+  <table class="table table-bordered">
     <thead>
       <tr>
-        <th>For</th>
-        <th>Hours</th>
+        <th class="align-middle text-center bg-light">For</th>
+        <th class="bg-light">Hours<div><small>as Decimal</small></div></th>
+        <th class="bg-light">Hours<div><small>as Time</small></div></th>
       </tr>
     </thead>
     <tbody>
       ${rows}
     </tbody>
+    <tfoot>
+      <tr>
+        <th class="bg-light text-right border">GRAND TOTAL:</th>
+        <th class="bg-light text-right">${totalHoursAsDecimal}</th>
+        <th class="bg-light text-right">${totalHoursAsTime}</th>
+      </tr>
+    </tfoot>
   </table>`;
 
   document.querySelector("#summary").innerHTML = html;
+}
+
+function parseHoursAsTime(hoursAsDecimal) {
+  const hoursAsDuration = moment.duration(hoursAsDecimal, "hours");
+  let hoursAsTime = hoursAsDuration._data.hours;
+  const minutesAsTime =
+    hoursAsDuration._data.minutes < 10
+      ? `0${hoursAsDuration._data.minutes}`
+      : hoursAsDuration._data.minutes;
+  const secondsAsTime =
+    hoursAsDuration._data.seconds < 10
+      ? `0${hoursAsDuration._data.seconds}`
+      : hoursAsDuration._data.seconds;
+  hoursAsTime += `:${minutesAsTime}:${secondsAsTime}`;
+  return hoursAsTime;
 }
 
 async function populateBreadcrumbs() {
