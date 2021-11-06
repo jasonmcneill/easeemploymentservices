@@ -77,9 +77,19 @@ function buildTable(data) {
   <table class="table table-bordered">
     <thead>
       <tr>
-        <th class="align-middle text-center bg-light">For</th>
-        <th class="bg-light">Hours<div><small>as Decimal</small></div></th>
-        <th class="bg-light">Hours<div><small>as Time</small></div></th>
+        <th width="50%" class="align-middle text-center bg-light">For</th>
+        <th width="25%" class="bg-light">
+          Hours
+          <div class="text-nowrap">
+            <small>as Decimal</small>
+          </div>
+        </th>
+        <th width="25%" class="bg-light">
+          Hours
+          <div class="text-nowrap">
+            <small>as Time</small>
+          </div>
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -87,7 +97,7 @@ function buildTable(data) {
     </tbody>
     <tfoot>
       <tr>
-        <th class="bg-light text-right border">GRAND TOTAL:</th>
+        <th class="bg-light text-right border">TOTAL HOURS:</th>
         <th class="bg-light text-right">${totalHoursAsDecimal}</th>
         <th class="bg-light text-right">${totalHoursAsTime}</th>
       </tr>
