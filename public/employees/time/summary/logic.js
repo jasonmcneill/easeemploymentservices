@@ -103,7 +103,7 @@ function buildTable(data) {
     </tbody>
     <tfoot>
       <tr>
-        <th class="bg-light text-right">EASE</th>
+        <th class="bg-light text-right">EASE:</th>
         <th class="bg-light text-right">${round(
           easeTotalHoursAsDecimal,
           4
@@ -111,7 +111,7 @@ function buildTable(data) {
         <th class="bg-light text-right">${easeTotalHoursAsTime}</th>
       </tr>
       <tr>
-        <th class="bg-light text-right">Non-EASE</th>
+        <th class="bg-light text-right">Non-EASE:</th>
         <th class="bg-light text-right">${round(nonEaseHoursAsDecimal, 4)}</th>
         <th class="bg-light text-right">${nonEaseHoursAsTime}</th>
       </tr>
