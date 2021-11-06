@@ -97,8 +97,8 @@ function buildTable(data) {
     </tbody>
     <tfoot>
       <tr>
-        <th class="bg-light text-right border">TOTAL HOURS:</th>
-        <th class="bg-light text-right">${round(2, totalHoursAsDecimal)}</th>
+        <th class="bg-light text-right border">TOTAL:</th>
+        <th class="bg-light text-right">${round(totalHoursAsDecimal, 2)}</th>
         <th class="bg-light text-right">${totalHoursAsTime}</th>
       </tr>
     </tfoot>
