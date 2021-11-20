@@ -9,22 +9,17 @@ exports.POST = (req, res) => {
   // Set "from" date
   let fromdate;
   if (req.body.fromdate === "") {
-    fromdate = moment()
-      .tz(timeZone)
-      .subtract(7, "days")
-      .format("YYYY-MM-DD 00:00:00");
+    fromdate = moment().subtract(7, "days").format("YYYY-MM-DD 00:00:00");
   } else {
-    fromdate = moment(req.body.fromdate)
-      .tz(timeZone)
-      .format("YYYY-MM-DD 00:00:00");
+    fromdate = moment(req.body.fromdate).format("YYYY-MM-DD 00:00:00");
   }
 
   // Set "to" date
   let todate;
   if (req.body.todate === "") {
-    todate = moment().tz(timeZone).format("YYYY-MM-DD 23:59:59");
+    todate = moment().format("YYYY-MM-DD 23:59:59");
   } else {
-    todate = moment(req.body.todate).tz(timeZone).format("YYYY-MM-DD 23:59:59");
+    todate = moment(req.body.todate).format("YYYY-MM-DD 23:59:59");
   }
 
   // Enforce authorization
@@ -104,9 +99,9 @@ exports.POST = (req, res) => {
         employees__timelogs t
       LEFT OUTER JOIN participants p ON t.participantid = p.participantid
       WHERE
-        entry >= ?
+        entry >= convert_tz(date_format(convert_tz(?, '+00:00', ?), "%Y-%m-%d 00:00:00"), ?, '+00:00')
       AND
-        entry <= ?
+        entry <= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), '%Y-%m-%d 23:59:59'), ?, '+00:00')
       AND
         t.employeeid = ?
       ;
@@ -114,7 +109,15 @@ exports.POST = (req, res) => {
 
     db.query(
       sql,
-      [timeZoneOffset, fromdate, utcFromDate, utcToDate, employeeid],
+      [
+        timeZoneOffset,
+        fromdate,
+        timeZoneOffset,
+        timeZoneOffset,
+        timeZoneOffset,
+        timeZoneOffset,
+        employeeid,
+      ],
       (err, result) => {
         if (err) {
           console.log(err);
