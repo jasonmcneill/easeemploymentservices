@@ -200,6 +200,7 @@ async function populateContent() {
     }),
     body: JSON.stringify({
       employeeid: employeeid,
+      timeZone: timeZone,
     }),
   })
     .then((res) => res.json())

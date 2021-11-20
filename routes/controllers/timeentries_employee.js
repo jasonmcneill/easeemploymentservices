@@ -9,17 +9,22 @@ exports.POST = (req, res) => {
   // Set "from" date
   let fromdate;
   if (req.body.fromdate === "") {
-    fromdate = moment().subtract(7, "days").format("YYYY-MM-DD 00:00:00");
+    fromdate = moment()
+      .tz(timeZone)
+      .subtract(7, "days")
+      .format("YYYY-MM-DD 00:00:00");
   } else {
-    fromdate = moment(req.body.fromdate).format("YYYY-MM-DD 00:00:00");
+    fromdate = moment(req.body.fromdate)
+      .tz(timeZone)
+      .format("YYYY-MM-DD 00:00:00");
   }
 
   // Set "to" date
   let todate;
   if (req.body.todate === "") {
-    todate = moment().format("YYYY-MM-DD 23:59:59");
+    todate = moment().tz(timeZone).format("YYYY-MM-DD 23:59:59");
   } else {
-    todate = moment(req.body.todate).format("YYYY-MM-DD 23:59:59");
+    todate = moment(req.body.todate).tz(timeZone).format("YYYY-MM-DD 23:59:59");
   }
 
   // Enforce authorization
@@ -82,37 +87,34 @@ exports.POST = (req, res) => {
     const type = result[0].type;
     const status = result[0].status;
 
+    const utcFromDate = moment(fromdate)
+      .tz("UTC")
+      .format("YYYY-MM-DD HH:mm:ss");
+    const utcToDate = moment(todate).tz("UTC").format("YYYY-MM-DD HH:mm:ss");
+
     const sql = `
-    SELECT
-      t.timelogid,
-      convert_tz(t.entry, '+00:00', ?) AS entry,
-      t.type,
-      t.participantid,
-      p.firstname,
-      p.lastname
-    FROM
-      employees__timelogs t
-    LEFT OUTER JOIN participants p ON t.participantid = p.participantid
-    WHERE
-      entry >= convert_tz(date_format(convert_tz(?, '+00:00', ?), "%Y-%m-%d 00:00:00"), ?, '+00:00')
-    AND
-      entry <= convert_tz(date_format(convert_tz(utc_timestamp(), '+00:00', ?), '%Y-%m-%d 23:59:59'), ?, '+00:00')
-    AND
-      t.employeeid = ?
-    ;
-  `;
+      SELECT
+        t.timelogid,
+        convert_tz(t.entry, '+00:00', ?) AS entry,
+        t.type,
+        t.participantid,
+        p.firstname,
+        p.lastname
+      FROM
+        employees__timelogs t
+      LEFT OUTER JOIN participants p ON t.participantid = p.participantid
+      WHERE
+        entry >= ?
+      AND
+        entry <= ?
+      AND
+        t.employeeid = ?
+      ;
+    `;
 
     db.query(
       sql,
-      [
-        timeZoneOffset,
-        fromdate,
-        timeZoneOffset,
-        timeZoneOffset,
-        timeZoneOffset,
-        timeZoneOffset,
-        employeeid,
-      ],
+      [timeZoneOffset, fromdate, utcFromDate, utcToDate, employeeid],
       (err, result) => {
         if (err) {
           console.log(err);
@@ -142,14 +144,8 @@ exports.POST = (req, res) => {
         }
 
         const entries = result.map((item) => {
-          const {
-            timelogid,
-            entry,
-            type,
-            participantid,
-            firstname,
-            lastname,
-          } = item;
+          const { timelogid, entry, type, participantid, firstname, lastname } =
+            item;
           const time = moment(entry).format("h:mm:ss A");
           const date = moment(entry).format("MMM. D");
           const fulldate = moment(entry).format("YYYY-MM-DD");
